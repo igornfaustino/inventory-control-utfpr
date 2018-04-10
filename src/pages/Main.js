@@ -1,5 +1,9 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
+import Home from './Home';
+import NewRequests from './NewRequests';
+import Requests from './Requests';
+import Products from './Products';
 
 {/* EXAMPLE... To see more...
  https://medium.com/@pshrmn/a-simple-react-router-v4-tutorial-7f23ff27adf
@@ -7,8 +11,6 @@ import { Switch, Route } from 'react-router-dom';
 
 
 // IMPORT HERE THE COMPONENTS THAT WILL BE RENDER!
-// import Home from './Home'
-// import Roster from './Roster'
 // import Schedule from './Schedule'
 
 /**
@@ -16,11 +18,12 @@ import { Switch, Route } from 'react-router-dom';
  */
 const Main = () => (
 	<main>
-		{/* <Switch>
+		<Switch>
 			<Route exact path='/' component={Home} />
-			<Route path='/roster' component={Roster} />
-			<Route path='/schedule' component={Schedule} />
-		</Switch> */}
+			<Route path='/novasolicitacoes' component={NewRequests} />
+			<Route path='/solicitacoes' component={Requests} />
+			<Route path='/produtos' component={Products} />
+		</Switch>
 	</main>
 );
 

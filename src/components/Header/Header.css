@@ -1,0 +1,22 @@
+.menu-icon{
+	color: #d9d9d9;
+	font-size: 150%;
+	margin-right: 5px;
+	margin-right: 5px;
+	text-decoration-color: #ffcc00;
+}
+
+.menu-icon:hover{
+	color: #d9d9d9;
+	text-decoration-color: #ffcc00;
+}
+
+.menu-icon-active{
+	color: #d9d9d9;
+	text-decoration-color: #ffcc00;
+}
+
+.menu-nav{
+	margin-left: 10px;
+	margin-right: 10px;
+}
