@@ -5,9 +5,9 @@ import NewRequests from './NewRequests';
 import Requests from './Requests';
 import Products from './Products';
 
-{/* EXAMPLE... To see more...
+/* EXAMPLE... To see more...
  https://medium.com/@pshrmn/a-simple-react-router-v4-tutorial-7f23ff27adf
-*/}
+*/
 
 
 // IMPORT HERE THE COMPONENTS THAT WILL BE RENDER!
