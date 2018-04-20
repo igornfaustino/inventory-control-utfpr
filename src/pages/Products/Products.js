@@ -2,9 +2,7 @@ import React from 'react';
 //import { Table } from 'reactstrap';
 
 import '../Pages.css';
-import './Products.css';
 
-import Line from '../../components/Line/Line';
 import List from '../../components/List/List';
 import TableList from '../../components/TableList/TableList';
 import SubHeader from '../../components/SubHeader/SubHeader';
