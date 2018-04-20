@@ -10,25 +10,22 @@ import {
 
 import { NavLink } from 'react-router-dom';
 
-import './Line.css';
+import Line from './Line/Line';
 
-export default class Line extends React.Component {
+export default class SubHeader extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.toggle = this.toggle.bind(this);
 		this.state = {
-			isOpen: false
+			title: props.title
 		};
 	}
-	toggle() {
-		this.setState({
-			isOpen: !this.state.isOpen
-		});
-	}
+	
 	render() {
 		return (
-			<div className='line'>
+			<div>
+                <h2 className='font' align='left' className='margin-title'>{this.state.title}</h2>
+                <Line></Line>
             </div>
 		);
 	}
