@@ -3,9 +3,29 @@ import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap
 
 export default class NewRequest extends React.Component {
 
-	constructor(promps, context) {
-		super(promps, context);
+	constructor(props) {
+		super(props);
+		this.state = {
+			description: '',
+			quantity: '',
+			justify: '',
+			requisitionType:'',
+			reference:''
+		}
 		this.arrayButton = [];
+	}
+
+	handleUserInput (e){
+		const description = e.target.description;
+		const quantity = e.target.quantity;
+		const justify = e.target.justify;
+		const requisitionType = e.target.requisitionType;
+		const reference = e.target.reference;
+
+		this.setState({
+			description, quantity, justify, requisitionType, reference
+		});
+		
 	}
 
 	showButton() {
@@ -15,6 +35,9 @@ export default class NewRequest extends React.Component {
 		});
 		// this.forceUpdate(() => {});
 	}
+
+	//Validation functions
+
 
 	renderQuotation(props) {
 		return props.aux.map(print =>
@@ -45,27 +68,30 @@ export default class NewRequest extends React.Component {
 				<FormGroup row>
 				</FormGroup>
 				<FormGroup row>
-					<Label for="descriptionArea" sm={2}>Descriçao</Label>
+					<Label for="descriptionArea" sm={2}>Descrição:</Label>
 					<Col sm={7}>
-						<Input type="textarea" name="decription" id="descriptionArea" placeholder="Descrição detalhada sobre os materias a serem solicitados" />
+						<Input value={this.state.description} type="textarea" id="descriptionArea" name="description" onChange={(event) => this.handleUserInput(event)}
+ placeholder="Descrição detalhada sobre os materias a serem solicitados" />
 					</Col>
 				</FormGroup>
 				<FormGroup row>
-					<Label for="quantityArea" sm={2}>Quantidade</Label>
+					<Label for="quantityArea" sm={2}>Quantidade:</Label>
 					<Col sm={2}>
-						<Input type="number" name="quantity" id="quantityArea" placeholder="Quantidade" />
-					</Col>
+						<Input value={this.state.quantity} type="number" onChange={(event) => this.handleUserInput(event)}
+ placeholder="Quantidade" />
+					</Col> 
 				</FormGroup>
 				<FormGroup row>
-					<Label for="justifyArea" sm={2}>Justificativa</Label>
+					<Label for="justifyArea" sm={2}>Justificativa:</Label>
 					<Col sm={7}>
-						<Input type="textarea" name="justify" id="justiryArea" placeholder="Justificativa para tal solicitação" />
+						<Input value={this.state.justify} type="textarea" onChange={(event) => this.handleUserInput(event)}
+ placeholder="Justificativa para tal solicitação" />
 					</Col>
 				</FormGroup>
 				<FormGroup row>
-					<Label sm={2}>Adicionar cotação </Label>
+					<Label sm={2}>Adicionar cotação</Label>
 					<Col sm={1}>
-						<Button color="secondary" onClick={this.showButton()}>Adicionar</Button>
+						<Button color="secondary">Adicionar</Button>
 					</Col>
 				</FormGroup>
 				<FormGroup row>
