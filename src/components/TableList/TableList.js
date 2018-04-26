@@ -1,10 +1,11 @@
 import React from 'react';
 import {
-	Table, Button
+	Table
 } from 'reactstrap';
 
-import '../../pages/Products/Products.css';
 import '../../pages/Pages.css';
+import './TableList.css';
+
 
 export default class TableList extends React.Component {
 	constructor(props) {
@@ -23,10 +24,10 @@ export default class TableList extends React.Component {
 		const TableItems = this.state.tableItems.map((item, index) => {
 			if (item !== null && item !== undefined){
 				let lineItens = Object.keys(item).map((key, index) => {
-					if(key != 'change' && key != 'check' && key != 'id')
+					if(key != 'change' && key != 'checked' && key != 'id')
 						return <td key={index}>{item[key]}</td>;
-					if(item[key] == 'check')
-						return <td key={index}><input type="checkbox" className="check btn-success" onChange = {(e) => {
+					else if(key == 'checked')
+						return <td key={index}><input type="checkbox" className="check btn-success" checked={item[key]} onChange = {(e) => {
 							item.change(item.id)}} /></td>
 				});
 				let line = (<tr key={index}>
@@ -37,11 +38,7 @@ export default class TableList extends React.Component {
 		});
 		
 		return (
-			<div className="table">
-				<header align='left' className="font-header font">
-					<Button outline color="success" disabled>&#x2713;</Button> 
-					&emsp;Selecione os produtos que deseja solicitar novamente
-				</header>
+			<div>
                 <Table responsive>
                     <thead>
                         <tr>

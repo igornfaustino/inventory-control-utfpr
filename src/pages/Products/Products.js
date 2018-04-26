@@ -1,5 +1,5 @@
 import React from 'react';
-//import { Table } from 'reactstrap';
+import { Table, Container, Button } from 'reactstrap';
 
 import '../Pages.css';
 
@@ -10,23 +10,67 @@ import SubHeader from '../../components/SubHeader/SubHeader';
 export default class Products extends React.Component {
 	constructor(props){
 		super(props);
+		this.handleClick = this.handleClick.bind(this);
 		this.state = {
 			term: 'teste',
+			isDisabled: true,
+			checkedCount: 0,
 			items: [
 				{
 					id: 'id123',
 					siorg: "1234",
 					description: "description",
 					date: "10/10/10" ,
-					check: 'check',
-					change: this.test
+					checked: false,
+					change: this.handleClick
+				},
+				{
+					id: 'id124',
+					siorg: "1234",
+					description: "description",
+					date: "10/10/10" ,
+					checked: false,
+					change: this.handleClick
+				},
+				{
+					id: 'id125',
+					siorg: "1234",
+					description: "description",
+					date: "10/10/10" ,
+					checked: false,
+					change: this.handleClick
 				}
 			]
 		};
 	}
 
-	test = (e) => {
-		console.log(e);
+	componentDidUpdate() {
+
+	}
+
+	//Comentar depois: controla adição dos itens - habilita botao quando um item está marcado
+	handleClick(e){
+		let updatedItems = this.state.items;
+		let count = this.state.checkedCount
+		updatedItems.forEach((value, index, Array) => {
+			if(value.id === e){
+				value.checked = !value.checked
+				if(value.checked){
+					count += 1;
+				} else if (count > 0) {
+					count -= 1;
+				}
+			}
+		});
+		let isDisabled = true;
+		if (count > 0) {
+			isDisabled = false;
+		}
+		this.setState({
+			items: updatedItems,
+			checkedCount: count,
+			isDisabled: isDisabled
+		});
 	}
 
 	onChange = (event) => {
@@ -37,7 +81,18 @@ export default class Products extends React.Component {
 		return (
 			<div>
 				<SubHeader title="Histórico de pedidos"></SubHeader>
+				
+				<header align='left' className="font-header font header">
+					<Button outline color="success" disabled>&#x2713;</Button> 
+					&emsp;Selecione os produtos que deseja solicitar novamente
+				</header>
+	
 				<TableList header={['SIORG', 'Descrição', 'Data', ' ']} items={this.state.items} />	
+
+				<Container className="float-right">
+					<Button color="success" disabled={this.state.isDisabled} className="float-right" type="submit">Adicionar</Button> 
+				</Container>
+
 			</div >
 		);
 	}
