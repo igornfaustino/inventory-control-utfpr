@@ -6,7 +6,7 @@ export default class NewRequest extends React.Component {
 	render() {
 		return (
 			<div>
-				<SubHeader title="Novas solicitações"></SubHeader>
+				<SubHeader title="Nova solicitação"></SubHeader>
 			</div >
 		);
 	}

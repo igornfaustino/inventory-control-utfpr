@@ -4,6 +4,7 @@ import Home from './Home/Home';
 import NewRequests from './NewRequests';
 import Requests from './Requests';
 import Products from './Products/Products';
+import ApprovedRequests from './approvedRequests/ApprovedRequests';
 
 const Main = () => (
 	<main>
@@ -12,6 +13,7 @@ const Main = () => (
 			<Route path='/novasolicitacoes' component={NewRequests} />
 			<Route path='/solicitacoes' component={Requests} />
 			<Route path='/produtos' component={Products} />
+			<Route path='/aprovados' component={ApprovedRequests} />
 		</Switch>
 	</main>
 );
