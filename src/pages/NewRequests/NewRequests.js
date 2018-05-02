@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-import { FormErrors } from './FormErrors';
+// import { FormErrors } from './FormErrors';
 import './NewRequest.css';
 import axios from 'axios'
 
@@ -77,7 +77,7 @@ export default class NewRequest extends React.Component {
 			qtd: this.state.quantity
 		}).then(res => {
 			console.log(res)
-			if(res.status == 200) {
+			if(res.status === 200) {
 				alert("Solicitação cadastrada")
 				this.setState({
 					description: '',
@@ -93,6 +93,8 @@ export default class NewRequest extends React.Component {
 					formErrors: { description: '', quantity: '', justify: '' },
 					descriptionValid: false,
 				})
+			} else {
+				alert("Opss.. algo saiu errado")
 			}
 		}).catch(err => {
 			alert("Opss.. algo saiu errado")
@@ -188,7 +190,7 @@ export default class NewRequest extends React.Component {
 					</FormGroup>
 
 					{this.state.quotation.map((quotation, idx) => (
-						<div className="panel panel-default margin-left-huge margin-top-medium">
+						<div className="panel panel-default margin-left-huge margin-top-medium" key={idx}>
 							<FormGroup row>
 								<Label for="typeArea" sm={2}>Tipo:</Label>
 								<Col sm={2}>
