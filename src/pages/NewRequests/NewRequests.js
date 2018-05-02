@@ -2,6 +2,7 @@ import React from 'react';
 import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import { FormErrors } from './FormErrors';
 import './NewRequest.css';
+import axios from 'axios'
 
 export default class NewRequest extends React.Component {
 
@@ -59,6 +60,44 @@ export default class NewRequest extends React.Component {
 
 	}
 
+	submitRequest = () => {
+		this.setState({
+			quantityValid: false,
+			justifyValid: false,
+			formValid: false,
+		});
+		let prices = this.state.quotation.filter((item) => {
+			return (item.requisitionType !== '' && item.reference !== '')
+		});
+		console.log("working")
+		axios.post('/requisition/', {
+			description: this.state.description,
+			justification: this.state.justify,
+			prices: prices,
+			qtd: this.state.quantity
+		}).then(res => {
+			console.log(res)
+			if(res.status == 200) {
+				alert("Solicitação cadastrada")
+				this.setState({
+					description: '',
+					quantity: '',
+					justify: '',
+					quotation:
+						[
+							{
+								requisitionType: '',
+								reference: '',
+							}
+						],
+					formErrors: { description: '', quantity: '', justify: '' },
+					descriptionValid: false,
+				})
+			}
+		}).catch(err => {
+			alert("Opss.. algo saiu errado")
+		});
+	}
 
 	//Validation functions
 
@@ -189,7 +228,7 @@ export default class NewRequest extends React.Component {
 
 				<div align="right" className={'margin'}>
 					<Button type="submit" color="secondary" className="btn btn-primary"
-						disabled={!this.state.formValid}>
+						disabled={!this.state.formValid} onClick={this.submitRequest}>
 						Enviar Solicitação
        				</Button>
 				</div>
