@@ -7,7 +7,7 @@ import List from '../../components/List/List';
 import TableList from '../../components/TableList/TableList';
 import SubHeader from '../../components/SubHeader/SubHeader';
 
-export default class Products extends React.Component {
+export default class ApprovedRequests extends React.Component {
 	constructor(props){
 		super(props);
 		this.handleClick = this.handleClick.bind(this);
@@ -80,14 +80,14 @@ export default class Products extends React.Component {
 	render() {
 		return (
 			<div>
-				<SubHeader title="Histórico de pedidos"></SubHeader>
+				<SubHeader title="Solicitações já aprovadas"></SubHeader>
 				
 				<header align='left' className="font-header font header">
 					<Button outline color="success" disabled>&#x2713;</Button> 
-					&emsp;Selecione os produtos que deseja solicitar novamente
+					&emsp;Selecione os produtos que deseja solicitar
 				</header>
 	
-				<TableList header={['SIORG', 'Descrição', 'Data', ' ']} items={this.state.items} />	
+				<TableList header={['SIORG', 'Descrição', 'Aprovado em', ' ']} items={this.state.items} />	
 
 				<Container className="float-right">
 					<Button color="success" disabled={this.state.isDisabled} className="float-right" type="submit">Solicitar</Button> 
