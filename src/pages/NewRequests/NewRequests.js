@@ -11,38 +11,54 @@ export default class NewRequest extends React.Component {
 			description: '',
 			quantity: '',
 			justify: '',
-			requisitionType: '',
-			reference: '',
-			formErrors: { description: '', quantity: '', justify: '', requisitionType: '', reference: '' },
+			quotation:
+				[
+					{
+						requisitionType: '',
+						reference: '',
+					}
+				],
+			formErrors: { description: '', quantity: '', justify: '' },
 			descriptionValid: false,
 			quantityValid: false,
 			justifyValid: false,
-			requisitionTypeValid: false,
-			referenceValid: false,
-		}
-		this.arrayButton = [];
+			formValid: false,
+		};
+	}
+
+	handleQuotationChange = (idx) => (evt) => {
+		const quotation = this.state.quotation.map((quotation, sidx) => {
+			if (idx !== sidx) return quotation;
+			return { ...quotation, [evt.target.name]: evt.target.value };
+		});
+
+		this.setState({ quotation: quotation });
+	}
+
+	handleRemoveQuotation = (idx) => () => {
+		this.setState({
+			quotation: this.state.quotation.filter((s, sidx) => idx !== sidx)
+		});
+	}
+
+	handleAddQuotation = () => {
+		this.setState({
+			quotation: this.state.quotation.concat(
+				[{
+					requisitionType: '',
+					reference: ''
+				}])
+		});
 	}
 
 	handleUserInput(e) {
-		const description = e.target.description;
-		const quantity = e.target.quantity;
-		const justify = e.target.justify;
-		const requisitionType = e.target.requisitionType;
-		const reference = e.target.reference;
+		const name = e.target.name;
+		const value = e.target.value;
 
-		this.setState({
-			description, quantity, justify, requisitionType, reference
-		});
+		this.setState({ [name]: value }, () => { this.validateField(name, value) });
 
 	}
 
-	showButton() {
-		this.arrayButton.push({
-			type: " ",
-			reference: " "
-		});
-		// this.forceUpdate(() => {});
-	}
 
 	//Validation functions
 
@@ -51,8 +67,6 @@ export default class NewRequest extends React.Component {
 		let descriptionValid = this.state.descriptionValid;
 		let quantityValid = this.state.quantityValid;
 		let justifyValid = this.state.justifyValid;
-		let requisitionTypeValid = this.state.requisitionTypeValid;
-		let referenceValid = this.state.referenceValid;
 
 		switch (fieldName) {
 			case 'description':
@@ -60,20 +74,14 @@ export default class NewRequest extends React.Component {
 				fieldValidationErrors.description = descriptionValid ? '' : ' Campo deve ser preenchido!';
 				break;
 			case 'quantity':
+				quantityValid = value > 0;
 				fieldValidationErrors.quantity = quantityValid ? '' : ' is invalid';
 				break;
 			case 'justify':
 				justifyValid = value.length >= 0;
 				fieldValidationErrors.justify = justifyValid ? '' : ' is invalid';
 				break;
-			case 'requisitionType':
-				requisitionTypeValid = value.length >= 0;
-				fieldValidationErrors.requisitionType = requisitionTypeValid ? '' : ' is invalid';
-				break;
-			case 'reference':
-				referenceValid = value.length >= 0;
-				fieldValidationErrors.reference = referenceValid ? '' : ' is invalid';
-				break;
+
 
 			default:
 				break;
@@ -83,41 +91,19 @@ export default class NewRequest extends React.Component {
 			descriptionValid: descriptionValid,
 			quantityValid: quantityValid,
 			justifyValid: justifyValid,
-			requisitionTypeValid: requisitionTypeValid,
-			referenceValid: referenceValid,
 		}, this.validateForm);
 	}
 
 	validateForm() {
 		this.setState({
 			formValid: this.state.descriptionValid && this.state.quantityValid
-				&& this.state.justifyValid && this.state.requisitionTypeValid && this.state.referenceValid
+				&& this.state.justifyValid
+
 		});
 	}
 
-	renderQuotation(props) {
-		return props.aux.map(print =>
-
-			<div className="panel panel-default">
-				<FormErrors formErrors={this.state.formErrors} />
-				<FormGroup row>
-					<Label for="typeArea" sm={2}>Tipo:</Label>
-					<Col sm={1}>
-						<Input type="select" name="select" id="typeArea">
-							<option>Link</option>
-							<option>E-mail</option>
-							<option>PDF</option>
-						</Input>
-					</Col>
-				</FormGroup>
-				<FormGroup row>
-					<Label for="referenceArea" sm={2}>Referência:</Label>
-					<Col sm={5}>
-						<Input type="text" name="reference" id="referenceArea" />
-					</Col>
-				</FormGroup>
-			</div>
-		);
+	errorClass(error) {
+		return (error.length === 0 ? '' : 'has-error');
 	}
 
 	render() {
@@ -127,38 +113,77 @@ export default class NewRequest extends React.Component {
 				<Form>
 					<FormGroup row>
 					</FormGroup>
-					<FormGroup row>
-						<Label for="descriptionArea" sm={2}>Descrição:</Label>
-						<Col sm={7}>
-							<Input value={this.state.description} type="textarea" id="descriptionArea" name="description" onChange={(event) => this.handleUserInput(event)}
-								placeholder="Descrição detalhada sobre os materias a serem solicitados" />
-						</Col>
-					</FormGroup>
-					<FormGroup row>
-						<Label for="quantityArea" sm={2}>Quantidade:</Label>
-						<Col sm={2}>
-							<Input value={this.state.quantity} type="number" onChange={(event) => this.handleUserInput(event)}
-								placeholder="Quantidade" />
-						</Col>
-					</FormGroup>
-					<FormGroup row>
-						<Label for="justifyArea" sm={2}>Justificativa:</Label>
-						<Col sm={7}>
-							<Input value={this.state.justify} type="textarea" onChange={(event) => this.handleUserInput(event)}
-								placeholder="Justificativa para tal solicitação" />
-						</Col>
-					</FormGroup>
-					<FormGroup row>
+					<div className={`form-group${this.errorClass(this.state.formErrors.description)}`}>
+						<FormGroup row>
+							<Label for="descriptionArea" sm={2}>Descrição:</Label>
+							<Col sm={7}>
+								<Input value={this.state.description} type="textarea" id="descriptionArea" name="description" onChange={(event) => this.handleUserInput(event)}
+									placeholder="Descrição detalhada sobre o material a ser solicitado" />
+							</Col>
+						</FormGroup>
+					</div>
+					<div className={`form-group
+                 ${this.errorClass(this.state.formErrors.quantity)}`}>
+						<FormGroup row>
+							<Label for="quantityArea" sm={2}>Quantidade:</Label>
+							<Col sm={1}>
+								<Input value={this.state.quantity} type="number" id="quantityArea" name="quantity" onChange={(event) => this.handleUserInput(event)} />
+							</Col>
+						</FormGroup>
+					</div>
+					<div className={`form-group
+                 ${this.errorClass(this.state.formErrors.justify)}`}>
+						<FormGroup row>
+							<Label for="justifyArea" sm={2}>Justificativa:</Label>
+							<Col sm={7}>
+								<Input value={this.state.justify} type="textarea" id="justifyArea" name="justify" onChange={(event) => this.handleUserInput(event)}
+									placeholder="Justificativa para tal solicitação" />
+							</Col>
+						</FormGroup>
+					</div>
+					<FormGroup row className="margin-top-medium">
 						<Label sm={2}>Adicionar cotação</Label>
 						<Col sm={1}>
-							<Button color="secondary">Adicionar</Button>
+							<Button color="success" onClick={this.handleAddQuotation}>Adicionar</Button>
 						</Col>
 					</FormGroup>
-					<FormGroup row>
-						<Col>
-							<this.renderQuotation aux={this.arrayButton}></this.renderQuotation>
-						</Col>
-					</FormGroup>
+
+					{this.state.quotation.map((quotation, idx) => (
+						<div className="panel panel-default margin-left-huge margin-top-medium">
+							<FormGroup row>
+								<Label for="typeArea" sm={2}>Tipo:</Label>
+								<Col sm={2}>
+									<Input type="select" name="requisitionType" id="typeArea"
+										value={quotation.requisitionType}
+										onChange={this.handleQuotationChange(idx)}>
+										<option>URL</option>
+										<option>PDF</option>
+									</Input>
+								</Col>
+								<Button color="danger" type="button" onClick={this.handleRemoveQuotation(idx)}>Remover</Button>
+							</FormGroup>
+							<FormGroup row>
+								<Label for="referenceArea" sm={2}>URL:</Label>
+								<Col sm={5}>
+									<Input type="text" name="reference" id="referenceArea"
+										placeholder={'Referência para cotação'}
+										value={quotation.reference}
+										onChange={this.handleQuotationChange(idx)}
+									/>
+								</Col>
+							</FormGroup>
+							<FormGroup className="margin-left-small">
+								<Input type="file" name="file" id="fileButton" />
+							</FormGroup>
+
+							<div align="left" className="margin-left-small">
+								<FormText color="muted">
+									Apenas selecione um arquivo, se não for possível enviar uma URL
+          						</FormText>
+							</div>
+
+						</div>
+					))}
 
 				</Form>
 

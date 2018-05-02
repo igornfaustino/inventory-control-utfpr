@@ -1,3 +1,19 @@
 .margin{
     margin-right: 30px;
 }
+
+.margin-left-huge{
+    margin-left: 170px;
+}
+
+.margin-left-small{
+    margin-left: 60px;
+}
+
+.margin-top-small{
+    margin-top: 30px;
+}
+
+.margin-top-medium{
+    margin-top: 50px;
+}
