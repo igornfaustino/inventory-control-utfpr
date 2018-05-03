@@ -63,7 +63,7 @@ export default class Products extends React.Component {
 						_id: item._id,
 						// siorg: item.siorg,
 						description: item.description,
-						date: moment(item.date).format('L'),
+						date: moment(item.date).locale('pt-br').format('DD/MM/YYYY'),
 						input: (<Button color="success" onClick={() => {
 							this.handleClick(item)
 						}} type="submit">Solicitar</Button>)

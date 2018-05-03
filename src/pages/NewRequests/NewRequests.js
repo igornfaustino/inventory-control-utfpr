@@ -118,6 +118,7 @@ export default class NewRequest extends React.Component {
 				});
 			}
 		}).catch(err => {
+			console.log(err)			
 			alert("Opss.. algo saiu errado");
 			this.setState({
 				descriptionValid: true,
