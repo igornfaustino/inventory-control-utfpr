@@ -17,7 +17,7 @@ export default class NewRequest extends React.Component {
 			quotation:
 				[
 					{
-						requisitionType: '',
+						requisitionType: 'URL',
 						reference: '',
 						price: '',
 					}
@@ -58,7 +58,7 @@ export default class NewRequest extends React.Component {
 		this.setState({
 			quotation: this.state.quotation.concat(
 				[{
-					requisitionType: '',
+					requisitionType: 'URL',
 					reference: '',
 					price: '',
 				}])
@@ -75,19 +75,21 @@ export default class NewRequest extends React.Component {
 
 	submitRequest = () => {
 		this.setState({
+			descriptionValid: false,
 			quantityValid: false,
 			justifyValid: false,
 			formValid: false,
 		});
+		console.log(this.state.quotation)
 		let prices = this.state.quotation.filter((item) => {
 			return (item.requisitionType !== '' && item.reference !== '')
 		});
-		console.log("working")
+		console.log(prices)
 		axios.post('/requisition/', {
 			description: this.state.description,
 			justification: this.state.justify,
 			qtd: this.state.quantity,
-			prices: prices
+			quotation: prices
 		}).then(res => {
 			console.log(res)
 			if (res.status === 200) {
@@ -99,19 +101,30 @@ export default class NewRequest extends React.Component {
 					quotation:
 						[
 							{
-								requisitionType: '',
+								requisitionType: 'URL',
 								reference: '',
 								price:'',
 							}
 						],
 					formErrors: { description: '', quantity: '', justify: '' },
-					descriptionValid: false,
 				})
 			} else {
-				alert("Opss.. algo saiu errado")
+				alert("Opss.. algo saiu errado");
+				this.setState({
+					descriptionValid: true,
+					quantityValid: true,
+					justifyValid: true,
+					formValid: true,
+				});
 			}
 		}).catch(err => {
-			alert("Opss.. algo saiu errado")
+			alert("Opss.. algo saiu errado");
+			this.setState({
+				descriptionValid: true,
+				quantityValid: true,
+				justifyValid: true,
+				formValid: true,
+			});
 		});
 	}
 
