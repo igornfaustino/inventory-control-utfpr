@@ -43,6 +43,7 @@ export default class ApprovedRequests extends React.Component {
 						}} type="submit">Solicitar</Button>)
 					})
 				})
+				
 				items = items.filter(item => {
 					return item.status === 'aprovado'
 				});
@@ -52,6 +53,7 @@ export default class ApprovedRequests extends React.Component {
 					loading: false
 				})
 			}
+			console.log('snasdnlkads');
 		}).catch(ex => {
 			console.error(ex, ex.response);
 		})

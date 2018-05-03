@@ -14,6 +14,7 @@ export default class NewRequest extends React.Component {
 			description: '',
 			quantity: '',
 			justify: '',
+			price: '',
 			quotation:
 				[
 					{
@@ -22,16 +23,17 @@ export default class NewRequest extends React.Component {
 						price: '',
 					}
 				],
-			formErrors: { description: '', quantity: '', justify: '' },
+			formErrors: { description: '', quantity: '', justify: '', price: '' },
 			descriptionValid: false,
 			quantityValid: false,
 			justifyValid: false,
+			priceValid: false,
 			formValid: false,
 		};
 	}
 
 	componentWillMount() {
-		if(this.props.location.state && this.props.location.state.product){
+		if (this.props.location.state && this.props.location.state.product) {
 			this.setState({
 				description: this.props.location.state.product.description,
 				descriptionValid: true
@@ -86,16 +88,17 @@ export default class NewRequest extends React.Component {
 		axios.post('/requisition/', {
 			description: this.state.description,
 			justification: this.state.justify,
-			prices: prices,
-			qtd: this.state.quantity
+			qtd: this.state.quantity,
+			prices: this.state.price,
 		}).then(res => {
 			console.log(res)
-			if(res.status === 200) {
+			if (res.status === 200) {
 				alert("Solicitação cadastrada")
 				this.setState({
 					description: '',
 					quantity: '',
 					justify: '',
+					price: '',
 					quotation:
 						[
 							{
@@ -122,6 +125,7 @@ export default class NewRequest extends React.Component {
 		let descriptionValid = this.state.descriptionValid;
 		let quantityValid = this.state.quantityValid;
 		let justifyValid = this.state.justifyValid;
+		let priceValid = this.state.priceValid;
 
 		switch (fieldName) {
 			case 'description':
@@ -136,6 +140,10 @@ export default class NewRequest extends React.Component {
 				justifyValid = value.length >= 0;
 				fieldValidationErrors.justify = justifyValid ? '' : ' is invalid';
 				break;
+			case 'price':
+				priceValid = value > 0;
+				fieldValidationErrors.price = priceValid ? '' : ' is invalid';
+				break;
 
 
 			default:
@@ -146,13 +154,14 @@ export default class NewRequest extends React.Component {
 			descriptionValid: descriptionValid,
 			quantityValid: quantityValid,
 			justifyValid: justifyValid,
+			priceValid: priceValid,
 		}, this.validateForm);
 	}
 
 	validateForm() {
 		this.setState({
 			formValid: this.state.descriptionValid && this.state.quantityValid
-				&& this.state.justifyValid
+				&& this.state.justifyValid && this.state.priceValid
 
 		});
 	}
@@ -185,6 +194,15 @@ export default class NewRequest extends React.Component {
 							<Label for="quantityArea" sm={2}>Quantidade:</Label>
 							<Col sm={1}>
 								<Input value={this.state.quantity} type="number" id="quantityArea" name="quantity" onChange={(event) => this.handleUserInput(event)} />
+							</Col>
+						</FormGroup>
+					</div>
+					<div className={`form-group
+                 ${this.errorClass(this.state.formErrors.price)}`}>
+						<FormGroup row>
+							<Label for="priceArea" sm={2}>Preço:</Label>
+							<Col sm={1}>
+								<Input value={this.state.price} type="real" placeholder="R$" id="priceArea" name="price" onChange={(event) => this.handleUserInput(event)} />
 							</Col>
 						</FormGroup>
 					</div>
