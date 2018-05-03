@@ -19,6 +19,7 @@ export default class NewRequest extends React.Component {
 					{
 						requisitionType: '',
 						reference: '',
+						price: '',
 					}
 				],
 			formErrors: { description: '', quantity: '', justify: '' },
@@ -32,7 +33,8 @@ export default class NewRequest extends React.Component {
 	componentWillMount() {
 		if(this.props.location.state && this.props.location.state.product){
 			this.setState({
-				description: this.props.location.state.product.description
+				description: this.props.location.state.product.description,
+				descriptionValid: true
 			})
 		}
 	}
@@ -57,7 +59,8 @@ export default class NewRequest extends React.Component {
 			quotation: this.state.quotation.concat(
 				[{
 					requisitionType: '',
-					reference: ''
+					reference: '',
+					price: '',
 				}])
 		});
 	}
@@ -98,6 +101,7 @@ export default class NewRequest extends React.Component {
 							{
 								requisitionType: '',
 								reference: '',
+								price:'',
 							}
 						],
 					formErrors: { description: '', quantity: '', justify: '' },
@@ -218,13 +222,24 @@ export default class NewRequest extends React.Component {
 							<FormGroup row>
 								<Label for="referenceArea" sm={2}>URL:</Label>
 								<Col sm={5}>
-									<Input type="text" name="reference" id="referenceArea"
+									<Input type="url" name="reference" id="referenceArea"
 										placeholder={'Referência para cotação'}
 										value={quotation.reference}
 										onChange={this.handleQuotationChange(idx)}
 									/>
 								</Col>
 							</FormGroup>
+							<FormGroup row>
+								<Label for="priceArea" sm={2}>Preço:</Label>
+								<Col sm={2}>
+									<Input type="text" name="price" id="priceArea"
+										placeholder={'R$'}
+										value={quotation.price}
+										onChange={this.handleQuotationChange(idx)}
+									/>
+								</Col>
+							</FormGroup>
+							
 							<FormGroup className="margin-left-small">
 								<Input type="file" name="file" id="fileButton" />
 							</FormGroup>
