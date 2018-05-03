@@ -11,7 +11,6 @@ export default class TableList extends React.Component {
 	constructor(props) {
 		super(props);
 		
-		console.log(props.items)
 		this.state = {
 			headerItems: props.header,
 			tableItems: [].concat(props.items)
@@ -24,17 +23,16 @@ export default class TableList extends React.Component {
 		const TableItems = this.state.tableItems.map((item, index) => {
 			if (item !== null && item !== undefined){
 				let lineItens = Object.keys(item).map((key, index) => {
-					if(key != 'change' && key != 'checked' && key != 'id')
+					if (key.charAt(0) !== '_')
 						return <td key={index}>{item[key]}</td>;
-					else if(key == 'checked')
-						return <td key={index}><input type="checkbox" className="check btn-success" checked={item[key]} onChange = {(e) => {
-							item.change(item.id)}} /></td>
+					return null
 				});
 				let line = (<tr key={index}>
 					{lineItens}
 				</tr>);
 				return line;
 			}
+			return null
 		});
 		
 		return (

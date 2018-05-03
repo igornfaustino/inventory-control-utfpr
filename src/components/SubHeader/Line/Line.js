@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-	Collapse,
-	Navbar,
-	NavbarToggler,
-	Nav,
-	NavItem
-} from 'reactstrap';
 
-
-import { NavLink } from 'react-router-dom';
 
 import './Line.css';
 

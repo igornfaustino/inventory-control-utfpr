@@ -1,6 +1,7 @@
 import React from 'react';
 import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-// import { FormErrors } from './FormErrors';
+import SubHeader from '../../components/SubHeader/SubHeader';
+
 import './NewRequest.css';
 import axios from 'axios'
 
@@ -8,6 +9,7 @@ export default class NewRequest extends React.Component {
 
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			description: '',
 			quantity: '',
@@ -25,6 +27,14 @@ export default class NewRequest extends React.Component {
 			justifyValid: false,
 			formValid: false,
 		};
+	}
+
+	componentWillMount() {
+		if(this.props.location.state && this.props.location.state.product){
+			this.setState({
+				description: this.props.location.state.product.description
+			})
+		}
 	}
 
 	handleQuotationChange = (idx) => (evt) => {
@@ -150,8 +160,10 @@ export default class NewRequest extends React.Component {
 	render() {
 		return (
 			<div>
-
-				<Form>
+				<SubHeader title="Solicitar um material"></SubHeader>
+				<Form style={{
+					marginTop: 30
+				}}>
 					<FormGroup row>
 					</FormGroup>
 					<div className={`form-group${this.errorClass(this.state.formErrors.description)}`}>
