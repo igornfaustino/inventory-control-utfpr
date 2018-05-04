@@ -260,12 +260,6 @@ export default class NewRequest extends React.Component {
 										</Col>
 									</FormGroup>
 	
-									<div align="left" className="margin-left-small">
-										<FormText color="muted">
-											Apenas selecione um arquivo, se não for possível enviar uma URL
-									  </FormText>
-									</div>
-	
 								</div>
 							)
 						} else {
@@ -297,12 +291,6 @@ export default class NewRequest extends React.Component {
 									<FormGroup className="margin-left-small">
 										<Input type="file" label="upload" name="file" id="fileButton" value={quotation.reference} onChange={this.handleQuotationChange(idx)} />
 									</FormGroup>
-	
-									<div align="left" className="margin-left-small">
-										<FormText color="muted">
-											Apenas selecione um arquivo, se não for possível enviar uma URL
-									  </FormText>
-									</div>
 	
 								</div>
 							)
