@@ -31,15 +31,12 @@ export default class NewRequest extends React.Component {
 		};
 	}
 
-	onFormSubmit = (e) => {
-		e.preventDefault() // Stop form submit
-		this.fileUpload(this.state.file).then((response) => {
-			console.log(response.data);
+	onChangeFile = (idx) => (evt) => {
+		const quotation = this.state.quotation.map((quotation, sidx) => {
+			if (idx !== sidx) return quotation;
+			return{...quotation, [evt.target.name]: evt.target.files[0]};
 		})
-	}
-
-	onChange = (e) => {
-    this.setState({file:e.target.files[0]})
+    	// this.setState({file:e.target.files[0]})
   }
 
 	componentWillMount() {
@@ -303,7 +300,7 @@ export default class NewRequest extends React.Component {
 									</FormGroup>
 
 									<FormGroup className="margin-left-small">
-										<Input type="file" label="upload" accept=".pdf" name="file" id="fileButton" value={quotation.reference} onChange={this.handleQuotationChange(idx)} />
+										<Input type="file" label="upload" accept=".pdf" name="file" id="fileButton" value={quotation.file} onChange={this.onChangeFile(idx)} />
 									</FormGroup>
 
 								</div>
