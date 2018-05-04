@@ -20,6 +20,7 @@ export default class NewRequest extends React.Component {
 						requisitionType: 'URL',
 						reference: '',
 						price: '',
+						file: null,
 					}
 				],
 			formErrors: { description: '', quantity: '', justify: '', },
@@ -29,6 +30,17 @@ export default class NewRequest extends React.Component {
 			formValid: false,
 		};
 	}
+
+	onFormSubmit = (e) => {
+		e.preventDefault() // Stop form submit
+		this.fileUpload(this.state.file).then((response) => {
+			console.log(response.data);
+		})
+	}
+
+	onChange = (e) => {
+    this.setState({file:e.target.files[0]})
+  }
 
 	componentWillMount() {
 		if (this.props.location.state && this.props.location.state.product) {
@@ -65,6 +77,7 @@ export default class NewRequest extends React.Component {
 					requisitionType: 'URL',
 					reference: '',
 					price: '',
+					file: null,
 				}])
 		});
 	}
@@ -108,6 +121,7 @@ export default class NewRequest extends React.Component {
 								requisitionType: 'URL',
 								reference: '',
 								price: '',
+								file: null,
 							}
 						],
 					formErrors: { description: '', quantity: '', justify: '' },
@@ -224,7 +238,7 @@ export default class NewRequest extends React.Component {
 					</FormGroup>
 
 					{this.state.quotation.map((quotation, idx) => {
-						if(quotation.requisitionType === 'URL'){
+						if (quotation.requisitionType === 'URL') {
 							return (
 								<div className="panel panel-default margin-left-huge margin-top-medium" key={idx}>
 									<FormGroup row>
@@ -259,7 +273,7 @@ export default class NewRequest extends React.Component {
 											/>
 										</Col>
 									</FormGroup>
-	
+
 								</div>
 							)
 						} else {
@@ -287,15 +301,15 @@ export default class NewRequest extends React.Component {
 											/>
 										</Col>
 									</FormGroup>
-	
+
 									<FormGroup className="margin-left-small">
-										<Input type="file" label="upload" name="file" id="fileButton" value={quotation.reference} onChange={this.handleQuotationChange(idx)} />
+										<Input type="file" label="upload" accept=".pdf" name="file" id="fileButton" value={quotation.reference} onChange={this.handleQuotationChange(idx)} />
 									</FormGroup>
-	
+
 								</div>
 							)
 						}
-						
+
 					})}
 
 				</Form>
