@@ -39,6 +39,10 @@ export default class NewRequest extends React.Component {
 		}
 	}
 
+	componentWillUnmount() {
+		alert('teste')
+	}
+
 	handleQuotationChange = (idx) => (evt) => {
 		const quotation = this.state.quotation.map((quotation, sidx) => {
 			if (idx !== sidx) return quotation;
@@ -103,7 +107,7 @@ export default class NewRequest extends React.Component {
 							{
 								requisitionType: 'URL',
 								reference: '',
-								price:'',
+								price: '',
 							}
 						],
 					formErrors: { description: '', quantity: '', justify: '' },
@@ -118,7 +122,7 @@ export default class NewRequest extends React.Component {
 				});
 			}
 		}).catch(err => {
-			console.log(err)			
+			console.log(err)
 			alert("Opss.. algo saiu errado");
 			this.setState({
 				descriptionValid: true,
@@ -219,53 +223,92 @@ export default class NewRequest extends React.Component {
 						</Col>
 					</FormGroup>
 
-					{this.state.quotation.map((quotation, idx) => (
-						<div className="panel panel-default margin-left-huge margin-top-medium" key={idx}>
-							<FormGroup row>
-								<Label for="typeArea" sm={2}>Tipo:</Label>
-								<Col sm={2}>
-									<Input type="select" name="requisitionType" id="typeArea"
-										value={quotation.requisitionType}
-										onChange={this.handleQuotationChange(idx)}>
-										<option>URL</option>
-										<option>PDF</option>
-									</Input>
-								</Col>
-								<Button color="danger" type="button" onClick={this.handleRemoveQuotation(idx)}>Remover</Button>
-							</FormGroup>
-							<FormGroup row>
-								<Label for="referenceArea" sm={2}>URL:</Label>
-								<Col sm={5}>
-									<Input type="url" name="reference" id="referenceArea"
-										placeholder={'Referência para cotação'}
-										value={quotation.reference}
-										onChange={this.handleQuotationChange(idx)}
-									/>
-								</Col>
-							</FormGroup>
-							<FormGroup row>
-								<Label for="priceArea" sm={2}>Preço:</Label>
-								<Col sm={2}>
-									<Input type="text" name="price" id="priceArea"
-										placeholder={'R$'}
-										value={quotation.price}
-										onChange={this.handleQuotationChange(idx)}
-									/>
-								</Col>
-							</FormGroup>
-							
-							<FormGroup className="margin-left-small">
-								<Input type="file" name="file" id="fileButton" />
-							</FormGroup>
-
-							<div align="left" className="margin-left-small">
-								<FormText color="muted">
-									Apenas selecione um arquivo, se não for possível enviar uma URL
-          						</FormText>
-							</div>
-
-						</div>
-					))}
+					{this.state.quotation.map((quotation, idx) => {
+						if(quotation.requisitionType === 'URL'){
+							return (
+								<div className="panel panel-default margin-left-huge margin-top-medium" key={idx}>
+									<FormGroup row>
+										<Label for="typeArea" sm={2}>Tipo:</Label>
+										<Col sm={2}>
+											<Input type="select" name="requisitionType" id="typeArea"
+												value={quotation.requisitionType}
+												onChange={this.handleQuotationChange(idx)}>
+												<option>URL</option>
+												<option>PDF</option>
+											</Input>
+										</Col>
+										<Button color="danger" type="button" onClick={this.handleRemoveQuotation(idx)}>Remover</Button>
+									</FormGroup>
+									<FormGroup row>
+										<Label for="referenceArea" sm={2}>URL:</Label>
+										<Col sm={5}>
+											<Input type="url" name="reference" id="referenceArea"
+												placeholder={'Referência para cotação'}
+												value={quotation.reference}
+												onChange={this.handleQuotationChange(idx)}
+											/>
+										</Col>
+									</FormGroup>
+									<FormGroup row>
+										<Label for="priceArea" sm={2}>Preço:</Label>
+										<Col sm={2}>
+											<Input type="text" name="price" id="priceArea"
+												placeholder={'R$'}
+												value={quotation.price}
+												onChange={this.handleQuotationChange(idx)}
+											/>
+										</Col>
+									</FormGroup>
+	
+									<div align="left" className="margin-left-small">
+										<FormText color="muted">
+											Apenas selecione um arquivo, se não for possível enviar uma URL
+									  </FormText>
+									</div>
+	
+								</div>
+							)
+						} else {
+							return (
+								<div className="panel panel-default margin-left-huge margin-top-medium" key={idx}>
+									<FormGroup row>
+										<Label for="typeArea" sm={2}>Tipo:</Label>
+										<Col sm={2}>
+											<Input type="select" name="requisitionType" id="typeArea"
+												value={quotation.requisitionType}
+												onChange={this.handleQuotationChange(idx)}>
+												<option>URL</option>
+												<option>PDF</option>
+											</Input>
+										</Col>
+										<Button color="danger" type="button" onClick={this.handleRemoveQuotation(idx)}>Remover</Button>
+									</FormGroup>
+									<FormGroup row>
+										<Label for="priceArea" sm={2}>Preço:</Label>
+										<Col sm={2}>
+											<Input type="text" name="price" id="priceArea"
+												placeholder={'R$'}
+												value={quotation.price}
+												onChange={this.handleQuotationChange(idx)}
+											/>
+										</Col>
+									</FormGroup>
+	
+									<FormGroup className="margin-left-small">
+										<Input type="file" label="upload" name="file" id="fileButton" value={quotation.reference} onChange={this.handleQuotationChange(idx)} />
+									</FormGroup>
+	
+									<div align="left" className="margin-left-small">
+										<FormText color="muted">
+											Apenas selecione um arquivo, se não for possível enviar uma URL
+									  </FormText>
+									</div>
+	
+								</div>
+							)
+						}
+						
+					})}
 
 				</Form>
 
