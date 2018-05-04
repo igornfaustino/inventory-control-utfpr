@@ -30,11 +30,14 @@ export default class Header extends React.Component {
 		return (
 			<div>
 				<Navbar color="dark" dark expand="md">
-					<NavLink to='/'><img src={require('../../images/logoUTFPR.png')} alt="UTFP-Logo"></img></NavLink>
+					<NavLink to='/' >
+						<img src={require('../../images/logoUTFPR.png')} width="120" alt="UTFP-Logo"></img>
+					</NavLink>
+					
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar>
 						<Nav className="ml-auto" navbar>
-							<NavItem className={'menu-nav'}>
+							<NavItem className={'menu-nav'} navbar-rigth>
 								<NavLink to='/novasolicitacoes' className={'menu-icon'} activeStyle={activeStyle}>Nova Solicitação</NavLink>
 							</NavItem>
 							<NavItem className={'menu-nav'}>
