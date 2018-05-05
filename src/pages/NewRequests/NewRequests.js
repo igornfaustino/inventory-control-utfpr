@@ -244,10 +244,10 @@ export default class NewRequest extends React.Component {
 				<Form style={{
 					marginTop: 30
 				}}>
-					<FormGroup row>
+					<FormGroup row style={marginRight}>
 					</FormGroup>
 					<div className={`form-group${this.errorClass(this.state.formErrors.description)}`}>
-						<FormGroup row>
+						<FormGroup row style={marginRight}>
 							<Label for="descriptionArea" sm={2}>Descrição:</Label>
 							<Col sm={7}>
 								<Input value={this.state.description} type="textarea" id="descriptionArea" name="description" onChange={(event) => this.handleUserInput(event)}
@@ -257,7 +257,7 @@ export default class NewRequest extends React.Component {
 					</div>
 					<div className={`form-group
                  ${this.errorClass(this.state.formErrors.quantity)}`}>
-						<FormGroup row>
+						<FormGroup row style={marginRight}>
 							<Label for="quantityArea" sm={2}>Quantidade:</Label>
 							<Col sm={1}>
 								<Input value={this.state.quantity} type="number" id="quantityArea" name="quantity" onChange={(event) => this.handleUserInput(event)} />
@@ -266,7 +266,7 @@ export default class NewRequest extends React.Component {
 					</div>
 					<div className={`form-group
                  ${this.errorClass(this.state.formErrors.justify)}`}>
-						<FormGroup row>
+						<FormGroup row style={marginRight}>
 							<Label for="justifyArea" sm={2}>Justificativa:</Label>
 							<Col sm={7}>
 								<Input value={this.state.justify} type="textarea" id="justifyArea" name="justify" onChange={(event) => this.handleUserInput(event)}
@@ -274,7 +274,7 @@ export default class NewRequest extends React.Component {
 							</Col>
 						</FormGroup>
 					</div>
-					<FormGroup row className="margin-top-medium">
+					<FormGroup row style={marginRight} className="margin-top-medium">
 						<Label sm={2}>Adicionar cotação</Label>
 						<Col sm={1}>
 							<Button color="success" onClick={this.handleAddQuotation}>Adicionar</Button>
@@ -285,7 +285,7 @@ export default class NewRequest extends React.Component {
 						if (quotation.requisitionType === 'URL') {
 							return (
 								<div className="panel panel-default margin-left-huge margin-top-medium" key={idx}>
-									<FormGroup row>
+									<FormGroup row style={marginRight}>
 										<Label for="typeArea" sm={2}>Tipo:</Label>
 										<Col sm={2}>
 											<Input type="select" name="requisitionType" id="typeArea"
@@ -297,7 +297,7 @@ export default class NewRequest extends React.Component {
 										</Col>
 										<Button color="danger" type="button" onClick={this.handleRemoveQuotation(idx)}>Remover</Button>
 									</FormGroup>
-									<FormGroup row>
+									<FormGroup row style={marginRight}>
 										<Label for="referenceArea" sm={2}>URL:</Label>
 										<Col sm={5}>
 											<Input type="url" name="reference" id="referenceArea"
@@ -307,7 +307,7 @@ export default class NewRequest extends React.Component {
 											/>
 										</Col>
 									</FormGroup>
-									<FormGroup row>
+									<FormGroup row style={marginRight}>
 										<Label for="priceArea" sm={2}>Preço:</Label>
 										<Col sm={2}>
 											<Input type="text" name="price" id="priceArea"
@@ -330,7 +330,7 @@ export default class NewRequest extends React.Component {
 								file = (
 									<div className="margin-left-small text-left">
 										<p>Arquivo enviado com sucesso</p>
-										<FormGroup row className="padding">
+										<FormGroup row style={marginRight} className="padding">
 											<Button type="button" color="primary" className="my-btn-download" onClick={this.fileDownload(quotation.file)}>Download</Button>
 											<Button type="button" color="danger" className="my-btn-excluir" onClick={this.fileDelete(idx)}>Excluir</Button>
 										</FormGroup>
@@ -339,7 +339,7 @@ export default class NewRequest extends React.Component {
 							}
 							return (
 								<div className="panel panel-default margin-left-huge margin-top-medium" key={idx}>
-									<FormGroup row>
+									<FormGroup row style={marginRight}>
 										<Label for="typeArea" sm={2}>Tipo:</Label>
 										<Col sm={2}>
 											<Input type="select" name="requisitionType" id="typeArea"
@@ -351,7 +351,7 @@ export default class NewRequest extends React.Component {
 										</Col>
 										<Button color="danger" type="button" onClick={this.handleRemoveQuotation(idx)}>Remover</Button>
 									</FormGroup>
-									<FormGroup row>
+									<FormGroup row style={marginRight}>
 										<Label for="priceArea" sm={2}>Preço:</Label>
 										<Col sm={2}>
 											<Input type="text" name="price" id="priceArea"
@@ -381,4 +381,8 @@ export default class NewRequest extends React.Component {
 			</div>
 		);
 	}
+}
+
+const marginRight = {
+	marginRight: 0
 }
