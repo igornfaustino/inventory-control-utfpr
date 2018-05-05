@@ -20,7 +20,8 @@ export default class NewRequest extends React.Component {
 						requisitionType: 'URL',
 						reference: '',
 						price: '',
-						file: null,
+						rawFile: null,
+						file: ''
 					}
 				],
 			formErrors: { description: '', quantity: '', justify: '', },
@@ -32,12 +33,22 @@ export default class NewRequest extends React.Component {
 	}
 
 	onChangeFile = (idx) => (evt) => {
-		const quotation = this.state.quotation.map((quotation, sidx) => {
-			if (idx !== sidx) return quotation;
-			return{...quotation, [evt.target.name]: evt.target.files[0]};
+		let quotation = this.state.quotation;
+		let formData = new FormData();
+		formData.append('file', evt.target.files[0])
+		axios.post('/file', formData).then(res => {
+			if (res.status === 200) {
+				console.log(res.data.fileId)
+				quotation[idx].file = res.data.fileId
+				this.setState({
+					quotation: quotation
+				})
+			}
+		}).catch(err => {
+			console.log(err)
 		})
-    	// this.setState({file:e.target.files[0]})
-  }
+		// this.setState({file:e.target.files[0]})
+	}
 
 	componentWillMount() {
 		if (this.props.location.state && this.props.location.state.product) {
@@ -46,10 +57,6 @@ export default class NewRequest extends React.Component {
 				descriptionValid: true
 			})
 		}
-	}
-
-	componentWillUnmount() {
-		alert('teste')
 	}
 
 	handleQuotationChange = (idx) => (evt) => {
@@ -74,7 +81,8 @@ export default class NewRequest extends React.Component {
 					requisitionType: 'URL',
 					reference: '',
 					price: '',
-					file: null,
+					rawFile: null,
+					file: ''
 				}])
 		});
 	}
@@ -99,6 +107,7 @@ export default class NewRequest extends React.Component {
 			return (item.requisitionType !== '' && item.reference !== '')
 		});
 		console.log(prices)
+		prices.forEach(function (price) { delete price.rawFile });
 		axios.post('/requisition/', {
 			description: this.state.description,
 			justification: this.state.justify,
@@ -118,7 +127,8 @@ export default class NewRequest extends React.Component {
 								requisitionType: 'URL',
 								reference: '',
 								price: '',
-								file: null,
+								rawFile: null,
+								file: ''
 							}
 						],
 					formErrors: { description: '', quantity: '', justify: '' },
@@ -142,6 +152,32 @@ export default class NewRequest extends React.Component {
 				formValid: true,
 			});
 		});
+	}
+
+	fileDownload = (file) => () => {
+		axios.get('/file/'+file, {
+			responseType: 'blob'
+		}).then(res => {
+			const url = window.URL.createObjectURL(new Blob([res.data]));
+			const link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', file + '.pdf');
+			document.body.appendChild(link);
+			link.click();
+		})
+	}
+
+	fileDelete = (idx) => () => {
+		let quotation = this.state.quotation;
+		let file = quotation[idx].file;
+		axios.delete('/file/'+file).then(res => {
+			if(res.status === 200){
+				quotation[idx].file = '';
+				this.setState({
+					quotation
+				})
+			}
+		})
 	}
 
 	//Validation functions
@@ -274,6 +310,22 @@ export default class NewRequest extends React.Component {
 								</div>
 							)
 						} else {
+							let file
+							if (quotation.file === '') {
+								file = (<FormGroup className="margin-left-small">
+									<Input type="file" label="upload" accept=".pdf" name="file" id="fileButton" value={quotation.rawFile} onChange={this.onChangeFile(idx)} />
+								</FormGroup>)
+							} else {
+								file = (
+									<div className="margin-left-small text-left">
+										<p>Arquivo enviado com sucesso</p>
+										<FormGroup row className = "padding">
+											<Button type="button" color="primary" className="my-btn-download" onClick={this.fileDownload(quotation.file)}>Download</Button>
+											<Button type="button" color="danger" className="my-btn-excluir" onClick={this.fileDelete(idx)}>Excluir</Button>
+										</FormGroup>
+									</div>
+								)
+							}
 							return (
 								<div className="panel panel-default margin-left-huge margin-top-medium" key={idx}>
 									<FormGroup row>
@@ -299,9 +351,7 @@ export default class NewRequest extends React.Component {
 										</Col>
 									</FormGroup>
 
-									<FormGroup className="margin-left-small">
-										<Input type="file" label="upload" accept=".pdf" name="file" id="fileButton" value={quotation.file} onChange={this.onChangeFile(idx)} />
-									</FormGroup>
+									{file}
 
 								</div>
 							)
