@@ -118,12 +118,20 @@ export default class Products extends React.Component {
 
 				<div>
 					{data}
-					<div  align="left" className="container">
+					<div align="left" className="margin-left">
+						<div className="margin-left-small">
+							<p>Importe os dados da solicitação de uma planílha CSV</p>
+						</div>
+
 						<CSVReader
 							cssClass="react-csv-input"
-							label="Importe os dados da solicitação de uma planílha CSV"
 							onFileLoaded={this.handleForce}
 						/>
+
+						<Button type="submit" color="primary" className="btn btn-primary margin-top">
+							Enviar planílha
+       				</Button>
+
 					</div>
 				</div>
 			</div >
