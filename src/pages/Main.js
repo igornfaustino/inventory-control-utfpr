@@ -5,8 +5,7 @@ import NewRequests from './NewRequests/NewRequests';
 import Requests from './teacherRequests/Requests';
 import Products from './Products/Products';
 import ApprovedRequests from './approvedRequests/ApprovedRequests';
-import EditPurchasePage from './edditPurchase/EdditPurchase'
-
+import PurchaseRequisition from './PurchaseRequisition/PurchaseRequisition'
 const Main = () => (
 	<main>
 		<Switch>
@@ -15,7 +14,8 @@ const Main = () => (
 			<Route path='/solicitacoes' component={Requests} />
 			<Route path='/produtos' component={Products} />
 			<Route path='/aprovados' component={ApprovedRequests} />
-			<Route path='/editar' component={EditPurchasePage} />
+			<Route path='/requisicoesdecompra' component={PurchaseRequisition} />
+            
 		</Switch>
 	</main>
 );

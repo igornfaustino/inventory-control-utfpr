@@ -1,7 +1,7 @@
 import React from 'react';  
 
 import {addRequest} from './connectAPI';
-import SubHeader from '../SubHeader/SubHeader';
+import {SubHeader} from '../SubHeader/SubHeader';
 
 import PurchaseForm from './PurchaseForm';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-import SubHeader from '../../components/SubHeader/SubHeader';
+import {SubHeader} from '../../components/SubHeader/SubHeader';
 
 import './NewRequest.css';
 import axios from 'axios'
