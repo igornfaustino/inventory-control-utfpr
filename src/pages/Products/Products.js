@@ -2,7 +2,11 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import { ClipLoader } from 'react-spinners';
 
+import ReactDOM from "react-dom";
+import CSVReader from "react-csv-reader";
+
 import '../Pages.css';
+import './Products.css';
 
 import TableList from '../../components/TableList/TableList';
 import SubHeader from '../../components/SubHeader/SubHeader';
@@ -69,7 +73,7 @@ export default class Products extends React.Component {
 						}} type="submit">Solicitar</Button>)
 					})
 				});
-				
+
 				this.setState({
 					items,
 					loading: false
@@ -92,6 +96,10 @@ export default class Products extends React.Component {
 		this.setState({ term: event.target.value });
 	}
 
+	handleForce = data => {
+		console.log(data);
+	};
+
 	render() {
 		let data
 		if (this.state.loading === false) {
@@ -108,13 +116,16 @@ export default class Products extends React.Component {
 			<div>
 				<SubHeader title="Histórico de pedidos"></SubHeader>
 
-				<header align='left' className="font-header font header">
-					<Button outline color="success" disabled>&#x2713;</Button>
-					&emsp;Selecione os produtos que deseja solicitar novamente
-				</header>
-
-				{data}
-
+				<div>
+					{data}
+					<div  align="left" className="container">
+						<CSVReader
+							cssClass="react-csv-input"
+							label="Importe os dados da solicitação de uma planílha CSV"
+							onFileLoaded={this.handleForce}
+						/>
+					</div>
+				</div>
 			</div >
 		);
 	}
