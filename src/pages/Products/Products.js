@@ -20,6 +20,7 @@ export default class Products extends React.Component {
 		super(props);
 		this.handleClick = this.handleClick.bind(this);
 		this.state = {
+			canUpload: false,
 			loading: true,
 			items: [],
 			csv: null
@@ -66,10 +67,64 @@ export default class Products extends React.Component {
 	}
 
 	handleForce = data => {
+		let body = data.slice(0); // make copy
+		body.splice(0, 1);
+		let header = data[0]
+		header.forEach((value, id) => {
+			if (value.toLocaleLowerCase() === 'descrição' || value.toLocaleLowerCase() === 'descricao' || value.toLocaleLowerCase() === 'description') {
+				header[id] = 'description'
+			} else if (value.toLocaleLowerCase() === 'qtd' || value.toLocaleLowerCase() === 'quantidade') {
+				header[id] = 'qtd'
+			} else if (value.toLocaleLowerCase() === 'siorg') {
+				header[id] = 'siorg'
+			} else {
+				header[id] = ''
+			}
+		});
+
+		let csv = []
+		body.forEach((value, id) => {
+			let object = {}
+			if (value !== '' && value.length !== 1) {
+				value.forEach((value, id) => {
+					if (header[id] !== '')
+						object[header[id]] = value
+				})
+				csv.push(object)
+			}
+		});
+
 		this.setState({
-			csv: data
+			csv,
+			canUpload: true
 		});
 	};
+
+	submitSheet = async () => {
+		this.setState({
+			canUpload: false
+		});
+		let { csv } = this.state;
+		let error = []
+		for (let i = 0; i < csv.length; i++) {
+			try {
+				let res = await axios.post('/requisition', csv[i])
+				if (res.status !== 200) {
+					error.push(i + 1)
+				}
+			}
+			catch(ex) {
+				error.push(i + 1)
+			}
+		}
+
+		if (error.length == 0) {
+			alert('Planilha importada com sucesso')
+			window.location.reload();
+		} else {
+			console.log(error)
+		}
+	}
 
 	render() {
 		let data
@@ -99,9 +154,11 @@ export default class Products extends React.Component {
 							onFileLoaded={this.handleForce}
 						/>
 
-						<Button type="submit" color="primary" className="btn btn-primary margin-top">
+						<Button disabled={!this.state.canUpload} type="button" color="primary" className="btn btn-primary margin-top" onClick={() => {
+							this.submitSheet()
+						}}>
 							Enviar planílha
-       				</Button>
+       					</Button>
 
 					</div>
 				</div>
