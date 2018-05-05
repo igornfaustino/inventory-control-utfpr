@@ -1,12 +1,18 @@
 
 const requisitionlist=[
     {
-        requesterId:'1',
-        description:"asdasdasd",
+        id: 'id123',
+        siorg: '12312',
+        description: 'descricao...............',
+        checked: false,
+        change: this.handleClick
     },
     {
-        requesterId:'2',
-        description:"hgfhfgh",
+        id: 'id124',
+        siorg: '12313123132',
+        description: 'descricao...............',
+        checked: false,
+        change: this.handleClick
     }
 
 ]

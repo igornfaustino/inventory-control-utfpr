@@ -1,21 +1,12 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Home from './Home';
-import NewRequests from './NewRequests';
-import Requests from './Requests';
-import Products from './Products';
+import Home from './Home/Home';
+import NewRequests from './NewRequests/NewRequests';
+import Requests from './teacherRequests/Requests';
+import Products from './Products/Products';
+import ApprovedRequests from './approvedRequests/ApprovedRequests';
+import EditPurchasePage from './edditPurchase/EdditPurchase'
 
-/* EXAMPLE... To see more...
- https://medium.com/@pshrmn/a-simple-react-router-v4-tutorial-7f23ff27adf
-*/
-
-
-// IMPORT HERE THE COMPONENTS THAT WILL BE RENDER!
-// import Schedule from './Schedule'
-
-/**
- * Main page, here you can pass your path and the componet to render...
- */
 const Main = () => (
 	<main>
 		<Switch>
@@ -23,6 +14,8 @@ const Main = () => (
 			<Route path='/novasolicitacoes' component={NewRequests} />
 			<Route path='/solicitacoes' component={Requests} />
 			<Route path='/produtos' component={Products} />
+			<Route path='/aprovados' component={ApprovedRequests} />
+			<Route path='/editar' component={EditPurchasePage} />
 		</Switch>
 	</main>
 );

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FormGroup,Col,ControlLabel,FormControl,HelpBlock } from 'react-bootstrap';
+import {FormGroup,Col,Row,ControlLabel,Label,FormControl,HelpBlock } from 'react-bootstrap';
 
 const TextInput = ({name, size ,label, onChange, placeholder, value, error,help, type="text"}) => {
   let wrapperClass = '';
@@ -9,33 +9,30 @@ const TextInput = ({name, size ,label, onChange, placeholder, value, error,help,
   }
 
   return (
-  <Col horizontal
-    md={size}
-  >
-    <FormGroup  
+    <FormGroup 
       controlId={name} 
       validationState={wrapperClass}
     >
-      <Col 
-        componentClass={ControlLabel} 
-        sm={4}
-      >
-        {label}
+    <Row>
+      <Col sm={2}>
+        <Label for={name} >{label}</Label>
       </Col>
-      <Col>
+      <Col sm={6}>
         <FormControl 
           type={type}
           name={name}
+          id={name}
           className="form-control"
           placeholder={placeholder}
           value={value}
           onChange={onChange}
         />
         <FormControl.Feedback />
-      </Col>
+      
         <HelpBlock>{help}</HelpBlock>
+      </Col>
+    </Row>  
     </FormGroup>
-  </Col>
   );
 };
 

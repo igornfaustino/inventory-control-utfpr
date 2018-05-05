@@ -1,10 +1,9 @@
 import React from 'react';  
 
-import {addRequest,loadAllRequisition} from './connectAPI';
-
+import {addRequest} from './connectAPI';
+import SubHeader from '../SubHeader/SubHeader';
 
 import PurchaseForm from './PurchaseForm';
-
 
 export class NewPurchasePage extends React.Component {
 
@@ -12,38 +11,37 @@ export class NewPurchasePage extends React.Component {
     super(props);
     this.state = {
       purchase: {
-        purchaseId: '', 
-        management: '', 
-        requisitionDate: '', 
-        UGR: '', 
-        originOfCost: '',
-        sector: '',
-        requester: '',
-        requisitionItems: [],
-      },
+        term: 'teste',
+        isDisabled: true,
+        management: 'utfpr',
+        requisitionDate: '2016-05-02T00:00:00',
+        UGR: 'Laboratorio de Computacao',
+        originOfCost: 'materiais de consumo',
+        sector: 'DACOM',
+        requester: 'Zanoni',
+        requisitionItems: [
+            {
+                id: '1',
+                siorg: '1',
+                description: 'dasdasdsad',
+            },
+            {
+                id: '2',
+                siorg: 'das1',
+                description: 'kujadfnalkfdasdasdsad',
+            }
+        ],
+    },
       saving: false
     };
     this.savePurchase = this.savePurchase.bind(this);
     this.updatePurchaseState = this.updatePurchaseState.bind(this);
+    this.ChangeRequest= this.ChangeRequest.bind(this)
   }
 
-  RemoveRequest(event) {
+  ChangeRequest(requestlist) {
     const purchase = this.state.purchase;
-    const RequisitionItemsId = event.target.value;
-    
-    
-    const RequisitionItems = purchase.requisitionItems.filter( (requisition)=> {return requisition.requesterId !== RequisitionItemsId }   )
-   
-    purchase.requisitionItems=RequisitionItems
-
-    this.setState({purchase: purchase});
-  }
-  AddRequest(event) {
-    const purchase = this.state.purchase;
-
-    const requests=loadAllRequisition()
-
-
+    purchase.requisitionItems=requestlist
     this.setState({purchase: purchase});
   }
   
@@ -57,22 +55,21 @@ export class NewPurchasePage extends React.Component {
 
   savePurchase(event) {
     event.preventDefault();
-    addRequest(this.purchase)
+    addRequest(this.state.purchase)
   }
   
 
   render() {
     return (
       <div>
-        <h1>Nova Requisição de Compra</h1>
+        <SubHeader title="Nova Requisição de Compra"></SubHeader>
         <PurchaseForm 
           purchase={this.state.purchase} 
-          onRequisitionItems={this.updateRequisitionItems}
           onSave={this.savePurchase}
           onChange={this.updatePurchaseState}
 
-          onRemoveRequest={this.RemoveRequest}
-          onAddRequest={this.AddRequest}
+          edit={false}
+          onChangeRequest={this.ChangeRequest}
         />
       </div>
     );
