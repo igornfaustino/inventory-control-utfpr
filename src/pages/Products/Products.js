@@ -21,35 +21,8 @@ export default class Products extends React.Component {
 		this.handleClick = this.handleClick.bind(this);
 		this.state = {
 			loading: true,
-			term: 'teste',
-			isDisabled: true,
-			checkedCount: 0,
-			items: [
-				{
-					id: 'id123',
-					siorg: "1234",
-					description: "description",
-					date: "10/10/10",
-					checked: false,
-					change: this.handleClick
-				},
-				{
-					id: 'id124',
-					siorg: "1234",
-					description: "description",
-					date: "10/10/10",
-					checked: false,
-					change: this.handleClick
-				},
-				{
-					id: 'id125',
-					siorg: "1234",
-					description: "description",
-					date: "10/10/10",
-					input: 'btn',
-					change: this.handleClick
-				}
-			]
+			items: [],
+			csv: null
 		};
 	}
 
@@ -92,12 +65,10 @@ export default class Products extends React.Component {
 		})
 	}
 
-	onChange = (event) => {
-		this.setState({ term: event.target.value });
-	}
-
 	handleForce = data => {
-		console.log(data);
+		this.setState({
+			csv: data
+		});
 	};
 
 	render() {
