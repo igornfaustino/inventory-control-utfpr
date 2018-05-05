@@ -1,5 +1,6 @@
 import React from 'react';
-import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Prompt } from 'react-router'
+import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import SubHeader from '../../components/SubHeader/SubHeader';
 
 import './NewRequest.css';
@@ -34,20 +35,10 @@ export default class NewRequest extends React.Component {
 
 	onChangeFile = (idx) => (evt) => {
 		let quotation = this.state.quotation;
-		let formData = new FormData();
-		formData.append('file', evt.target.files[0])
-		axios.post('/file', formData).then(res => {
-			if (res.status === 200) {
-				console.log(res.data.fileId)
-				quotation[idx].file = res.data.fileId
-				this.setState({
-					quotation: quotation
-				})
-			}
-		}).catch(err => {
-			console.log(err)
-		})
-		// this.setState({file:e.target.files[0]})
+		quotation[idx].rawFile = evt.target.files[0]
+		this.setState({
+			quotation
+		});
 	}
 
 	componentWillMount() {
@@ -55,7 +46,7 @@ export default class NewRequest extends React.Component {
 			this.setState({
 				description: this.props.location.state.product.description,
 				descriptionValid: true
-			})
+			});
 		}
 	}
 
@@ -95,19 +86,32 @@ export default class NewRequest extends React.Component {
 
 	}
 
-	submitRequest = () => {
+	submitRequest = async () => {
 		this.setState({
 			descriptionValid: false,
 			quantityValid: false,
 			justifyValid: false,
 			formValid: false,
 		});
+
+
+
 		console.log(this.state.quotation)
-		let prices = this.state.quotation.filter((item) => {
-			return (item.requisitionType !== '' && item.reference !== '')
-		});
+		let prices = this.state.quotation
+		for (let i = 0; i < prices.length; i++) {
+			if (prices[i].requisitionType.toLocaleUpperCase() === 'PDF') {
+				let formData = new FormData();
+				formData.append('file', prices[i].rawFile)
+				const file = await axios.post('/file/', formData);
+				prices[i].reference = file.data.fileId
+			}
+			delete prices[i].file
+			delete prices[i].rawFile
+		}
+		prices = prices.filter((price) => {
+			return (price.reference !== '')
+		})
 		console.log(prices)
-		prices.forEach(function (price) { delete price.rawFile });
 		axios.post('/requisition/', {
 			description: this.state.description,
 			justification: this.state.justify,
@@ -154,8 +158,9 @@ export default class NewRequest extends React.Component {
 		});
 	}
 
+	// TODO: remove from this file
 	fileDownload = (file) => () => {
-		axios.get('/file/'+file, {
+		axios.get('/file/' + file, {
 			responseType: 'blob'
 		}).then(res => {
 			const url = window.URL.createObjectURL(new Blob([res.data]));
@@ -167,11 +172,12 @@ export default class NewRequest extends React.Component {
 		})
 	}
 
+	// TODO: remove from this file
 	fileDelete = (idx) => () => {
 		let quotation = this.state.quotation;
 		let file = quotation[idx].file;
-		axios.delete('/file/'+file).then(res => {
-			if(res.status === 200){
+		axios.delete('/file/	' + file).then(res => {
+			if (res.status === 200) {
 				quotation[idx].file = '';
 				this.setState({
 					quotation
@@ -180,7 +186,7 @@ export default class NewRequest extends React.Component {
 		})
 	}
 
-	//Validation functions
+	//--------- Validation functions --------------
 
 	validateField(fieldName, value) {
 		let fieldValidationErrors = this.state.formErrors;
@@ -227,8 +233,13 @@ export default class NewRequest extends React.Component {
 	}
 
 	render() {
+		const { descriptionValid, quantityValid, justifyValid } = this.state
 		return (
 			<div>
+				<Prompt
+					when={descriptionValid || quantityValid || justifyValid }
+					message="tem certeza que deseja sair desta página? Todas as suas alterações serão perdidas"
+				/>
 				<SubHeader title="Solicitar um material"></SubHeader>
 				<Form style={{
 					marginTop: 30
@@ -313,13 +324,13 @@ export default class NewRequest extends React.Component {
 							let file
 							if (quotation.file === '') {
 								file = (<FormGroup className="margin-left-small">
-									<Input type="file" label="upload" accept=".pdf" name="file" id="fileButton" value={quotation.rawFile} onChange={this.onChangeFile(idx)} />
+									<Input type="file" label="upload" accept=".pdf" name="file" id="fileButton" onChange={this.onChangeFile(idx)} />
 								</FormGroup>)
 							} else {
 								file = (
 									<div className="margin-left-small text-left">
 										<p>Arquivo enviado com sucesso</p>
-										<FormGroup row className = "padding">
+										<FormGroup row className="padding">
 											<Button type="button" color="primary" className="my-btn-download" onClick={this.fileDownload(quotation.file)}>Download</Button>
 											<Button type="button" color="danger" className="my-btn-excluir" onClick={this.fileDelete(idx)}>Excluir</Button>
 										</FormGroup>
