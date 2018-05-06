@@ -4,6 +4,7 @@ import { ClipLoader } from 'react-spinners';
 
 import ReactDOM from "react-dom";
 import CSVReader from "react-csv-reader";
+import {Link} from 'react-router-dom';
 
 import '../Pages.css';
 import './Products.css';
@@ -42,9 +43,9 @@ export default class Products extends React.Component {
 						// siorg: item.siorg,
 						description: item.description,
 						date: moment(item.date).locale('pt-br').format('DD/MM/YYYY'),
-						input: (<Button color="success" onClick={() => {
-							this.handleClick(item)
-						}} type="submit">Solicitar</Button>)
+						input: (<Link to={`editarsolicitacoes/${item._id}`}>
+						Editar
+					  </Link>)
 					})
 				});
 
