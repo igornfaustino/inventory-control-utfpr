@@ -35,9 +35,10 @@ export class NewPurchasePage extends React.Component {
 
   updatePurchaseState(event) {
     const field = event.target.name;
+    const value = event.target.value;
     const purchase = this.state.purchase;
     purchase[field] = event.target.value;
-    return this.setState({purchase: purchase});
+    return this.setState({purchase: purchase}, { [field]: value }, () => { this.validateField(field, value) });
   }
 
   savePurchase(event) {

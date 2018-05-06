@@ -31,15 +31,71 @@ export class PurchaseForm extends React.Component {
       this.state={
         modal: false,
         loading:true,
-        data:
-        {
+        data:{
           requisitions:[]
-        }
+        },
+        formErrors: { management: '', requester: '', sector: '', ugr: '' },
+        managementField: false,
+        requesterField: false,
+        sectorField: false,
+        ugrField: false,
+        dateField: false,
+        formIsValid: false,
       }
       this.toggleOut= this.toggleOut.bind(this)
       this.toggleIn= this.toggleIn.bind(this)
       this.removeRequest= this.removeRequest.bind(this)
       this.AddRequest= this.AddRequest.bind(this)
+    }
+
+    export validateField(fieldName, value) {
+      let managementField = this.state.managementField;
+      let requesterField = this.state.requesterField;
+      let sectorField = this.state.sectorField;
+      let ugrField = this.state.ugrField;
+      let fieldValidationErrors = this.state.formErrors;
+      switch (fieldName) {
+        case 'management':
+          if(value.length >= 0) {
+            managementField = true;
+          }
+          fieldValidationErrors.management = managementField ? '' : ' Campo deve ser preenchido!';
+          break;
+        case 'requester':
+          if(value.length >= 0) {
+            requesterField = true;
+          }
+          fieldValidationErrors.requester = requesterField ? '' : ' Campo deve ser preenchido!';
+          break;
+        case 'sector':
+          if(value.length >= 0) {
+            sectorField = true;
+          }
+          fieldValidationErrors.sector = sectorField ? '' : ' Campo deve ser preenchido!';
+          break;
+        case 'UGR':
+          if(value.length >= 0) {
+            ugrField = true;
+          }
+          fieldValidationErrors.ugr = ugrField ? '' : ' Campo deve ser preenchido!';
+          break;
+        default:
+          break;
+      }
+      this.setState({
+        formErrors: fieldValidationErrors,
+        managementField: managementField,
+        requesterField: requesterField,
+        sectorField: sectorField,
+        ugrField: ugrField,
+      }, this.validateForm);
+    }
+
+    validateForm() {
+      this.setState({
+        formIsValid: this.state.managementField && this.state.requesterField
+          && this.state.sectorField && this.state.ugrField
+      });
     }
 
     componentWillMount(){

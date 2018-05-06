@@ -81,6 +81,7 @@ export async function loadPurchaseRequisition(id) {
         console.error(ex, ex.response);
     })
 }
+
 export async function savePurchaseRequisition(purchase) {
     return await axios.post('/purchase',purchase ).then(response => {
         if (response.status === 200) {

@@ -1,6 +1,4 @@
 import React from 'react';
-
-
 import Line from './Line/Line';
 import '../../pages/Pages.css';
 
