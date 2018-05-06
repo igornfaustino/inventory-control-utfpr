@@ -9,9 +9,10 @@ import './Products.css';
 
 import TableList from '../../components/TableList/TableList';
 import SubHeader from '../../components/SubHeader/SubHeader';
+import Header from '../../components/Header/Header';
 
 import axios from 'axios';
-import moment from 'moment'
+import moment from 'moment';
 
 
 export default class Products extends React.Component {
@@ -57,7 +58,6 @@ export default class Products extends React.Component {
 		})
 	}
 
-	//Comentar depois: controla adição dos itens - habilita botao quando um item está marcado
 	handleClick(e) {
 		this.props.history.push({
 			pathname: '/novasolicitacoes',
@@ -143,13 +143,13 @@ export default class Products extends React.Component {
 		}
 		return (
 			<div>
+				<Header></Header>
 				<SubHeader title="Histórico de pedidos"></SubHeader>
-
 				<div>
 					{data}
 					<div align="left" className="margin-left">
 						<div className="margin-left-small">
-							<p>Importe os dados da solicitação de uma planílha CSV</p>
+							<p>Importe os dados da solicitação de uma planilha CSV</p>
 						</div>
 
 						<CSVReader
@@ -160,7 +160,7 @@ export default class Products extends React.Component {
 						<Button disabled={!this.state.canUpload} type="button" color="primary" className="btn btn-primary margin-top" onClick={() => {
 							this.submitSheet()
 						}}>
-							Enviar planílha
+							Enviar planilha
        					</Button>
 
 					</div>

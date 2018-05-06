@@ -6,6 +6,7 @@ import '../Pages.css';
 
 import TableList from '../../components/TableList/TableList';
 import SubHeader from '../../components/SubHeader/SubHeader';
+import Header from '../../components/Header/Header';
 
 import axios from 'axios';
 import moment from 'moment'
@@ -86,8 +87,8 @@ export default class ApprovedRequests extends React.Component {
 		}
 		return (
 			<div>
+				<Header></Header>
 				<SubHeader title="Solicitações já aprovadas"></SubHeader>
-
 				<header align='left' className="font-header font header">
 					<Button outline color="success" disabled>&#x2713;</Button>
 					&emsp;Selecione os produtos que deseja solicitar

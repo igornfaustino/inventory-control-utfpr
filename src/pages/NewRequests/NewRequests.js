@@ -1,6 +1,7 @@
 import React from 'react';
 import { Prompt } from 'react-router'
 import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import Header from '../../components/Header/Header';
 import SubHeader from '../../components/SubHeader/SubHeader';
 
 import './NewRequest.css';
@@ -236,6 +237,7 @@ export default class NewRequest extends React.Component {
 		const { descriptionValid, quantityValid, justifyValid } = this.state
 		return (
 			<div>
+				<Header></Header>
 				<Prompt
 					when={descriptionValid || quantityValid || justifyValid }
 					message="tem certeza que deseja sair desta página? Todas as suas alterações serão perdidas"
