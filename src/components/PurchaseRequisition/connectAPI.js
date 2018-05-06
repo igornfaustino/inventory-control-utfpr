@@ -44,16 +44,9 @@ const requestlist=[
 
 
 export async function loadRequisition(id){
-    
-    return await axios.get('/requisition/'+id).then(response => {
-        if (response.status === 200) {
-            return ({
-                requisition:response.data.requisition,
-                loading:false
-            })
-        }
-    }).catch(ex => {
-        console.error(ex, ex.response);
+    console.log("Loading Requisition!", id)
+    return await loadAllRequisition( (value)=>{
+        return value.requisition._id === id
     })
 }
 export async function loadAllRequisition() {
