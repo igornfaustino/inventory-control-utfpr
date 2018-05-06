@@ -44,9 +44,16 @@ const requestlist=[
 
 
 export async function loadRequisition(id){
-    console.log("Loading Requisition!", id)
-    return await loadAllRequisition( (value)=>{
-        return value.requisition._id === id
+    
+    return await axios.get('/requisition/'+id).then(response => {
+        if (response.status === 200) {
+            return ({
+                requisition:response.data.requisition,
+                loading:false
+            })
+        }
+    }).catch(ex => {
+        console.error(ex, ex.response);
     })
 }
 export async function loadAllRequisition() {
@@ -81,15 +88,15 @@ export async function loadPurchaseRequisition(id) {
         console.error(ex, ex.response);
     })
 }
-
 export async function savePurchaseRequisition(purchase) {
     return await axios.post('/purchase',purchase ).then(response => {
         if (response.status === 200) {
-            console.log(response)
+            alert("Adicionado com sucesso!")
             return (response.data._id)
         }
     })
     .catch(ex => {
+        alert("Não Foi possivel conectar ao servidor")
         console.error(ex, ex.response);
     })
 }
@@ -97,11 +104,12 @@ export async function updatePurchaseRequisition(purchase) {
     console.log(purchase)
     return await axios.put('/purchase/'+purchase._id,purchase ).then(response => {
         if (response.status === 200) {
-            console.log(response)
+            alert("Atualizado com sucesso!")
             return (response.data._id)
         }
     })
     .catch(ex => {
+        alert("Não Foi possivel conectar ao servidor")
         console.error(ex, ex.response);
     })
 }

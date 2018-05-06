@@ -1,17 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FormGroup,Col,Row,Label,FormControl,HelpBlock } from 'react-bootstrap';
+import {FormGroup,Col,Label,Row,FormControl,HelpBlock } from 'react-bootstrap';
 
 const TextInput = ({name, size ,label, onChange, placeholder, value, error,help,disabled=false, type="text"}) => {
-  let wrapperClass = '';
-  if (error && error.length > 0) {
-    wrapperClass = 'warning';
-  }
-
+  
   return (
     <FormGroup 
       controlId={name} 
-      validationState={wrapperClass}
     >
     <Row>
       <Col sm={3}>
@@ -30,7 +25,7 @@ const TextInput = ({name, size ,label, onChange, placeholder, value, error,help,
         />
         <FormControl.Feedback />
       
-        <HelpBlock>{help}</HelpBlock>
+        <HelpBlock>{error}</HelpBlock>
       </Col>
     </Row>  
     </FormGroup>
