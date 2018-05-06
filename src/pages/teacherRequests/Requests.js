@@ -7,7 +7,6 @@ import '../Pages.css';
 import TableList from '../../components/TableList/TableList';
 import SubHeader from '../../components/SubHeader/SubHeader';
 
-import {Link} from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment'
 
@@ -40,9 +39,9 @@ export default class ApprovedRequests extends React.Component {
 						// siorg: item.siorg,
 						description: item.description,
 						date: moment(item.date).locale('pt-br').format('DD/MM/YYYY'),
-						input: (<Link to={`editarsolicitacoes/${item._id}`}>
-						Editar
-					  </Link>)
+						input: (<Button color="success" onClick={() => {
+							this.handleClick(item)
+						}} type="submit">Solicitar</Button>)
 					})
 				})
 				// items = items.filter(item => {
