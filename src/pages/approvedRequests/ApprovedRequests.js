@@ -36,6 +36,7 @@ export default class ApprovedRequests extends React.Component {
 					items.push({
 						_id: item._id,
 						// siorg: item.siorg,
+						_status: item.status,
 						description: item.description,
 						date: moment(item.date).locale('pt-br').format('DD/MM/YYYY'),
 						input: (<Button color="success" onClick={() => {
@@ -44,8 +45,9 @@ export default class ApprovedRequests extends React.Component {
 					})
 				})
 				
+				console.log(requisitions);
 				items = items.filter(item => {
-					return item.status === 'aprovado'
+					return item._status === 'aprovado'
 				});
 				
 				this.setState({
@@ -53,7 +55,6 @@ export default class ApprovedRequests extends React.Component {
 					loading: false
 				})
 			}
-			console.log('snasdnlkads');
 		}).catch(ex => {
 			console.error(ex, ex.response);
 		})

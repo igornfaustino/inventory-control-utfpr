@@ -2,7 +2,6 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import { ClipLoader } from 'react-spinners';
 
-import ReactDOM from "react-dom";
 import CSVReader from "react-csv-reader";
 
 import '../Pages.css';
@@ -77,7 +76,11 @@ export default class Products extends React.Component {
 				header[id] = 'qtd'
 			} else if (value.toLocaleLowerCase() === 'siorg') {
 				header[id] = 'siorg'
-			} else {
+			} else if (value.toLocaleLowerCase() === 'date' || value.toLocaleLowerCase() === 'data') {
+				header[id] = 'date'
+			} else if (value.toLocaleLowerCase() === 'status' || value.toLocaleLowerCase() === 'situação') {
+				header[id] = 'status'
+			}else {
 				header[id] = ''
 			}
 		});
@@ -113,16 +116,16 @@ export default class Products extends React.Component {
 					error.push(i + 1)
 				}
 			}
-			catch(ex) {
+			catch (ex) {
 				error.push(i + 1)
 			}
 		}
 
-		if (error.length == 0) {
+		if (error.length === 0) {
 			alert('Planilha importada com sucesso')
 			window.location.reload();
 		} else {
-			console.log(error)
+			alert('As segintes linhas não foram inseridas com sucesso' + error.toString())
 		}
 	}
 
