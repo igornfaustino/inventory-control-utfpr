@@ -1,36 +1,23 @@
 import React from 'react';  
 
-import {addRequest} from './connectAPI';
-import {SubHeader} from '../SubHeader/SubHeader';
+import {savePurchaseRequisition} from './connectAPI';
+import SubHeader from '../SubHeader/SubHeader';
 
 import PurchaseForm from './PurchaseForm';
-
+import { isDate, now } from 'moment';
+import moment from 'moment'
 export class NewPurchasePage extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       purchase: {
-        term: 'teste',
-        isDisabled: true,
-        management: 'utfpr',
-        requisitionDate: '2016-05-02T00:00:00',
-        UGR: 'Laboratorio de Computacao',
-        originOfCost: 'materiais de consumo',
-        sector: 'DACOM',
-        requester: 'Zanoni',
-        requisitionItems: [
-            {
-                id: '1',
-                siorg: '1',
-                description: 'dasdasdsad',
-            },
-            {
-                id: '2',
-                siorg: 'das1',
-                description: 'kujadfnalkfdasdasdsad',
-            }
-        ],
+        management: '',
+        requisitionDate: moment(Date.now()).format("YYYY-MM-DD"),
+        UGR: '',
+        sector: '',
+        requester: '',
+        requisitionItems: [],
     },
       saving: false
     };
@@ -55,7 +42,14 @@ export class NewPurchasePage extends React.Component {
 
   savePurchase(event) {
     event.preventDefault();
-    addRequest(this.state.purchase)
+    try{
+       savePurchaseRequisition(this.state.purchase).then( (value)=>{
+        console.log(value)
+      })
+    }
+    catch(error){
+      console.log(error)
+    }
   }
   
 

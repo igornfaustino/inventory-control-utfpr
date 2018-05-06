@@ -5,7 +5,7 @@ import { ClipLoader } from 'react-spinners';
 import '../Pages.css';
 
 import TableList from '../../components/TableList/TableList';
-import {SubHeader} from '../../components/SubHeader/SubHeader';
+import SubHeader from '../../components/SubHeader/SubHeader';
 
 import axios from 'axios';
 import moment from 'moment'

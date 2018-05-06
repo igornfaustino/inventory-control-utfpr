@@ -1,6 +1,7 @@
 import React from 'react';
-import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-import {SubHeader} from '../../components/SubHeader/SubHeader';
+import { Prompt } from 'react-router'
+import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import SubHeader from '../../components/SubHeader/SubHeader';
 
 import './NewRequest.css';
 import axios from 'axios'
@@ -20,7 +21,8 @@ export default class NewRequest extends React.Component {
 						requisitionType: 'URL',
 						reference: '',
 						price: '',
-						file: null,
+						rawFile: null,
+						file: ''
 					}
 				],
 			formErrors: { description: '', quantity: '', justify: '', },
@@ -32,24 +34,20 @@ export default class NewRequest extends React.Component {
 	}
 
 	onChangeFile = (idx) => (evt) => {
-		const quotation = this.state.quotation.map((quotation, sidx) => {
-			if (idx !== sidx) return quotation;
-			return{...quotation, [evt.target.name]: evt.target.files[0]};
-		})
-    	// this.setState({file:e.target.files[0]})
-  }
+		let quotation = this.state.quotation;
+		quotation[idx].rawFile = evt.target.files[0]
+		this.setState({
+			quotation
+		});
+	}
 
 	componentWillMount() {
 		if (this.props.location.state && this.props.location.state.product) {
 			this.setState({
 				description: this.props.location.state.product.description,
 				descriptionValid: true
-			})
+			});
 		}
-	}
-
-	componentWillUnmount() {
-		alert('teste')
 	}
 
 	handleQuotationChange = (idx) => (evt) => {
@@ -74,7 +72,8 @@ export default class NewRequest extends React.Component {
 					requisitionType: 'URL',
 					reference: '',
 					price: '',
-					file: null,
+					rawFile: null,
+					file: ''
 				}])
 		});
 	}
@@ -87,17 +86,31 @@ export default class NewRequest extends React.Component {
 
 	}
 
-	submitRequest = () => {
+	submitRequest = async () => {
 		this.setState({
 			descriptionValid: false,
 			quantityValid: false,
 			justifyValid: false,
 			formValid: false,
 		});
+
+
+
 		console.log(this.state.quotation)
-		let prices = this.state.quotation.filter((item) => {
-			return (item.requisitionType !== '' && item.reference !== '')
-		});
+		let prices = this.state.quotation
+		for (let i = 0; i < prices.length; i++) {
+			if (prices[i].requisitionType.toLocaleUpperCase() === 'PDF') {
+				let formData = new FormData();
+				formData.append('file', prices[i].rawFile)
+				const file = await axios.post('/file/', formData);
+				prices[i].reference = file.data.fileId
+			}
+			delete prices[i].file
+			delete prices[i].rawFile
+		}
+		prices = prices.filter((price) => {
+			return (price.reference !== '')
+		})
 		console.log(prices)
 		axios.post('/requisition/', {
 			description: this.state.description,
@@ -118,7 +131,8 @@ export default class NewRequest extends React.Component {
 								requisitionType: 'URL',
 								reference: '',
 								price: '',
-								file: null,
+								rawFile: null,
+								file: ''
 							}
 						],
 					formErrors: { description: '', quantity: '', justify: '' },
@@ -144,7 +158,35 @@ export default class NewRequest extends React.Component {
 		});
 	}
 
-	//Validation functions
+	// TODO: remove from this file
+	fileDownload = (file) => () => {
+		axios.get('/file/' + file, {
+			responseType: 'blob'
+		}).then(res => {
+			const url = window.URL.createObjectURL(new Blob([res.data]));
+			const link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', file + '.pdf');
+			document.body.appendChild(link);
+			link.click();
+		})
+	}
+
+	// TODO: remove from this file
+	fileDelete = (idx) => () => {
+		let quotation = this.state.quotation;
+		let file = quotation[idx].file;
+		axios.delete('/file/	' + file).then(res => {
+			if (res.status === 200) {
+				quotation[idx].file = '';
+				this.setState({
+					quotation
+				})
+			}
+		})
+	}
+
+	//--------- Validation functions --------------
 
 	validateField(fieldName, value) {
 		let fieldValidationErrors = this.state.formErrors;
@@ -191,16 +233,21 @@ export default class NewRequest extends React.Component {
 	}
 
 	render() {
+		const { descriptionValid, quantityValid, justifyValid } = this.state
 		return (
 			<div>
+				<Prompt
+					when={descriptionValid || quantityValid || justifyValid }
+					message="tem certeza que deseja sair desta página? Todas as suas alterações serão perdidas"
+				/>
 				<SubHeader title="Solicitar um material"></SubHeader>
 				<Form style={{
 					marginTop: 30
 				}}>
-					<FormGroup row>
+					<FormGroup row style={marginRight}>
 					</FormGroup>
 					<div className={`form-group${this.errorClass(this.state.formErrors.description)}`}>
-						<FormGroup row>
+						<FormGroup row style={marginRight}>
 							<Label for="descriptionArea" sm={2}>Descrição:</Label>
 							<Col sm={7}>
 								<Input value={this.state.description} type="textarea" id="descriptionArea" name="description" onChange={(event) => this.handleUserInput(event)}
@@ -210,7 +257,7 @@ export default class NewRequest extends React.Component {
 					</div>
 					<div className={`form-group
                  ${this.errorClass(this.state.formErrors.quantity)}`}>
-						<FormGroup row>
+						<FormGroup row style={marginRight}>
 							<Label for="quantityArea" sm={2}>Quantidade:</Label>
 							<Col sm={1}>
 								<Input value={this.state.quantity} type="number" id="quantityArea" name="quantity" onChange={(event) => this.handleUserInput(event)} />
@@ -219,7 +266,7 @@ export default class NewRequest extends React.Component {
 					</div>
 					<div className={`form-group
                  ${this.errorClass(this.state.formErrors.justify)}`}>
-						<FormGroup row>
+						<FormGroup row style={marginRight}>
 							<Label for="justifyArea" sm={2}>Justificativa:</Label>
 							<Col sm={7}>
 								<Input value={this.state.justify} type="textarea" id="justifyArea" name="justify" onChange={(event) => this.handleUserInput(event)}
@@ -227,7 +274,7 @@ export default class NewRequest extends React.Component {
 							</Col>
 						</FormGroup>
 					</div>
-					<FormGroup row className="margin-top-medium">
+					<FormGroup row style={marginRight} className="margin-top-medium">
 						<Label sm={2}>Adicionar cotação</Label>
 						<Col sm={1}>
 							<Button color="success" onClick={this.handleAddQuotation}>Adicionar</Button>
@@ -238,7 +285,7 @@ export default class NewRequest extends React.Component {
 						if (quotation.requisitionType === 'URL') {
 							return (
 								<div className="panel panel-default margin-left-huge margin-top-medium" key={idx}>
-									<FormGroup row>
+									<FormGroup row style={marginRight}>
 										<Label for="typeArea" sm={2}>Tipo:</Label>
 										<Col sm={2}>
 											<Input type="select" name="requisitionType" id="typeArea"
@@ -250,7 +297,7 @@ export default class NewRequest extends React.Component {
 										</Col>
 										<Button color="danger" type="button" onClick={this.handleRemoveQuotation(idx)}>Remover</Button>
 									</FormGroup>
-									<FormGroup row>
+									<FormGroup row style={marginRight}>
 										<Label for="referenceArea" sm={2}>URL:</Label>
 										<Col sm={5}>
 											<Input type="url" name="reference" id="referenceArea"
@@ -260,7 +307,7 @@ export default class NewRequest extends React.Component {
 											/>
 										</Col>
 									</FormGroup>
-									<FormGroup row>
+									<FormGroup row style={marginRight}>
 										<Label for="priceArea" sm={2}>Preço:</Label>
 										<Col sm={2}>
 											<Input type="text" name="price" id="priceArea"
@@ -274,9 +321,25 @@ export default class NewRequest extends React.Component {
 								</div>
 							)
 						} else {
+							let file
+							if (quotation.file === '') {
+								file = (<FormGroup className="margin-left-small">
+									<Input type="file" label="upload" accept=".pdf" name="file" id="fileButton" onChange={this.onChangeFile(idx)} />
+								</FormGroup>)
+							} else {
+								file = (
+									<div className="margin-left-small text-left">
+										<p>Arquivo enviado com sucesso</p>
+										<FormGroup row style={marginRight} className="padding">
+											<Button type="button" color="primary" className="my-btn-download" onClick={this.fileDownload(quotation.file)}>Download</Button>
+											<Button type="button" color="danger" className="my-btn-excluir" onClick={this.fileDelete(idx)}>Excluir</Button>
+										</FormGroup>
+									</div>
+								)
+							}
 							return (
 								<div className="panel panel-default margin-left-huge margin-top-medium" key={idx}>
-									<FormGroup row>
+									<FormGroup row style={marginRight}>
 										<Label for="typeArea" sm={2}>Tipo:</Label>
 										<Col sm={2}>
 											<Input type="select" name="requisitionType" id="typeArea"
@@ -288,7 +351,7 @@ export default class NewRequest extends React.Component {
 										</Col>
 										<Button color="danger" type="button" onClick={this.handleRemoveQuotation(idx)}>Remover</Button>
 									</FormGroup>
-									<FormGroup row>
+									<FormGroup row style={marginRight}>
 										<Label for="priceArea" sm={2}>Preço:</Label>
 										<Col sm={2}>
 											<Input type="text" name="price" id="priceArea"
@@ -299,9 +362,7 @@ export default class NewRequest extends React.Component {
 										</Col>
 									</FormGroup>
 
-									<FormGroup className="margin-left-small">
-										<Input type="file" label="upload" accept=".pdf" name="file" id="fileButton" value={quotation.file} onChange={this.onChangeFile(idx)} />
-									</FormGroup>
+									{file}
 
 								</div>
 							)
@@ -320,4 +381,8 @@ export default class NewRequest extends React.Component {
 			</div>
 		);
 	}
+}
+
+const marginRight = {
+	marginRight: 0
 }

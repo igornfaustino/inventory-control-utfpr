@@ -5,7 +5,8 @@ import NewRequests from './NewRequests/NewRequests';
 import Requests from './teacherRequests/Requests';
 import Products from './Products/Products';
 import ApprovedRequests from './approvedRequests/ApprovedRequests';
-import PurchaseRequisition from './PurchaseRequisition/PurchaseRequisition'
+import PurchasesHistory from './PurchasesHistory/PurchasesHistory';
+import PurchaseRequisition from "./PurchaseRequisition/PurchaseRequisition";
 const Main = () => (
 	<main>
 		<Switch>
@@ -14,8 +15,8 @@ const Main = () => (
 			<Route path='/solicitacoes' component={Requests} />
 			<Route path='/produtos' component={Products} />
 			<Route path='/aprovados' component={ApprovedRequests} />
-			<Route path='/requisicoesdecompra' component={PurchaseRequisition} />
-            
+			<Route path='/compras' component={PurchasesHistory} />
+			<Route path='/requisicao' component={PurchaseRequisition} />
 		</Switch>
 	</main>
 );

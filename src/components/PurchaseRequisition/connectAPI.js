@@ -1,36 +1,5 @@
-/*const Purchasechema = mongoose.Schema({
-    management: String,
-    requisitionDate: String,
-    UGR: String,
-    sector: String,
-    requester: String,
-    requisitionItems: [{
-        siorg: String,
-        description: { type: String, require: true },
-        justification: { type: String, require: true },
-        prices: [
-            {
-                type: { type: String, require: true },
-                priceRef: String,
-                value: Number
-            }
-        ],
-        priceJustification: String,
-        qtd: { type: Number, require: true },
-        itemSupplier: {
-            name: String,
-            cnpj: String,
-            phone: String,
-            address: {
-                number: Number,
-                street: String,
-                city: String,
-                state: String,
-                country: String,
-            }
-        },
-    }],
-});*/
+
+import axios from 'axios';
 const requisitionlist=[
     {
         id: 'id123',
@@ -74,23 +43,79 @@ const requestlist=[
 ]
 
 
-export const loadRequisition = (id)=>{
-    return requisitionlist.requesterId === id
+export async function loadRequisition(id){
+    console.log("Loading Requisition!", id)
+    return await loadAllRequisition( (value)=>{
+        return value.requisition._id === id
+    })
 }
-export const loadAllRequisition = ()=>{
-    return requisitionlist
+export async function loadAllRequisition() {
+    console.log("Loading Requisitions!")
+    return await axios.get('/requisitions').then(response => {
+        if (response.status === 200) {
+            let requisitions = response.data.requisitions;
+            
+            return ({
+                requisition:requisitions,
+                loading:false
+            })
+        }
+    }).catch(ex => {
+        console.error(ex, ex.response);
+    })
 }
 
 export const addRequest= (request)=>{
     console.log("request adicionada")
     requestlist.push(request)
 }
-export const loadAllPurchaseRequisition= () =>{
-    console.log("Carregado ",requestlist.length, " do banco de dados!")
-    return requestlist
+export async function loadPurchaseRequisition(id) {
+    return await axios.get('/purchase/'+id).then(response => {
+        if (response.status === 200) {
+            return ({
+                purchases:response.data.purchase,
+                loading:false
+            })
+        }
+    }).catch(ex => {
+        console.error(ex, ex.response);
+    })
 }
-export const loadPurchaseRequisition= (id) =>{
-    const element = requestlist.filter((e)=> e.purchaseId == id)
-    console.log("Carregado item:",element[0].purchaseId, " do banco de dados!")
-    return element[0]
+export async function savePurchaseRequisition(purchase) {
+    return await axios.post('/purchase',purchase ).then(response => {
+        if (response.status === 200) {
+            console.log(response)
+            return (response.data._id)
+        }
+    })
+    .catch(ex => {
+        console.error(ex, ex.response);
+    })
+}
+export async function updatePurchaseRequisition(purchase) {
+    console.log(purchase)
+    return await axios.put('/purchase/'+purchase._id,purchase ).then(response => {
+        if (response.status === 200) {
+            console.log(response)
+            return (response.data._id)
+        }
+    })
+    .catch(ex => {
+        console.error(ex, ex.response);
+    })
+}
+export async function loadAllPurchaseRequisition() {
+    return await axios.get('/purchase').then(response => {
+        if (response.status === 200) {
+            let purchases = response.data.purchases;
+                
+                return ({
+                    purchases:purchases,
+                    loading:false
+                })
+            
+        }
+    }).catch(ex => {
+        console.error(ex, ex.response);
+    })
 }

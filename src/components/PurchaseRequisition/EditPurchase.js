@@ -1,9 +1,9 @@
 import React from 'react';
 import '../../pages/Pages.css';
-import {SubHeader} from '../../components/SubHeader/SubHeader';
+import SubHeader from '../../components/SubHeader/SubHeader';
 
-import {addRequest,loadPurchaseRequisition} from './connectAPI';
-
+import {updatePurchaseRequisition,loadPurchaseRequisition} from './connectAPI';
+import { ClipLoader } from 'react-spinners';
 import PurchaseForm from './PurchaseForm';
 
 export default class EditPurchase extends React.Component {
@@ -15,6 +15,7 @@ export default class EditPurchase extends React.Component {
 
         this.state = {
             match: props.match,
+            loading:true,
             data: {
                 purchase: {}
             }
@@ -22,11 +23,22 @@ export default class EditPurchase extends React.Component {
         this.componentDidMount=this.componentDidMount.bind(this)        
     };
     componentDidMount(){
-        const data=this.state.data
-        data.purchase=loadPurchaseRequisition(this.state.match.params.id)
-        this.setState({
-            data:data
-        })
+        try{
+            const data=this.state.data
+            loadPurchaseRequisition(this.state.match.params.id).then((value)=>{
+                console.log(value)
+              data.purchase=value.purchases
+              this.setState(
+                {
+                  data: data,
+                  loading : value.loading
+                }
+              )
+            })
+          }
+          catch(error){
+            console.log(error)
+          }
     }
 
 
@@ -38,8 +50,15 @@ export default class EditPurchase extends React.Component {
     }
     savePurchase(event) {
         event.preventDefault();
-        addRequest(this.state.data.purchase)
-    }
+        try{
+           updatePurchaseRequisition(this.state.data.purchase).then( (value)=>{
+            console.log(value)
+          })
+        }
+        catch(error){
+          console.log(error)
+        }
+      }
     ChangeRequest(requestlist) {
         const data = this.state.data;
         data.purchase.requisitionItems=requestlist
@@ -47,18 +66,27 @@ export default class EditPurchase extends React.Component {
     }
 
     render() {
+        let data=(<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
+        <ClipLoader
+            color={'#123abc'}
+            loading={this.state.loading}
+        />
+    </div>)
+    if (this.state.loading === false) {
+    data=<PurchaseForm
+            purchase={this.state.data.purchase} 
+            
+            onSave={this.savePurchase}
+            onChange={this.updatePurchaseState}
+
+            edit={true}
+            onChangeRequest={this.ChangeRequest}
+        />
+    }
         return (
             <div>
                 <SubHeader title="Editar de Requisição"></SubHeader>
-                <PurchaseForm
-                    purchase={this.state.data.purchase} 
-                    
-                    onSave={this.savePurchase}
-                    onChange={this.updatePurchaseState}
-        
-                    edit={true}
-                    onChangeRequest={this.ChangeRequest}
-                />
+                {data}
             </div >
         );
     }

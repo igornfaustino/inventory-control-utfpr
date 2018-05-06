@@ -50,7 +50,10 @@ export default class Header extends React.Component {
 								<NavLink to='/editarsolicitacoes' className={'menu-icon'} activeStyle={activeStyle}>Editar Solicitações</NavLink>
 							</NavItem>
 							<NavItem className={'menu-nav'}>
-								<NavLink to='/requisicoesdecompra' className={'menu-icon'} activeStyle={activeStyle}>Requisição de Compra</NavLink>
+								<NavLink to='/compras' className={'menu-icon'} activeStyle={activeStyle}>Histórico de compras</NavLink>
+							</NavItem>
+							<NavItem className={'menu-nav'}>
+								<NavLink to='/requisicao' className={'menu-icon'} activeStyle={activeStyle}>Requisição de compras</NavLink>
 							</NavItem>
 						</Nav>
 					</Collapse>

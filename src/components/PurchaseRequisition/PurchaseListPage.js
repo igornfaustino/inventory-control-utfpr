@@ -4,7 +4,7 @@ import { loadAllPurchaseRequisition } from "./connectAPI";
 // Import React Table
 import Table from 'rc-table';
 import "react-table/react-table.css";
-import {SubHeader} from '../SubHeader/SubHeader';
+import SubHeader from '../SubHeader/SubHeader';
 import {Link} from 'react-router-dom';
 
 export default class PurchaseListPage extends React.Component {
@@ -17,16 +17,27 @@ export default class PurchaseListPage extends React.Component {
         };
         this.RenderViewAction=this.RenderViewAction.bind(this)
         this.RenderEditAction=this.RenderEditAction.bind(this)
-        this.componentDidMount=this.componentDidMount.bind(this)
+        this.componentWillMount=this.componentWillMount.bind(this)
     }
+    componentWillMount(){
+        try{
+          loadAllPurchaseRequisition().then((value)=>{
+            
+            this.setState(
+              {
+                purchaselist: value.purchases,
+                loading : value.loading
+              }
+            )
+          })
+        }
+        catch(error){
+          console.log(error)
+        }
+      }
 
-    componentDidMount(){
-        this.setState({
-            purchaselist:loadAllPurchaseRequisition()
-        })
-    }
     RenderEditAction= (o, row, index) => {
-        const id=this.state.purchaselist[index].purchaseId
+        const id=this.state.purchaselist[index]._id
         return (
           <Link to={`${this.state.match.url}/editar/${id}`}>
             Editar
@@ -34,7 +45,7 @@ export default class PurchaseListPage extends React.Component {
         );
       }
       RenderViewAction= (o, row, index) => {
-        const id=this.state.purchaselist[index].purchaseId
+        const id=this.state.purchaselist[index]._id
         return (
           <Link to={`${this.state.match.url}/visualizar/${id}`}>
             Visualizar
@@ -44,12 +55,7 @@ export default class PurchaseListPage extends React.Component {
     render(){
         const columns=
             [
-                { 
-                    title: 'ID', 
-                    dataIndex: 'purchaseId', 
-                    key: 'purchaseId',
-                    width: '10%', 
-                },
+                
                 { 
                     title: 'Gestão', 
                     dataIndex: 'management', 
@@ -64,8 +70,8 @@ export default class PurchaseListPage extends React.Component {
                 },
                 { 
                     title: '', 
-                    dataIndex: 'purchaseId', 
-                    key: 'purchaseId', 
+                    dataIndex: '_id', 
+                    key: '_id', 
                     width: '10%', 
                     render: this.RenderEditAction 
                 },

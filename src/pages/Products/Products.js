@@ -2,10 +2,14 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import { ClipLoader } from 'react-spinners';
 
+import ReactDOM from "react-dom";
+import CSVReader from "react-csv-reader";
+
 import '../Pages.css';
+import './Products.css';
 
 import TableList from '../../components/TableList/TableList';
-import {SubHeader} from '../../components/SubHeader/SubHeader';
+import SubHeader from '../../components/SubHeader/SubHeader';
 
 import axios from 'axios';
 import moment from 'moment'
@@ -16,36 +20,10 @@ export default class Products extends React.Component {
 		super(props);
 		this.handleClick = this.handleClick.bind(this);
 		this.state = {
+			canUpload: false,
 			loading: true,
-			term: 'teste',
-			isDisabled: true,
-			checkedCount: 0,
-			items: [
-				{
-					id: 'id123',
-					siorg: "1234",
-					description: "description",
-					date: "10/10/10",
-					checked: false,
-					change: this.handleClick
-				},
-				{
-					id: 'id124',
-					siorg: "1234",
-					description: "description",
-					date: "10/10/10",
-					checked: false,
-					change: this.handleClick
-				},
-				{
-					id: 'id125',
-					siorg: "1234",
-					description: "description",
-					date: "10/10/10",
-					input: 'btn',
-					change: this.handleClick
-				}
-			]
+			items: [],
+			csv: null
 		};
 	}
 
@@ -69,7 +47,7 @@ export default class Products extends React.Component {
 						}} type="submit">Solicitar</Button>)
 					})
 				});
-				
+
 				this.setState({
 					items,
 					loading: false
@@ -88,8 +66,64 @@ export default class Products extends React.Component {
 		})
 	}
 
-	onChange = (event) => {
-		this.setState({ term: event.target.value });
+	handleForce = data => {
+		let body = data.slice(0); // make copy
+		body.splice(0, 1);
+		let header = data[0]
+		header.forEach((value, id) => {
+			if (value.toLocaleLowerCase() === 'descrição' || value.toLocaleLowerCase() === 'descricao' || value.toLocaleLowerCase() === 'description') {
+				header[id] = 'description'
+			} else if (value.toLocaleLowerCase() === 'qtd' || value.toLocaleLowerCase() === 'quantidade') {
+				header[id] = 'qtd'
+			} else if (value.toLocaleLowerCase() === 'siorg') {
+				header[id] = 'siorg'
+			} else {
+				header[id] = ''
+			}
+		});
+
+		let csv = []
+		body.forEach((value, id) => {
+			let object = {}
+			if (value !== '' && value.length !== 1) {
+				value.forEach((value, id) => {
+					if (header[id] !== '')
+						object[header[id]] = value
+				})
+				csv.push(object)
+			}
+		});
+
+		this.setState({
+			csv,
+			canUpload: true
+		});
+	};
+
+	submitSheet = async () => {
+		this.setState({
+			canUpload: false
+		});
+		let { csv } = this.state;
+		let error = []
+		for (let i = 0; i < csv.length; i++) {
+			try {
+				let res = await axios.post('/requisition', csv[i])
+				if (res.status !== 200) {
+					error.push(i + 1)
+				}
+			}
+			catch(ex) {
+				error.push(i + 1)
+			}
+		}
+
+		if (error.length == 0) {
+			alert('Planilha importada com sucesso')
+			window.location.reload();
+		} else {
+			console.log(error)
+		}
 	}
 
 	render() {
@@ -108,13 +142,26 @@ export default class Products extends React.Component {
 			<div>
 				<SubHeader title="Histórico de pedidos"></SubHeader>
 
-				<header align='left' className="font-header font header">
-					<Button outline color="success" disabled>&#x2713;</Button>
-					&emsp;Selecione os produtos que deseja solicitar novamente
-				</header>
+				<div>
+					{data}
+					<div align="left" className="margin-left">
+						<div className="margin-left-small">
+							<p>Importe os dados da solicitação de uma planílha CSV</p>
+						</div>
 
-				{data}
+						<CSVReader
+							cssClass="react-csv-input"
+							onFileLoaded={this.handleForce}
+						/>
 
+						<Button disabled={!this.state.canUpload} type="button" color="primary" className="btn btn-primary margin-top" onClick={() => {
+							this.submitSheet()
+						}}>
+							Enviar planílha
+       					</Button>
+
+					</div>
+				</div>
 			</div >
 		);
 	}

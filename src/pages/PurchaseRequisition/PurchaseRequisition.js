@@ -1,7 +1,7 @@
 import React from 'react';
 import '../Home/Home.css';
 import { NewPurchasePage }  from '../../components/PurchaseRequisition/newPurchase'
-import  PurchaseListPage  from '../../components/PurchaseRequisition/PurchaseListPage'
+import PurchaseListPage  from '../../components/PurchaseRequisition/PurchaseListPage'
 import EditPurchase from "../../components/PurchaseRequisition/EditPurchase";
 import ViewPurchase from "../../components/PurchaseRequisition/ViewPurchase"
 // Import Routes
@@ -19,12 +19,12 @@ export default class PurchaseRequisition extends React.Component {
     }
     render() {
 		return (
-			<div align="left" className={'margin'}>
+			<div>
             <Switch>
-			    <Route exact path={`/requisicoesdecompra`} component={PurchaseListPage} />
-			    <Route exact path={`/requisicoesdecompra/novo`} component={NewPurchasePage} />
-			    <Route exact path={`/requisicoesdecompra/editar/:id(\\d+)`} component={EditPurchase} />
-			    <Route exact path={`/requisicoesdecompra/visualizar/:id(\\d+)`} component={ViewPurchase} />
+			    <Route exact path={`${this.state.match.url}`} component={PurchaseListPage} />
+			    <Route exact path={`${this.state.match.url}/novo`} component={NewPurchasePage} />
+			    <Route exact path={`${this.state.match.url}/editar/:id`} component={EditPurchase} />
+			    <Route exact path={`${this.state.match.url}/visualizar/:id`} component={ViewPurchase} />
             </Switch>
             </div >
         )
