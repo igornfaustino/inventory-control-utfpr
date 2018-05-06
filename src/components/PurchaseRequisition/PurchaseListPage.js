@@ -6,6 +6,7 @@ import Table from 'rc-table';
 import "react-table/react-table.css";
 import SubHeader from '../SubHeader/SubHeader';
 import {Link} from 'react-router-dom';
+import { Container,Button} from 'reactstrap'
 
 export default class PurchaseListPage extends React.Component {
 
@@ -86,6 +87,19 @@ export default class PurchaseListPage extends React.Component {
         return(
         <div>
             <SubHeader title="Listagem de Requisição"></SubHeader>
+            <Link to={`${this.state.match.url}/novo`}>
+                Novo
+            </Link>
+            <Container className="float-right">
+                <Button 
+                  color="success" 
+                  className="float-right" 
+                  onClick={`${this.state.match.url}/novo`}
+                  value={this.props.edit? 'Salvar Alterações': 'Salvar'}
+                >
+                  Salvar Alterações
+                </Button> 
+            </Container>
             <Table
                 columns={columns}
                 data={this.state.purchaselist}
