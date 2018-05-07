@@ -2,9 +2,7 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import { ClipLoader } from 'react-spinners';
 
-import ReactDOM from "react-dom";
 import CSVReader from "react-csv-reader";
-import {Link} from 'react-router-dom';
 
 import '../Pages.css';
 import './Products.css';

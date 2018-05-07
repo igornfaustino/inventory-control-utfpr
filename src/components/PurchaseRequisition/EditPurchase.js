@@ -85,7 +85,7 @@ export default class EditPurchase extends React.Component {
     }
         return (
             <div>
-                <SubHeader title="Editar de Requisição"></SubHeader>
+                <SubHeader title="Editar Requisição"></SubHeader>
                 {data}
             </div >
         );

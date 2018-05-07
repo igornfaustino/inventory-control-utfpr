@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 
 import Main from './pages/Main';
-import Header from './components/Header/Header';
 
 class App extends Component {
 	render() {

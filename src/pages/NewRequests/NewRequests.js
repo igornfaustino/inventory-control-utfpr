@@ -4,13 +4,9 @@ import FormRequest from "../NewRequests/FormRequest";
 import { loadRequisition } from "../../components/PurchaseRequisition/connectAPI";
 import { ClipLoader } from 'react-spinners';
 
-import { Prompt } from 'react-router'
-import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import Header from '../../components/Header/Header';
-import SubHeader from '../../components/SubHeader/SubHeader';
 
 import './NewRequest.css';
-import axios from 'axios'
 
 export default class NewRequest extends React.Component {
 
@@ -19,7 +15,7 @@ export default class NewRequest extends React.Component {
 
 		this.state = {
 			loading: true,
-			requisition: {}
+			requisition: null
 		}
 		this.componentWillMount = this.componentWillMount.bind(this)
 	}
@@ -57,7 +53,7 @@ export default class NewRequest extends React.Component {
 			data = <FormRequest
 				location={this.props.location}
 				requisition={this.state.requisition}
-				title={"Cadastro de material"} />
+				title={"Nova Solicitação"} />
 		}
 		return (
 			<div>

@@ -88,11 +88,7 @@ export default class ApprovedRequests extends React.Component {
 		return (
 			<div>
 				<Header></Header>
-				<SubHeader title="Solicitações já aprovadas"></SubHeader>
-				<header align='left' className="font-header font header">
-					<Button outline color="success" disabled>&#x2713;</Button>
-					&emsp;Selecione os produtos que deseja solicitar
-				</header>
+				<SubHeader title="Solicitações aprovadas"></SubHeader>
 
 				{data}
 

@@ -4,8 +4,7 @@ import {savePurchaseRequisition} from './connectAPI';
 import SubHeader from '../SubHeader/SubHeader';
 
 import PurchaseForm from './PurchaseForm';
-import { isDate, now } from 'moment';
-import moment from 'moment'
+import moment from 'moment';
 export class NewPurchasePage extends React.Component {
 
   constructor(props) {

@@ -1,10 +1,6 @@
 import React from 'react';
 import {
-	Collapse,
 	Navbar,
-	NavbarToggler,
-	Nav,
-	NavItem
 } from 'reactstrap';
 
 
@@ -25,9 +21,3 @@ export default class Header extends React.Component {
 		);
 	}
 }
-
-const activeStyle = {
-	color: '#d9d9d9',
-	textDecoration: 'underline',
-	textDecorationColor: '#ffcc00'
-};

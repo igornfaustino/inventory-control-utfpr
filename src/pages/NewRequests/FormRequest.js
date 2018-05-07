@@ -70,7 +70,11 @@ export default class FormRequest extends React.Component {
 	handleQuotationChange = (idx) => (evt) => {
 		const quotation = this.state.quotation.map((quotation, sidx) => {
 			if (idx !== sidx) return quotation;
-			return { ...quotation, [evt.target.name]: evt.target.value };
+			if (evt.target.name === 'requisitionType'){
+				return{...quotation, 'requisitionType': evt.target.value, 'reference': ''}
+			} else {
+				return { ...quotation, [evt.target.name]: evt.target.value };
+			}
 		});
 
 		this.setState({ quotation: quotation });
@@ -445,7 +449,7 @@ export default class FormRequest extends React.Component {
 				<div align="right" className={'margin'}>
 					<Button type="submit" color="secondary" className="btn btn-primary"
 						disabled={!this.state.formValid} onClick={this.state.edit ? this.saveRequest : this.submitRequest}>
-						Enviar Solicitação
+						{this.state.edit ?'Salvar Alterações':'Enviar Solicitação'}
        				</Button>
 				</div>
 			</div>

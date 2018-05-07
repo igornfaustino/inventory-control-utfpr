@@ -43,8 +43,6 @@ export class PurchaseForm extends React.Component {
     }
 
     componentWillMount(){
-      const state=this.state
-      state.data.requisitions
       try{
         loadAllRequisition().then((value)=>{
           let data=this.state.data
@@ -119,7 +117,7 @@ export class PurchaseForm extends React.Component {
               onClick={this.toggleIn} 
               className="float-right"
               >
-              Adiciona Solicitações
+              Adicionar Solicitações
             </Button> 
           </Container>
         )
@@ -186,7 +184,7 @@ export class PurchaseForm extends React.Component {
         dataIndex: 'siorg', 
         key: 'siorg', 
         width: '10%' 
-      },,
+      },
       { 
         title: 'Descrição',
         dataIndex: 'description', 

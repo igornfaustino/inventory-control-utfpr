@@ -43,7 +43,7 @@ export default class EditRequest extends React.Component {
             data=<FormRequest 
                 location={this.props.location} 
                 requisition={this.state.requisition} 
-                title={"Editar material"}/>
+                title={"Editar Solicitação"}/>
         }
         return(
             <div>
