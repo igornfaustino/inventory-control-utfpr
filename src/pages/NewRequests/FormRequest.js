@@ -119,22 +119,6 @@ export default class FormRequest extends React.Component {
 			console.log(res)
 			if (res.status === 200) {
 				alert("Atualizado com sucesso")
-				this.setState({
-					description: '',
-					quantity: '',
-					justify: '',
-					quotation:
-						[
-							{
-								requisitionType: 'URL',
-								reference: '',
-								price: '',
-								rawFile: null,
-								file: ''
-							}
-						],
-					formErrors: { description: '', quantity: '', justify: '' },
-				})
 			} else {
 				alert("Opss.. algo saiu errado");
 				this.setState({

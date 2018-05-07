@@ -40,7 +40,11 @@ export default class ApprovedRequests extends React.Component {
 						// siorg: item.siorg,
 						description: item.description,
 						date: moment(item.date).locale('pt-br').format('DD/MM/YYYY'),
-						input: (<Link to={`editarsolicitacoes/${item._id}`}>
+						input:(<Button color="success" onClick={() => {
+							this.handleClick(item)
+						}} type="submit">Solicitar</Button>),
+
+						edit: (<Link to={`editarsolicitacoes/${item._id}`}>
 						Editar
 					  </Link>)
 					})
@@ -74,7 +78,7 @@ export default class ApprovedRequests extends React.Component {
 	render() {
 		let data
 		if (this.state.loading === false) {
-			data = <TableList header={['Descrição', 'Data', ' ']} items={this.state.items} />
+			data = <TableList header={['Descrição', 'Data', ' ','']} items={this.state.items} />
 		} else {
 			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
 				<ClipLoader

@@ -1,47 +1,5 @@
 
 import axios from 'axios';
-const requisitionlist=[
-    {
-        id: 'id123',
-        siorg: '12312',
-        description: 'descricao...............',
-        checked: false,
-        change: this.handleClick
-    },
-    {
-        id: 'id124',
-        siorg: '12313123132',
-        description: 'descricao...............',
-        checked: false,
-        change: this.handleClick
-    }
-
-]
-
-const requestlist=[
-    {
-        purchaseId: 1231412,
-        management: 'utfpr',
-        requisitionDate: "2018-05-05",
-        UGR: 'Laboratorio de Computacao',
-        originOfCost: 'materiais de consumo',
-        sector: 'DACOM',
-        requester: 'xurumino',
-        requisitionItems: [
-            {
-                id: '1',
-                siorg: '1',
-                description: 'dasdasdsad',
-            },
-            {
-                id: '2',
-                siorg: 'das1',
-                description: 'kujadfnalkfdasdasdsad',
-            }
-        ],
-    }
-]
-
 
 export async function loadRequisition(id){
     
@@ -72,15 +30,13 @@ export async function loadAllRequisition() {
     })
 }
 
-export const addRequest= (request)=>{
-    console.log("request adicionada")
-    requestlist.push(request)
-}
 export async function loadPurchaseRequisition(id) {
     return await axios.get('/purchase/'+id).then(response => {
         if (response.status === 200) {
+            let purchase = response.data.purchase;
+            purchase.requisitionItems=prepareRequistionItems(purchase.requisitionItems)
             return ({
-                purchases:response.data.purchase,
+                purchases:purchase,
                 loading:false
             })
         }
@@ -89,7 +45,14 @@ export async function loadPurchaseRequisition(id) {
     })
 }
 export async function savePurchaseRequisition(purchase) {
-    return await axios.post('/purchase',purchase ).then(response => {
+    let newpurchase=purchase
+    let newItem=[]
+    purchase.requisitionItems.map( (item)=>{
+        newItem.push({item:item._id,itemSupplier:item.itemSupplier})
+    })
+    newpurchase.requisitionItems=newItem
+
+    return await axios.post('/purchase',newpurchase ).then(response => {
         if (response.status === 200) {
             alert("Adicionado com sucesso!")
             return (response.data._id)
@@ -101,8 +64,14 @@ export async function savePurchaseRequisition(purchase) {
     })
 }
 export async function updatePurchaseRequisition(purchase) {
-    console.log(purchase)
-    return await axios.put('/purchase/'+purchase._id,purchase ).then(response => {
+    let newpurchase=purchase
+    let newItem=[]
+    purchase.requisitionItems.map( (item)=>{
+        newItem.push({item:item._id,itemSupplier:item.itemSupplier})
+    })
+    newpurchase.requisitionItems=newItem
+
+    return await axios.put('/purchase/'+newpurchase._id,newpurchase ).then(response => {
         if (response.status === 200) {
             alert("Atualizado com sucesso!")
             return (response.data._id)
@@ -113,13 +82,41 @@ export async function updatePurchaseRequisition(purchase) {
         console.error(ex, ex.response);
     })
 }
+function prepareRequistionItems(requisitionItems){
+    
+    let newrequisitionItems=[]
+
+    requisitionItems.map( (item)=>{
+        if(item.item){
+            newrequisitionItems.push(
+                {
+                    _id:item.item._id,
+                    description:item.item.description,
+                    justification:item.item.justification,
+                    qtd:item.item.qtd,
+                    quotation:item.item.quotation,
+                    status:item.item.status,
+                    itemSupplier:item.itemSupplier
+                }  
+            )
+            }
+        })
+
+    return newrequisitionItems
+}
 export async function loadAllPurchaseRequisition() {
     return await axios.get('/purchase').then(response => {
         if (response.status === 200) {
             let purchases = response.data.purchases;
-                
+            let newpurchases=[]
+            purchases.map( purch=>
+                {
+                let purch2=purch
+                purch2.requisitionItems=prepareRequistionItems(purch.requisitionItems)
+                newpurchases.push(purch2)
+            })
                 return ({
-                    purchases:purchases,
+                    purchases:newpurchases,
                     loading:false
                 })
             
