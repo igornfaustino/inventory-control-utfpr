@@ -11,7 +11,6 @@ class App extends Component {
 		return (
 			<BrowserRouter>
 				<div className="App">
-					<Header></Header>
 					<Main></Main>
 				</div>
 			</BrowserRouter>

@@ -11,9 +11,10 @@ import './Products.css';
 
 import TableList from '../../components/TableList/TableList';
 import SubHeader from '../../components/SubHeader/SubHeader';
+import Header from '../../components/Header/Header';
 
 import axios from 'axios';
-import moment from 'moment'
+import moment from 'moment';
 
 
 export default class Products extends React.Component {
@@ -43,11 +44,9 @@ export default class Products extends React.Component {
 						// siorg: item.siorg,
 						description: item.description,
 						date: moment(item.date).locale('pt-br').format('DD/MM/YYYY'),
-						input:(<Button color="success" onClick={() => {
+						input: (<Button color="success" onClick={() => {
 							this.handleClick(item)
-						}} type="submit">Solicitar</Button>),
-
-						
+						}} type="submit">Solicitar</Button>)
 					})
 				});
 
@@ -61,7 +60,6 @@ export default class Products extends React.Component {
 		})
 	}
 
-	//Comentar depois: controla adição dos itens - habilita botao quando um item está marcado
 	handleClick(e) {
 		this.props.history.push({
 			pathname: '/novasolicitacoes',
@@ -80,7 +78,11 @@ export default class Products extends React.Component {
 				header[id] = 'qtd'
 			} else if (value.toLocaleLowerCase() === 'siorg') {
 				header[id] = 'siorg'
-			} else {
+			} else if (value.toLocaleLowerCase() === 'date' || value.toLocaleLowerCase() === 'data') {
+				header[id] = 'date'
+			} else if (value.toLocaleLowerCase() === 'status' || value.toLocaleLowerCase() === 'situação') {
+				header[id] = 'status'
+			}else {
 				header[id] = ''
 			}
 		});
@@ -116,23 +118,23 @@ export default class Products extends React.Component {
 					error.push(i + 1)
 				}
 			}
-			catch(ex) {
+			catch (ex) {
 				error.push(i + 1)
 			}
 		}
 
-		if (error.length == 0) {
+		if (error.length === 0) {
 			alert('Planilha importada com sucesso')
 			window.location.reload();
 		} else {
-			console.log(error)
+			alert('As segintes linhas não foram inseridas com sucesso' + error.toString())
 		}
 	}
 
 	render() {
 		let data
 		if (this.state.loading === false) {
-			data = <TableList header={['Descrição', 'Data',' ']} items={this.state.items} />
+			data = <TableList header={['Descrição', 'Data', ' ']} items={this.state.items} />
 		} else {
 			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
 				<ClipLoader
@@ -143,13 +145,13 @@ export default class Products extends React.Component {
 		}
 		return (
 			<div>
+				<Header></Header>
 				<SubHeader title="Histórico de pedidos"></SubHeader>
-
 				<div>
 					{data}
 					<div align="left" className="margin-left">
 						<div className="margin-left-small">
-							<p>Importe os dados da solicitação de uma planílha CSV</p>
+							<p>Importe os dados da solicitação de uma planilha CSV</p>
 						</div>
 
 						<CSVReader
@@ -160,7 +162,7 @@ export default class Products extends React.Component {
 						<Button disabled={!this.state.canUpload} type="button" color="primary" className="btn btn-primary margin-top" onClick={() => {
 							this.submitSheet()
 						}}>
-							Enviar planílha
+							Enviar planilha
        					</Button>
 
 					</div>

@@ -4,6 +4,7 @@ import FormRequest from "../NewRequests/FormRequest";
 import { loadRequisition } from "../../components/PurchaseRequisition/connectAPI";
 
 import { ClipLoader } from 'react-spinners';
+import Header from '../../components/Header/Header';
 
 export default class EditRequest extends React.Component {
 
@@ -46,6 +47,7 @@ export default class EditRequest extends React.Component {
         }
         return(
             <div>
+                <Header></Header>
                 {data}
             </div>
         )

@@ -29,8 +29,8 @@ export default class FormRequest extends React.Component {
 			descriptionValid: false,
 			quantityValid: false,
 			justifyValid: false,
-            formValid: false,
-            edit:false
+			formValid: false,
+			edit: false
 		};
 	}
 
@@ -43,23 +43,23 @@ export default class FormRequest extends React.Component {
 	}
 
 	componentWillMount() {
-        console.log(this.props)
-        if(this.props.requisition){
-            this.setState({
-                description:this.props.requisition.description,
-                quantity:this.props.requisition.qtd,
-                justify:this.props.requisition.justification,
-                quotation:this.props.requisition.quotation,
-                edit:true,
-                _id:this.props.requisition._id,
-                descriptionValid: true,
+		console.log(this.props)
+		if (this.props.requisition) {
+			this.setState({
+				description: this.props.requisition.description,
+				quantity: this.props.requisition.qtd,
+				justify: this.props.requisition.justification,
+				quotation: this.props.requisition.quotation,
+				edit: true,
+				_id: this.props.requisition._id,
+				descriptionValid: true,
 				quantityValid: true,
 				justifyValid: true,
 				formValid: true,
-            }
-            )
-        }
-        if (this.props.location.state && this.props.location.state.product) {
+			}
+			)
+		}
+		if (this.props.location.state && this.props.location.state.product) {
 			this.setState({
 				description: this.props.location.state.product.description,
 				descriptionValid: true
@@ -101,20 +101,20 @@ export default class FormRequest extends React.Component {
 
 		this.setState({ [name]: value }, () => { this.validateField(name, value) });
 
-    }
-    saveRequest = async () =>{
-        this.setState({
+	}
+	saveRequest = async () => {
+		this.setState({
 			descriptionValid: false,
 			quantityValid: false,
 			justifyValid: false,
 			formValid: false,
 		});
 
-        axios.put('/requisition/'+this.state._id, {
+		axios.put('/requisition/' + this.state._id, {
 			description: this.state.description,
 			justification: this.state.justify,
 			qtd: this.state.quantity,
-			quotation: this.preparePrice()
+			quotation: await this.preparePriceEdit()
 		}).then(res => {
 			console.log(res)
 			if (res.status === 200) {
@@ -138,15 +138,16 @@ export default class FormRequest extends React.Component {
 				formValid: true,
 			});
 		});
-    }
-    preparePrice(){
-        console.log(this.state.quotation)
+	}
+
+	async preparePrice() {
+		console.log(this.state.quotation)
 		let prices = this.state.quotation
 		for (let i = 0; i < prices.length; i++) {
 			if (prices[i].requisitionType.toLocaleUpperCase() === 'PDF') {
 				let formData = new FormData();
 				formData.append('file', prices[i].rawFile)
-				const file =  axios.post('/file/', formData);
+				const file = await axios.post('/file/', formData);
 				prices[i].reference = file.data.fileId
 			}
 			delete prices[i].file
@@ -155,9 +156,24 @@ export default class FormRequest extends React.Component {
 		prices = prices.filter((price) => {
 			return (price.reference !== '')
 		})
-        console.log(prices)
-        return prices
-    }
+		console.log(prices)
+		return prices
+	}
+
+	async preparePriceEdit() {
+		console.log(this.state.quotation)
+		let prices = this.state.quotation
+		for (let i = 0; i < prices.length; i++) {
+			delete prices[i].file
+			delete prices[i].rawFile
+		}
+		prices = prices.filter((price) => {
+			return (price.reference !== '')
+		})
+		console.log(prices)
+		return prices
+	}
+
 	submitRequest = async () => {
 		this.setState({
 			descriptionValid: false,
@@ -166,11 +182,11 @@ export default class FormRequest extends React.Component {
 			formValid: false,
 		});
 
-        axios.post('/requisition/', {
+		axios.post('/requisition/', {
 			description: this.state.description,
 			justification: this.state.justify,
 			qtd: this.state.quantity,
-			quotation: this.preparePrice()
+			quotation: await this.preparePrice()
 		}).then(res => {
 			console.log(res)
 			if (res.status === 200) {
@@ -229,15 +245,15 @@ export default class FormRequest extends React.Component {
 	// TODO: remove from this file
 	fileDelete = (idx) => () => {
 		let quotation = this.state.quotation;
-		let file = quotation[idx].file;
-		axios.delete('/file/	' + file).then(res => {
+		let file = quotation[idx].reference;
+		axios.delete('/file/' + file).then(res => {
 			if (res.status === 200) {
-				quotation[idx].file = '';
+				quotation[idx].reference = '';
 				this.setState({
 					quotation
 				})
 			}
-		})
+		});
 	}
 
 	//--------- Validation functions --------------
@@ -291,7 +307,7 @@ export default class FormRequest extends React.Component {
 		return (
 			<div>
 				<Prompt
-					when={descriptionValid || quantityValid || justifyValid }
+					when={descriptionValid || quantityValid || justifyValid}
 					message="tem certeza que deseja sair desta página? Todas as suas alterações serão perdidas"
 				/>
 				<SubHeader title={this.props.title}></SubHeader>
@@ -376,7 +392,7 @@ export default class FormRequest extends React.Component {
 							)
 						} else {
 							let file
-							if (quotation.file === '') {
+							if (quotation.reference === '') {
 								file = (<FormGroup className="margin-left-small">
 									<Input type="file" label="upload" accept=".pdf" name="file" id="fileButton" onChange={this.onChangeFile(idx)} />
 								</FormGroup>)
@@ -385,7 +401,7 @@ export default class FormRequest extends React.Component {
 									<div className="margin-left-small text-left">
 										<p>Arquivo enviado com sucesso</p>
 										<FormGroup row style={marginRight} className="padding">
-											<Button type="button" color="primary" className="my-btn-download" onClick={this.fileDownload(quotation.file)}>Download</Button>
+											<Button type="button" color="primary" className="my-btn-download" onClick={this.fileDownload(quotation.reference)}>Download</Button>
 											<Button type="button" color="danger" className="my-btn-excluir" onClick={this.fileDelete(idx)}>Excluir</Button>
 										</FormGroup>
 									</div>
@@ -428,7 +444,7 @@ export default class FormRequest extends React.Component {
 
 				<div align="right" className={'margin'}>
 					<Button type="submit" color="secondary" className="btn btn-primary"
-						disabled={!this.state.formValid} onClick={this.state.edit? this.saveRequest :this.submitRequest}>
+						disabled={!this.state.formValid} onClick={this.state.edit ? this.saveRequest : this.submitRequest}>
 						Enviar Solicitação
        				</Button>
 				</div>

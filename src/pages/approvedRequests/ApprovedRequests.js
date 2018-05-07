@@ -6,6 +6,7 @@ import '../Pages.css';
 
 import TableList from '../../components/TableList/TableList';
 import SubHeader from '../../components/SubHeader/SubHeader';
+import Header from '../../components/Header/Header';
 
 import axios from 'axios';
 import moment from 'moment'
@@ -36,6 +37,7 @@ export default class ApprovedRequests extends React.Component {
 					items.push({
 						_id: item._id,
 						// siorg: item.siorg,
+						_status: item.status,
 						description: item.description,
 						date: moment(item.date).locale('pt-br').format('DD/MM/YYYY'),
 						input: (<Button color="success" onClick={() => {
@@ -44,8 +46,9 @@ export default class ApprovedRequests extends React.Component {
 					})
 				})
 				
+				console.log(requisitions);
 				items = items.filter(item => {
-					return item.status === 'aprovado'
+					return item._status === 'aprovado'
 				});
 				
 				this.setState({
@@ -53,7 +56,6 @@ export default class ApprovedRequests extends React.Component {
 					loading: false
 				})
 			}
-			console.log('snasdnlkads');
 		}).catch(ex => {
 			console.error(ex, ex.response);
 		})
@@ -85,8 +87,8 @@ export default class ApprovedRequests extends React.Component {
 		}
 		return (
 			<div>
+				<Header></Header>
 				<SubHeader title="Solicitações já aprovadas"></SubHeader>
-
 				<header align='left' className="font-header font header">
 					<Button outline color="success" disabled>&#x2713;</Button>
 					&emsp;Selecione os produtos que deseja solicitar

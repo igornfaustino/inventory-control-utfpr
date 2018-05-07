@@ -30,7 +30,7 @@ export default class Header extends React.Component {
 		return (
 			<div>
 				<Navbar color="dark" dark expand="md">
-					<NavLink to='/'><img src={require('../../images/logoUTFPR.png')} alt="UTFP-Logo"></img></NavLink>
+					<NavLink to='/home'><img src={require('../../images/logoUTFPR.png')} alt="UTFP-Logo"></img></NavLink>
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar>
 						<Nav className="ml-auto" navbar>

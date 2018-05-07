@@ -271,7 +271,7 @@ export class PurchaseForm extends React.Component {
           columns={ ColumnAdd}
           data={this.props.purchase.requisitionItems} 
           className="table" 
-          rowKey={record => record.id} />
+          rowKey={record => record._id} />
         
           <this.ButtonFinishRequest/>
         </Col>
