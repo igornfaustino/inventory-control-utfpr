@@ -1,6 +1,6 @@
 import React from 'react';
 import { Prompt } from 'react-router'
-import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Row, Col, Button, Form, FormGroup, Label, Input, Container } from 'reactstrap';
 import SubHeader from '../../components/SubHeader/SubHeader';
 
 import './NewRequest.css';
@@ -70,8 +70,8 @@ export default class FormRequest extends React.Component {
 	handleQuotationChange = (idx) => (evt) => {
 		const quotation = this.state.quotation.map((quotation, sidx) => {
 			if (idx !== sidx) return quotation;
-			if (evt.target.name === 'requisitionType'){
-				return{...quotation, 'requisitionType': evt.target.value, 'reference': ''}
+			if (evt.target.name === 'requisitionType') {
+				return { ...quotation, 'requisitionType': evt.target.value, 'reference': '' }
 			} else {
 				return { ...quotation, [evt.target.name]: evt.target.value };
 			}
@@ -309,7 +309,7 @@ export default class FormRequest extends React.Component {
 	render() {
 		const { descriptionValid, quantityValid, justifyValid } = this.state
 		return (
-			<div>
+			<Container>
 				<Prompt
 					when={descriptionValid || quantityValid || justifyValid}
 					message="tem certeza que deseja sair desta página? Todas as suas alterações serão perdidas"
@@ -355,104 +355,125 @@ export default class FormRequest extends React.Component {
 						</Col>
 					</FormGroup>
 
-					{this.state.quotation.map((quotation, idx) => {
-						if (quotation.requisitionType === 'URL') {
-							return (
-								<div className="panel panel-default margin-left-huge margin-top-medium" key={idx}>
-									<FormGroup row style={marginRight}>
-										<Label for="typeArea" sm={2}>Tipo:</Label>
-										<Col sm={2}>
-											<Input type="select" name="requisitionType" id="typeArea"
-												value={quotation.requisitionType}
-												onChange={this.handleQuotationChange(idx)}>
-												<option>URL</option>
-												<option>PDF</option>
-											</Input>
-										</Col>
-										<Button color="danger" type="button" onClick={this.handleRemoveQuotation(idx)}>Remover</Button>
-									</FormGroup>
-									<FormGroup row style={marginRight}>
-										<Label for="referenceArea" sm={2}>URL:</Label>
-										<Col sm={5}>
-											<Input type="url" name="reference" id="referenceArea"
-												placeholder={'Referência para cotação'}
-												value={quotation.reference}
-												onChange={this.handleQuotationChange(idx)}
-											/>
-										</Col>
-									</FormGroup>
-									<FormGroup row style={marginRight}>
-										<Label for="priceArea" sm={2}>Preço:</Label>
-										<Col sm={2}>
-											<Input type="text" name="price" id="priceArea"
-												placeholder={'R$'}
-												value={quotation.price}
-												onChange={this.handleQuotationChange(idx)}
-											/>
-										</Col>
-									</FormGroup>
-
-								</div>
-							)
-						} else {
-							let file
-							if (quotation.reference === '') {
-								file = (<FormGroup className="margin-left-small">
-									<Input type="file" label="upload" accept=".pdf" name="file" id="fileButton" onChange={this.onChangeFile(idx)} />
-								</FormGroup>)
+					<Container className="margin-top-medium">
+						{this.state.quotation.map((quotation, idx) => {
+							if (quotation.requisitionType === 'URL') {
+								return (
+									<Container className="panel panel-default margin-left-huge" key={idx}>
+										<hr />
+										<Row className="margin-top-small">
+											<Col md="8">
+												<FormGroup row style={marginRight}>
+													<Label for="typeArea" sm={2}>Tipo:</Label>
+													<Col sm={2}>
+														<Input type="select" name="requisitionType" id="typeArea"
+															value={quotation.requisitionType}
+															onChange={this.handleQuotationChange(idx)}>
+															<option>URL</option>
+															<option>PDF</option>
+														</Input>
+													</Col>
+												</FormGroup>
+												<FormGroup row style={marginRight}>
+													<Label for="referenceArea" sm={2}>URL:</Label>
+													<Col sm={5}>
+														<Input type="url" name="reference" id="referenceArea"
+															placeholder={'Referência para cotação'}
+															value={quotation.reference}
+															onChange={this.handleQuotationChange(idx)}
+														/>
+													</Col>
+												</FormGroup>
+												<FormGroup row style={marginRight}>
+													<Label for="priceArea" sm={2}>Preço:</Label>
+													<Col sm={2}>
+														<Input type="text" name="price" id="priceArea"
+															placeholder={'R$'}
+															value={quotation.price}
+															onChange={this.handleQuotationChange(idx)}
+														/>
+													</Col>
+												</FormGroup>
+											</Col>
+											<Col md="4">
+												<Container>
+													<Button style={{
+														marginTop: '18%'
+													}} color="danger" type="button" onClick={this.handleRemoveQuotation(idx)}>Remover</Button>
+												</Container>
+											</Col>
+										</Row>
+									</Container>
+								)
 							} else {
-								file = (
-									<div className="margin-left-small text-left">
-										<p>Arquivo enviado com sucesso</p>
-										<FormGroup row style={marginRight} className="padding">
-											<Button type="button" color="primary" className="my-btn-download" onClick={this.fileDownload(quotation.reference)}>Download</Button>
-											<Button type="button" color="danger" className="my-btn-excluir" onClick={this.fileDelete(idx)}>Excluir</Button>
-										</FormGroup>
-									</div>
+								let file
+								if (quotation.reference === '') {
+									file = (<FormGroup className="margin-left-small">
+										<Input type="file" label="upload" accept=".pdf" name="file" id="fileButton" onChange={this.onChangeFile(idx)} />
+									</FormGroup>)
+								} else {
+									file = (
+										<div className="margin-left-small text-left">
+											<p>Arquivo enviado com sucesso</p>
+											<FormGroup row style={marginRight} className="padding">
+												<Button type="button" color="primary" className="my-btn-download" onClick={this.fileDownload(quotation.reference)}>Download</Button>
+												<Button type="button" color="danger" className="my-btn-excluir" onClick={this.fileDelete(idx)}>Excluir</Button>
+											</FormGroup>
+										</div>
+									)
+								}
+								return (
+									<Container className="panel margin-left-huge" key={idx}>
+										<hr />
+										<Row className="margin-top-small">
+											<Col md="8">
+												<FormGroup row style={marginRight}>
+													<Label for="typeArea" sm={2}>Tipo:</Label>
+													<Col sm={2}>
+														<Input type="select" name="requisitionType" id="typeArea"
+															value={quotation.requisitionType}
+															onChange={this.handleQuotationChange(idx)}>
+															<option>URL</option>
+															<option>PDF</option>
+														</Input>
+													</Col>
+												</FormGroup>
+												<FormGroup row style={marginRight}>
+													<Label for="priceArea" sm={2}>Preço:</Label>
+													<Col sm={2}>
+														<Input type="text" name="price" id="priceArea"
+															placeholder={'R$'}
+															value={quotation.price}
+															onChange={this.handleQuotationChange(idx)}
+														/>
+													</Col>
+												</FormGroup>
+
+												{file}
+											</Col>
+											<Col md="4">
+												<Container>
+													<Button style={{
+														marginTop: '15%'
+													}} color="danger" type="button" onClick={this.handleRemoveQuotation(idx)}>Remover</Button>
+												</Container>
+											</Col>
+										</Row>
+									</Container>
 								)
 							}
-							return (
-								<div className="panel panel-default margin-left-huge margin-top-medium" key={idx}>
-									<FormGroup row style={marginRight}>
-										<Label for="typeArea" sm={2}>Tipo:</Label>
-										<Col sm={2}>
-											<Input type="select" name="requisitionType" id="typeArea"
-												value={quotation.requisitionType}
-												onChange={this.handleQuotationChange(idx)}>
-												<option>URL</option>
-												<option>PDF</option>
-											</Input>
-										</Col>
-										<Button color="danger" type="button" onClick={this.handleRemoveQuotation(idx)}>Remover</Button>
-									</FormGroup>
-									<FormGroup row style={marginRight}>
-										<Label for="priceArea" sm={2}>Preço:</Label>
-										<Col sm={2}>
-											<Input type="text" name="price" id="priceArea"
-												placeholder={'R$'}
-												value={quotation.price}
-												onChange={this.handleQuotationChange(idx)}
-											/>
-										</Col>
-									</FormGroup>
 
-									{file}
-
-								</div>
-							)
-						}
-
-					})}
-
+						})}
+					</Container>
 				</Form>
 
 				<div align="right" className={'margin'}>
 					<Button type="submit" color="secondary" className="btn btn-primary"
 						disabled={!this.state.formValid} onClick={this.state.edit ? this.saveRequest : this.submitRequest}>
-						{this.state.edit ?'Salvar Alterações':'Enviar Solicitação'}
-       				</Button>
+						{this.state.edit ? 'Salvar Alterações' : 'Enviar Solicitação'}
+					</Button>
 				</div>
-			</div>
+			</Container>
 		);
 	}
 }
