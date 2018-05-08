@@ -30,7 +30,7 @@ export default class Header extends React.Component {
 		return (
 			<div>
 				<Navbar color="dark" dark expand="md">
-					<NavLink to='/'><img src={require('../../images/logoUTFPR.png')} alt="UTFP-Logo"></img></NavLink>
+					<NavLink to='/home'><img src={require('../../images/logoUTFPR.png')} alt="UTFP-Logo"></img></NavLink>
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar>
 						<Nav className="ml-auto" navbar>
@@ -38,10 +38,16 @@ export default class Header extends React.Component {
 								<NavLink to='/novasolicitacoes' className={'menu-icon'} activeStyle={activeStyle}>Nova Solicitação</NavLink>
 							</NavItem>
 							<NavItem className={'menu-nav'}>
-								<NavLink to='/produtos' className={'menu-icon'} activeStyle={activeStyle}>Produtos já solicitados</NavLink>
+								<NavLink to='/produtos' className={'menu-icon'} activeStyle={activeStyle}>Histórico de pedidos</NavLink>
+							</NavItem>
+							<NavItem className={'menu-nav'}>
+								<NavLink to='/aprovados' className={'menu-icon'} activeStyle={activeStyle}>Solicitações Aprovadas</NavLink>
 							</NavItem>
 							<NavItem className={'menu-nav'}>
 								<NavLink to='/solicitacoes' className={'menu-icon'} activeStyle={activeStyle}>Suas Solicitações</NavLink>
+							</NavItem>
+							<NavItem className={'menu-nav'}>
+								<NavLink to='/requisicao' className={'menu-icon'} activeStyle={activeStyle}>Listagem de Requisições</NavLink>
 							</NavItem>
 						</Nav>
 					</Collapse>
