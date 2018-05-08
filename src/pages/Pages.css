@@ -4,7 +4,7 @@
 
 .font{
     margin-left: 18px;
-    font-family: '././Fonts/proxima-nova-condensed-light.otf';
+    /* font-family: '././Fonts/proxima-nova-condensed-light.otf'; */
 }
 
 .font-header{
@@ -12,7 +12,7 @@
 }
 
 .font-nav{
-     font-size: 30px;
+     font-size: 20px;
 }
 
 .btn-add{
