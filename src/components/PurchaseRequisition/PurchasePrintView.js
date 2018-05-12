@@ -32,9 +32,9 @@ export class PurchasePrintView extends React.Component {
         return justification
     }
     prepareItem(){
-        let items=[]
+        let itens=[]
          this.state.requisitionItems.forEach( (item,index)=>{
-            items.push(
+            itens.push(
             <tr>
                 <td>{index+1}</td>
                 <td>{item.description}</td>
@@ -42,7 +42,40 @@ export class PurchasePrintView extends React.Component {
                 <td>{item.quotation.map( (item)=> item.price)/item.quotation.length}</td>
             </tr>)
         })
-        return items
+        return itens
+    }
+    prepareCustoDosItem(){
+        let itens=[]
+        let category=[]
+        let find=false
+        this.state.requisitionItems.forEach( (requisition,index)=>{
+            let valor=requisition.qtd*requisition.quotation.map( (item)=> item.price)/requisition.quotation.length
+            if(category.includes(requisition.catedory)){
+                itens[category.indexOf(requisition.catedory)].itens.push(index+1)
+                itens[category.indexOf(requisition.catedory)].valor+=valor
+                find=true
+            }
+            if(!find){
+                category.push(requisition.catedory)
+                let item={catedory:requisition.catedory,itens:[index+1],valor:valor}
+                itens.push(item)
+            }
+        })
+
+        return itens.map( (item)=>{
+            let itens_requisicao=""
+            console.log(item.itens)
+            item.itens.forEach( (item)=>{
+                itens_requisicao= itens_requisicao+item+", "
+            })
+            return (
+                <tr>
+                <td>{item.catedory? item.catedory: "Não definido"}</td>
+                <td>{itens_requisicao}</td>
+                <td>{item.valor}</td>
+                </tr>
+            )
+        })
     }
 
     render(){
@@ -90,6 +123,21 @@ export class PurchasePrintView extends React.Component {
                 </thead>
                 <tbody>
                 {this.prepareItem()}
+                </tbody>
+            </Table>
+            <Table bordered condensed hover>
+                <thead>
+                <tr>
+                   <td colSpan="3">Custo Estimado</td>
+                </tr>
+                <tr>
+                   <td>Elemento de despesa</td>
+                   <td>Itens da Requisição</td>
+                   <td>Valor</td>
+                </tr>
+                </thead>
+                <tbody>
+                {this.prepareCustoDosItem()}
                 </tbody>
             </Table>
         </Container>
