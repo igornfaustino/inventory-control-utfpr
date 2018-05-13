@@ -39,7 +39,7 @@ export class PurchasePrintView extends React.Component {
                 <td>{index+1}</td>
                 <td>{item.description}</td>
                 <td>{item.qtd}</td>
-                <td>{item.quotation.map( (item)=> item.price)/item.quotation.length}</td>
+                <td>R$ {item.quotation.map( (item)=> item.price)/item.quotation.length},00</td>
             </tr>)
         })
         return itens
@@ -72,7 +72,7 @@ export class PurchasePrintView extends React.Component {
                 <tr>
                 <td>{item.catedory? item.catedory: "Não definido"}</td>
                 <td>{itens_requisicao}</td>
-                <td>{item.valor}</td>
+                <td>R$ {item.valor},00</td>
                 </tr>
             )
         })
@@ -84,25 +84,25 @@ export class PurchasePrintView extends React.Component {
             <Table bordered condensed hover>
                 <tbody>
                 <tr>
-                    <td>Requisição:</td>
+                    <td class="font-weight-bold">Requisição:</td>
                     <td>{this.state.requisitionNumber?this.state.requisitionNumber: "Não definido"}</td>
-                    <td>Setor:</td>
+                    <td class="font-weight-bold">Setor:</td>
                     <td>{this.state.sector}</td>
                 </tr>
                 <tr>
-                    <td>Data:</td>
+                    <td class="font-weight-bold">Data:</td>
                     <td>{moment(this.state.requisitionDate).format("DD/MM/YYYY")}</td>
-                    <td>Gestão:</td>
+                    <td class="font-weight-bold">Gestão:</td>
                     <td>{this.state.management}</td>
                 </tr>
                 <tr>
-                    <td>Requisitante:</td>
+                    <td class="font-weight-bold"    >Requisitante:</td>
                     <td>{this.state.requester}</td>
-                    <td>UGR:</td>
+                    <td class="font-weight-bold">UGR:</td>
                     <td>{this.state.UGR}</td>
                 </tr>
                 <tr>
-                    <td>Justificativa:</td>
+                    <td class="font-weight-bold">Justificativa:</td>
                     <td colSpan="3">
                         {this.prepareJustify()}
                     </td>
@@ -112,13 +112,13 @@ export class PurchasePrintView extends React.Component {
             <Table bordered condensed hover>
                 <thead>
                 <tr>
-                   <td colSpan="4">Itens Inseridos</td>
+                   <td colSpan="4" class="font-weight-bold">Itens Inseridos</td>
                 </tr>
                 <tr>
-                   <td>Item</td>
-                   <td>Descrição</td>
-                   <td>Quantidade</td>
-                   <td>Valor Unitario</td>
+                   <td class="font-weight-bold">Item</td>
+                   <td class="font-weight-bold">Descrição</td>
+                   <td class="font-weight-bold">Quantidade</td>
+                   <td class="font-weight-bold">Valor Unitario</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -128,12 +128,12 @@ export class PurchasePrintView extends React.Component {
             <Table bordered condensed hover>
                 <thead>
                 <tr>
-                   <td colSpan="3">Custo Estimado</td>
+                   <td colSpan="3" class="font-weight-bold">Custo Estimado</td>
                 </tr>
                 <tr>
-                   <td>Elemento de despesa</td>
-                   <td>Itens da Requisição</td>
-                   <td>Valor</td>
+                   <td class="font-weight-bold">Elemento de despesa</td>
+                   <td class="font-weight-bold">Itens da Requisição</td>
+                   <td class="font-weight-bold">Valor</td>
                 </tr>
                 </thead>
                 <tbody>
