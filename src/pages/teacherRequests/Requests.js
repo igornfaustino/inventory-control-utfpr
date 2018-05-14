@@ -46,9 +46,13 @@ export default class ApprovedRequests extends React.Component {
 							this.handleClick(item)
 						}} type="submit">Solicitar</Button>),
 
-						edit: (<Link to={`editarsolicitacoes/${item._id}`}>
-						Editar
-					  </Link>)
+						edit:<Button color="primary" onClick={ (item)=>{
+							this.props.history.push({
+								pathname: `editarsolicitacoes/${item._id}`,
+								state: { product: item }
+							})
+						} } type="submit">Editar</Button> 
+						
 					})
 				})
 				// items = items.filter(item => {
