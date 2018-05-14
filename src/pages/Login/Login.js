@@ -52,7 +52,7 @@ export default class Login extends React.Component {
 							required
 						/>
 						<Button className="btn btn-info btn-color" type="Submit" block size="lg" disabled={!this.validateForm()}>Entrar</Button>
-						<p class="mt-5 mb-3 text-muted">&copy; 2018</p>
+						<p className="mt-5 mb-3 text-muted">&copy; 2018</p>
 					</Form>
 				</div>
 			</div>
