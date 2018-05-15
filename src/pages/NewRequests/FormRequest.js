@@ -470,7 +470,7 @@ export default class FormRequest extends React.Component {
 				</Form>
 
 				<div align="right" className={'margin'}>
-					<Button type="submit" color="secondary" className="btn btn-primary"
+					<Button type="submit" style={ {marginBottom:'5px'} } color="secondary" className="btn btn-primary"
 						disabled={!this.state.formValid} onClick={this.state.edit ? this.saveRequest : this.submitRequest}>
 						{this.state.edit ? 'Salvar Alterações' : 'Enviar Solicitação'}
 					</Button>

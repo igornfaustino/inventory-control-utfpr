@@ -8,9 +8,9 @@ const TextInput = ({name, size ,label, onChange, placeholder, value, error,help,
     <FormGroup 
       controlId={name} 
     >
-    <Row>
-      <Col sm={3}>
-        <Label for={name} >{label}</Label>
+    <Row style={ {marginRight: 0,}}>
+      <Col sm={3} >
+        <Label for={name}  >{label}</Label>
       </Col>
       <Col sm={6}>
         <FormControl 

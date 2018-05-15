@@ -4,7 +4,6 @@
 
 .font{
     margin-left: 18px;
-    /* font-family: '././Fonts/proxima-nova-condensed-light.otf'; */
 }
 
 .font-header{
@@ -21,4 +20,11 @@
 
 .header{
     margin-top: 2%;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+.font-sb{
+  font-family: 'Poppins', sans-serif;
+  margin-left: 18px;
 }

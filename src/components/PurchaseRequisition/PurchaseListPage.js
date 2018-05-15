@@ -4,7 +4,6 @@ import { loadAllPurchaseRequisition } from "./connectAPI";
 // Import React Table
 import "react-table/react-table.css";
 import SubHeader from '../SubHeader/SubHeader';
-import { Link } from 'react-router-dom';
 import { Container, Button } from 'reactstrap'
 import TableList from '../TableList/TableList';
 import moment from 'moment'
@@ -43,10 +42,9 @@ export default class PurchaseListPage extends React.Component {
     RenderEditAction = (index) => {
         const id = this.state.purchaselist[index]._id
         return (
-            <Button color="primary" onClick={ (item)=>{
+            <Button color="primary" onClick={ ()=>{
                 this.props.history.push({
                     pathname: `${this.state.match.url}/editar/${id}`,
-                    state: { product: item }
                 })
             } } type="submit">Editar</Button> 
         );
@@ -54,11 +52,10 @@ export default class PurchaseListPage extends React.Component {
     RenderViewAction = (index) => {
         const id = this.state.purchaselist[index]._id
         return (
-            <Button color="secondary" onClick={ (item)=>{
+            <Button color="secondary" onClick={ ()=>{
                 this.props.history.push({
                     pathname: `${this.state.match.url}/visualizar/${id}`,
-                    state: { product: item }
-                })
+                    })
             } } type="submit">Visualizar</Button> 
 
         );

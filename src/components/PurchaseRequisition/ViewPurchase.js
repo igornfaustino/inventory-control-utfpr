@@ -5,7 +5,7 @@ import SubHeader from '../SubHeader/SubHeader';
 import { ClipLoader } from 'react-spinners';
 import { loadPurchaseRequisition } from './connectAPI';
 import PurchasePrintView from './PurchasePrintView'
-import PurchaseForm from './PurchaseForm';
+
 
 export default class ViewPurchase extends React.Component {
     constructor(props) {
@@ -24,7 +24,6 @@ export default class ViewPurchase extends React.Component {
         try {
             const data = this.state.data
             loadPurchaseRequisition(this.state.match.params.id).then((value) => {
-                console.log(value)
                 data.purchase = value.purchases
                 this.setState(
                     {

@@ -1,27 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Form,Col } from 'react-bootstrap';
+import {Form,ButtonGroup } from 'react-bootstrap';
 import {Button,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import { Container} from 'reactstrap'
 import moment from 'moment'
-import { ClipLoader } from 'react-spinners';
 import {loadAllRequisition} from './connectAPI';
 
+import {BootstrapTable, TableHeaderColumn,SearchField} from 'react-bootstrap-table';
+
+import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
+
 import TextInput from '../common/TextInput';
-// Import React Table
-import Table from 'rc-table';
-import "react-table/react-table.css";
 
-const CheckBox = ({ id }) => (
-  <label>
-    <input type="checkbox" />
-    {id}
-  </label>
-);
-
-CheckBox.propTypes = {
-  id: PropTypes.string,
-};
 
 export class PurchaseForm extends React.Component {
 
@@ -34,19 +24,37 @@ export class PurchaseForm extends React.Component {
         data:
         {
           requisitions:[]
-        }
+        },
+        requisitionItens:[]
       }
       this.toggleOut= this.toggleOut.bind(this)
       this.toggleIn= this.toggleIn.bind(this)
       this.removeRequest= this.removeRequest.bind(this)
       this.AddRequest= this.AddRequest.bind(this)
+
     }
 
     componentWillMount(){
+      let data= this.props.purchase.requisitionItems
+      let newdata=[]
+      data.forEach( (requisition,index)=>{
+        let price=requisition.quotation.reduce( (x,y)=> x+ y.price,0)/requisition.quotation.length
+        newdata.push( {...data[index],price:price,selected: false})
+    })
+    this.setState(
+      {
+        requisitionItens:newdata
+      }
+    )
+      
       try{
         loadAllRequisition().then((value)=>{
           let data=this.state.data
           data.requisitions= value.requisition
+          data.requisitions.forEach( (requisition,index)=>{
+            let price=requisition.quotation.reduce( (x,y)=> x+ y.price,0)/requisition.quotation.length
+            data.requisitions[index]= {...data.requisitions[index],price:price,selected: false}
+          })
           this.setState(
             {
               data:data,
@@ -59,43 +67,47 @@ export class PurchaseForm extends React.Component {
         console.log(error)
       }
     }
-    AddRequest(index){
-      const rows = this.props.purchase.requisitionItems;
-      const requisitions= this.state.data.requisitions
-      if(!rows.includes(requisitions[index])){
-        console.log("Item adicionado a lista com sucesso!")
-        rows.push(requisitions[index])
-        this.props.onChangeRequest(rows)
-      }
-      else{
-        console.warn("Item já esta contido!")
-      }
+    AddRequest(){
+      console.log("Click?")
+      this.toggleOut()
+      let data = this.state.data
+      let rows = this.state.requisitionItens
+
+      data.requisitions.forEach( (value,index)=>{
+        if(value.selected){
+          if(rows.filter( item=> item.description === value.description ).length === 0){
+            rows.push(value)
+            data.requisitions[index]={ ...data.requisitions[index], selected:false}
+          }
+        }
+      })
+      this.props.onChangeRequest(rows)
+
+      this.setState({
+        data:data,
+        requisitionItens: rows
+      })
     }
 
     handleRemoveClick = index => () => {
       this.removeRequest(index);
     };
-    handleAddClick = index => () => {
-      this.AddRequest(index);
-    };
   
     renderDeleteAction = (o, row, index) => {
       return (
-        <a href='#' onClick={this.handleRemoveClick(index)}>
-          Remover
-        </a>
+        <Button color="danger" size='sm' onClick={this.handleRemoveClick(index)}>
+          Remover Selecionados
+        </Button>
       );
     }
-    renderAddAction = (o, row, index) => {
-      return (
-        <a href='#' onClick={this.handleAddClick(index)}>
-          Adicionar
-        </a>
-      );
-    }
-    removeRequest(index) {
-      const rows = this.props.purchase.requisitionItems;
-      rows.splice(index, 1);
+    
+    removeRequest() {
+      const rows = this.state.requisitionItens;
+      rows.forEach((value,index)=>{
+        if(value.selected){
+          rows.splice(index, 1);
+        }
+      })
       this.props.onChangeRequest(rows)
     }
     toggleIn() {
@@ -108,22 +120,24 @@ export class PurchaseForm extends React.Component {
         modal: false
       });
     }
+    
     ButtonAddRequest=()=>{
       if(!this.props.disabled){
         return(
-          <Container className="float-right">
-            <Button 
-              outline 
+          <Button 
+              color="success" 
+              size="sm"
               onClick={this.toggleIn} 
               className="float-right"
               >
               Adicionar Solicitações
             </Button> 
-          </Container>
         )
       }
       else{
-        return ( "")
+        return ( 
+          ""
+        )
       }
     }
     isDisabled=()=>{
@@ -135,13 +149,21 @@ export class PurchaseForm extends React.Component {
         this.props.purchase.requester.length>0 
       ) ? false:true
     }
+    CustonModalSearch= props=>{
+      return (
+        <SearchField
+          defaultValue={ props.defaultSearch }
+          placeholder={ "Buscar" }/>
+      );
+    }
     ButtonFinishRequest=()=>{
       if(!this.props.disabled){
         return(
-          <Container className="float-right">
+          <Container className="float-right" style={ {margin:'10px'}}>
                 <Button 
-                  color="success" 
+                  color="secondary" 
                   className="float-right" 
+                  size="sm"
                   disabled={this.isDisabled() }
                   onClick={this.props.onSave}
                   value={this.props.edit? 'Salvar Alterações': 'Salvar'}
@@ -155,75 +177,59 @@ export class PurchaseForm extends React.Component {
         return ( "")
       }
     }
-
-  render() {
-    let ColumnRemove= [
-      { 
-        title: 'Siorg',
-        dataIndex: 'siorg', 
-        key: 'siorg', 
-        width: '10%' 
-      },
-      { 
-        title: 'Descrição',
-        dataIndex: 'description', 
-        key: 'description', 
-        width: '80%'
-      },
-      { 
-        title: 'Operação', 
-        dataIndex: '', 
-        key: 'x', 
-        width: '10%',
-        render: this.renderAddAction 
-      },
-    ]
-    let ColumnAdd =[
-      { 
-        title: 'Siorg',
-        dataIndex: 'siorg', 
-        key: 'siorg', 
-        width: '10%' 
-      },
-      { 
-        title: 'Descrição',
-        dataIndex: 'description', 
-        key: 'description', 
-        width: '80%'
-      },
-    ]
-    if(!this.props.disabled){
-      ColumnAdd.push({ 
-        title: 'Operação', 
-        dataIndex: '', 
-        key: 'x', 
-        width: '10%',
-        render: this.renderDeleteAction 
+    onRowSelect = (item,isSelect,e) =>{
+      let requisitionItens= this.state.requisitionItens
+      let index= requisitionItens.indexOf(item)
+      requisitionItens[index]={...requisitionItens[index], selected:isSelect}
+      this.setState({
+        requisitionItems:requisitionItens
+      })
+      console.log(this.state.requisitionItens)
+    }
+    onRowModalSelect = (item,isSelect,e) =>{
+      let data= this.state.data
+      let index= data.requisitions.indexOf(item)
+      data.requisitions[index]={...data.requisitions[index], selected:isSelect}
+      this.setState({
+        requisitionItems:data
       })
     }
-    let mytable=(
-        <div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
-          <ClipLoader
-            color={'#123abc'}
-            loading={this.state.loading}
-          />
-        </div>)
-    if(this.state.loading === false){
-      mytable=<Table 
-                columns={ ColumnRemove}
-                data={this.state.data.requisitions} 
-                className="table" 
-                rowKey={record => record._id} />
+
+    CustomButtonGroupModal = props => {
+      return (
+        <ButtonGroup>
+          <Button type='button'
+            size="sm"
+            className={ `btn btn-success` }
+            onClick={()=>{this.AddRequest()}}>
+            Adicionar Selecionados
+          </Button>
+        </ButtonGroup>
+      );
     }
+    priceFormatter(cell, row) {
+      return `R$ ${cell.toFixed(2)}`;
+    }
+
+  render() {
     return (
-      <div>
+      <Container>
         <Form 
           style={{marginTop: 30}}
         >
 
           <TextInput
+            name="number"
+            label="Numero da Requisição:"
+            type='string'
+            size='4'
+            disabled={!this.props.edit}
+            value={this.props.purchase.number}
+            onChange={this.props.onChange}/>
+
+          <TextInput
             name="requisitionDate"
-            label="Data"
+            label="Data:"
             type='date'
             size='4'
             disabled={this.props.disabled}
@@ -232,7 +238,7 @@ export class PurchaseForm extends React.Component {
 
           <TextInput
             name="management"
-            label="Gestão"
+            label="Gestão:"
             disabled={this.props.disabled}
             size='4'
             value={this.props.purchase.management}
@@ -240,7 +246,7 @@ export class PurchaseForm extends React.Component {
 
           <TextInput
             name="requester"
-            label="Requisitante"
+            label="Requisitante:"
             disabled={this.props.disabled}
             size='4'
             value={this.props.purchase.requester}
@@ -248,7 +254,7 @@ export class PurchaseForm extends React.Component {
          
           <TextInput
             name="sector"
-            label="Setor"
+            label="Setor:"
             disabled={this.props.disabled}
             size='4'
             value={this.props.purchase.sector}
@@ -256,35 +262,66 @@ export class PurchaseForm extends React.Component {
 
           <TextInput
             name="UGR"
-            label="UGR"
+            label="UGR:"
             size='4'
             disabled={this.props.disabled}
             value={this.props.purchase.UGR}
             onChange={this.props.onChange}/>
           
-        <Col sm={12}>
         
-        <this.ButtonAddRequest/>
-        <Table 
-          columns={ ColumnAdd}
-          data={this.props.purchase.requisitionItems} 
-          className="table" 
-          rowKey={record => record._id} />
-        
+         <this.ButtonAddRequest/>
+         <BootstrapTable 
+          ref='table' 
+          data={ this.state.requisitionItens } 
+          options={ {deleteBtn: this.renderDeleteAction, noDataText:"Não há solicitação adicionada" }} 
+          selectRow={ {mode: 'checkbox', clickToSelect: true, onSelect: this.onRowSelect,bgColor: '#e4ecf5' }}
+          deleteRow>
+              <TableHeaderColumn dataField='description' dataSort={ true } isKey>Descrição</TableHeaderColumn>
+              <TableHeaderColumn dataField='qtd'
+                tdStyle={{width:'15%'}} 
+                thStyle={{width:'15%'}} 
+                dataSort={ true }>Quantidade</TableHeaderColumn>
+              <TableHeaderColumn dataField='price'
+                dataFormat={this.priceFormatter}
+                tdStyle={{width:'15%'}} 
+                thStyle={{width:'15%'}} 
+                dataSort={ true }>Preço</TableHeaderColumn>
+                <TableHeaderColumn tdStyle={{width:'14%'}} thStyle={{width:'14%'}} dataField='status' dataSort={ true }>Status</TableHeaderColumn>
+          </BootstrapTable>
+
           <this.ButtonFinishRequest/>
-        </Col>
+        
           
         </Form>
-        <Modal isOpen={this.state.modal} fade={false} toggle={this.toggleOut} className={this.props.className}>
+        <Modal isOpen={this.state.modal} fade={false} toggle={this.toggleOut} size="lg"
+          
+        >
           <ModalHeader toggle={this.toggle}>Solicitações Disponíveis</ModalHeader>
           <ModalBody>
-            {mytable}
+          <BootstrapTable 
+            ref='table' 
+            search
+            pagination
+            data={ this.state.data.requisitions } 
+            options={ {btnGroup: this.CustomButtonGroupModal, searchField:this.CustonModalSearch, noDataText:"Não há solicitação adicionada" }} 
+            selectRow={ {mode: 'checkbox', clickToSelect: true, onSelect: this.onRowModalSelect,bgColor: '#e4ecf5' }}
+            >
+                <TableHeaderColumn  dataField='description' dataSort={ true } isKey>Descrição</TableHeaderColumn>
+                <TableHeaderColumn tdStyle={{width:'16%'}} thStyle={{width:'16%'}} dataField='qtd' dataSort={ true }>Quantidade</TableHeaderColumn>
+                <TableHeaderColumn 
+                  dataFormat={this.priceFormatter}
+                  tdStyle={{width:'15%'}} 
+                  thStyle={{width:'15%'}} 
+                  dataField='price' 
+                  dataSort={ true }>Preço</TableHeaderColumn>
+                <TableHeaderColumn tdStyle={{width:'14%'}} thStyle={{width:'14%'}} dataField='status' dataSort={ true }>Status</TableHeaderColumn>
+          </BootstrapTable>
           </ModalBody>
           <ModalFooter>
-              <Button color="secondary" onClick={this.toggleOut}>Fechar</Button>
+              <Button color="danger" onClick={this.toggleOut}>Fechar</Button>
           </ModalFooter>
         </Modal>
-      </div>
+      </Container>
   );
   }
 }

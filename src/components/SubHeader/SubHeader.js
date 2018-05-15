@@ -16,7 +16,7 @@ export default class SubHeader extends React.Component {
 	render() {
 		return (
 			<div>
-                <h2 className="font font-nav margin-title" align='left'>{this.state.title}</h2>
+                <h2 className="font-sb font-nav margin-title" align='left'>{this.state.title}</h2>
                 <Line></Line>
             </div>
 		);

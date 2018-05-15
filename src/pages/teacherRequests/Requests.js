@@ -7,7 +7,6 @@ import '../Pages.css';
 import TableList from '../../components/TableList/TableList';
 import SubHeader from '../../components/SubHeader/SubHeader';
 
-import {Link} from 'react-router-dom';
 import Header from '../../components/Header/Header';
 
 import axios from 'axios';
@@ -46,11 +45,11 @@ export default class ApprovedRequests extends React.Component {
 							this.handleClick(item)
 						}} type="submit">Solicitar</Button>),
 
-						edit:<Button color="primary" onClick={ (item)=>{
+						edit:<Button color="primary" onClick={ ()=>{
 							this.props.history.push({
-								pathname: `editarsolicitacoes/${item._id}`,
-								state: { product: item }
-							})
+								pathname: `/editarsolicitacoes/${item._id}`,
+								id:item._id
+								})
 						} } type="submit">Editar</Button> 
 						
 					})

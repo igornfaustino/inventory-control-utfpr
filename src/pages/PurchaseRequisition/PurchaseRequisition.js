@@ -15,7 +15,6 @@ export default class PurchaseRequisition extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            match: this.props.match
         }
     }
     render() {
@@ -23,10 +22,10 @@ export default class PurchaseRequisition extends React.Component {
             <div>
                 <Header></Header>
                 <Switch>
-                    <Route exact path={`${this.state.match.url}`} component={PurchaseListPage} />
-                    <Route exact path={`${this.state.match.url}/novo`} component={NewPurchasePage} />
-                    <Route exact path={`${this.state.match.url}/editar/:id`} component={EditPurchase} />
-                    <Route exact path={`${this.state.match.url}/visualizar/:id`} component={ViewPurchase} />
+                    <Route exact path={`${this.props.match.url}`} component={PurchaseListPage} />
+                    <Route exact path={`${this.props.match.url}/novo`} component={NewPurchasePage} />
+                    <Route exact path={`${this.props.match.url}/editar/:id`} component={EditPurchase} />
+                    <Route exact path={`${this.props.match.url}/visualizar/:id`} component={ViewPurchase} />
                 </Switch>
             </div >
         )
