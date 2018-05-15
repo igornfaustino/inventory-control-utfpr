@@ -4,7 +4,6 @@ import { loadAllPurchaseRequisition } from "./connectAPI";
 // Import React Table
 import "react-table/react-table.css";
 import SubHeader from '../SubHeader/SubHeader';
-import { Link } from 'react-router-dom';
 import { Container, Button } from 'reactstrap'
 import TableList from '../TableList/TableList';
 import moment from 'moment'
@@ -43,17 +42,22 @@ export default class PurchaseListPage extends React.Component {
     RenderEditAction = (index) => {
         const id = this.state.purchaselist[index]._id
         return (
-            <Link to={`${this.state.match.url}/editar/${id}`}>
-                Editar
-          </Link>
+            <Button color="primary" onClick={ ()=>{
+                this.props.history.push({
+                    pathname: `${this.state.match.url}/editar/${id}`,
+                })
+            } } type="submit">Editar</Button> 
         );
     }
     RenderViewAction = (index) => {
         const id = this.state.purchaselist[index]._id
         return (
-            <Link to={`${this.state.match.url}/visualizar/${id}`}>
-                Visualizar
-          </Link>
+            <Button color="secondary" onClick={ ()=>{
+                this.props.history.push({
+                    pathname: `${this.state.match.url}/visualizar/${id}`,
+                    })
+            } } type="submit">Visualizar</Button> 
+
         );
     }
     render() {
@@ -89,7 +93,8 @@ export default class PurchaseListPage extends React.Component {
             data = (
                 <div>
                     <TableList header={['Gestão', 'Requisitante', 'Data', 'Custo', '', '']} items={items} />
-                    <Container className="float-right">
+                    
+                    <Container className="float-right" style={ {marginTop:'40px',} }>
                         <Button
                             color="success"
                             href={`${this.state.match.url}/novo`}

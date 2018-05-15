@@ -157,7 +157,7 @@ export default class Products extends React.Component {
 							onFileLoaded={this.handleForce}
 						/>
 
-						<Button disabled={!this.state.canUpload} type="button" color="primary" className="btn btn-primary margin-top" onClick={() => {
+						<Button disabled={!this.state.canUpload} type="button" color="secondary" style={ {marginBottom:'5px'} } className="btn btn-primary margin-top" onClick={() => {
 							this.submitSheet()
 						}}>
 							Enviar planilha

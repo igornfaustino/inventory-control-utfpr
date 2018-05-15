@@ -309,12 +309,14 @@ export default class FormRequest extends React.Component {
 	render() {
 		const { descriptionValid, quantityValid, justifyValid } = this.state
 		return (
+			<div>
+				<SubHeader title={this.props.title}></SubHeader>
+
 			<Container>
 				<Prompt
 					when={descriptionValid || quantityValid || justifyValid}
 					message="tem certeza que deseja sair desta página? Todas as suas alterações serão perdidas"
 				/>
-				<SubHeader title={this.props.title}></SubHeader>
 				<Form style={{
 					marginTop: 30
 				}}>
@@ -381,7 +383,7 @@ export default class FormRequest extends React.Component {
 															placeholder={'Referência para cotação'}
 															value={quotation.reference}
 															onChange={this.handleQuotationChange(idx)}
-														/>
+															/>
 													</Col>
 												</FormGroup>
 												<FormGroup row style={marginRight}>
@@ -391,7 +393,7 @@ export default class FormRequest extends React.Component {
 															placeholder={'R$'}
 															value={quotation.price}
 															onChange={this.handleQuotationChange(idx)}
-														/>
+															/>
 													</Col>
 												</FormGroup>
 											</Col>
@@ -445,7 +447,7 @@ export default class FormRequest extends React.Component {
 															placeholder={'R$'}
 															value={quotation.price}
 															onChange={this.handleQuotationChange(idx)}
-														/>
+															/>
 													</Col>
 												</FormGroup>
 
@@ -462,18 +464,19 @@ export default class FormRequest extends React.Component {
 									</Container>
 								)
 							}
-
+							
 						})}
 					</Container>
 				</Form>
 
 				<div align="right" className={'margin'}>
-					<Button type="submit" color="secondary" className="btn btn-primary"
+					<Button type="submit" style={ {marginBottom:'5px'} } color="secondary" className="btn btn-primary"
 						disabled={!this.state.formValid} onClick={this.state.edit ? this.saveRequest : this.submitRequest}>
 						{this.state.edit ? 'Salvar Alterações' : 'Enviar Solicitação'}
 					</Button>
 				</div>
 			</Container>
+	</div>
 		);
 	}
 }
