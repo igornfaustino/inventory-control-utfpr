@@ -9,8 +9,8 @@ export class PurchasePrintView extends React.Component {
       super(props)
 
       this.state={
-        requisitionNumber: null,
         management: '',
+        number:'',
         requisitionDate: "",
         UGR: '',
         sector: '',
@@ -85,7 +85,7 @@ export class PurchasePrintView extends React.Component {
                 <tbody>
                 <tr>
                     <td class="font-weight-bold">Requisição:</td>
-                    <td>{this.state.requisitionNumber?this.state.requisitionNumber: "Não definido"}</td>
+                    <td>{this.state.number?this.state.number: "Não definido"}</td>
                     <td class="font-weight-bold">Setor:</td>
                     <td>{this.state.sector}</td>
                 </tr>
@@ -112,7 +112,7 @@ export class PurchasePrintView extends React.Component {
             <Table bordered condensed hover>
                 <thead>
                 <tr>
-                   <td colSpan="4" class="font-weight-bold">Itens Inseridos</td>
+                   <td colSpan="4" class="font-weight-bold text-center">Itens Inseridos</td>
                 </tr>
                 <tr>
                    <td class="font-weight-bold">Item</td>
@@ -128,7 +128,7 @@ export class PurchasePrintView extends React.Component {
             <Table bordered condensed hover>
                 <thead>
                 <tr>
-                   <td colSpan="3" class="font-weight-bold">Custo Estimado</td>
+                   <td colSpan="3" class="font-weight-bold text-center">Custo Estimado</td>
                 </tr>
                 <tr>
                    <td class="font-weight-bold">Elemento de despesa</td>

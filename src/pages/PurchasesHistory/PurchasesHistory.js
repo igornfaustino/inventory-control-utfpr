@@ -102,7 +102,8 @@ export default class PurchasesHistory extends React.Component {
 		if (this.state.loading === false) {
 			data = <TableList header={['Descrição', 'Custo', 'Data', ' ']} items={this.state.items} />
 		} else {
-			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
+			data = (
+			<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
 				<ClipLoader
 					color={'#123abc'}
 					loading={this.state.loading}
