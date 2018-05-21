@@ -1,0 +1,7 @@
+front-end:
+  build: .
+  ports:
+   - 3000:3000
+  volumes:  
+   - .:/usr/src/app
+  command: bash -c "npm install; npm start"
