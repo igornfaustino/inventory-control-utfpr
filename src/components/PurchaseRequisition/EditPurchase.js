@@ -26,7 +26,7 @@ export default class EditPurchase extends React.Component {
         try{
             const data=this.state.data
             loadPurchaseRequisition(this.state.match.params.id).then((value)=>{
-                console.log(value)
+              console.log(value)
               data.purchase=value.purchases
               this.setState(
                 {
