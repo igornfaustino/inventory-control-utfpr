@@ -168,6 +168,12 @@ export default class FormRequest extends React.Component {
 		console.log(this.state.quotation)
 		let prices = this.state.quotation
 		for (let i = 0; i < prices.length; i++) {
+			if (prices[i].rawFile){
+				let formData = new FormData();
+				formData.append('file', prices[i].rawFile)
+				const file = await axios.post('/file/', formData);
+				prices[i].reference = file.data.fileId
+			}
 			delete prices[i].file
 			delete prices[i].rawFile
 		}
