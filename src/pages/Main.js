@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import Login from './Login/Login';
 import Home from './Home/Home';
 import NewRequests from './NewRequests/NewRequests';
-import Requests from './teacherRequests/Requests';
+import Requests from './Requests/Requests';
 import Products from './Products/Products';
 import ApprovedRequests from './approvedRequests/ApprovedRequests';
 import PurchasesHistory from './PurchasesHistory/PurchasesHistory';
