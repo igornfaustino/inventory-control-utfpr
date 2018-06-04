@@ -23,6 +23,9 @@
     "react-table": "^6.8.2",
     "reactstrap": "^5.0.0-beta.3"
   },
+  "resolutions": {
+    "@babel/runtime": "7.0.0-beta.46"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
