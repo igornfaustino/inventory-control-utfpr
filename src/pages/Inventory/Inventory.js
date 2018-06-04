@@ -4,7 +4,7 @@ import { ClipLoader } from 'react-spinners';
 import {BootstrapTable, TableHeaderColumn,SearchField} from 'react-bootstrap-table';
 
 import '../Pages.css';
-import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
+// import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
 import TableList from '../../components/TableList/TableList';
 import SubHeader from '../../components/SubHeader/SubHeader';
@@ -126,6 +126,7 @@ export default class Inventory extends React.Component {
 					search
             		//pagination
 					data={this.state.items}
+					headerStyle={{ fontSize: "15px", position: "relative", top: "-30px"}}
 					options={{searchField:this.CustonModalSearch, noDataText:"Não há solicitação adicionada" }}
 					>
 					<TableHeaderColumn dataField='siorg' dataSort={ true }
