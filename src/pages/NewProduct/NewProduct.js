@@ -7,6 +7,23 @@ import './NewProduct.css';
 import axios from 'axios';
 
 export default class NewProduct extends React.Component {
+
+	constructor(props){
+		super(props);
+
+		this.state = {
+			siorg: '',
+			buyer: '',
+			requester: '',
+			description: '',
+			origin: '',
+			type: '',
+			quantity: '',
+			state: '',
+		};
+	}
+
+
 	render() {
 		return (
 			<div className="margin-left">
