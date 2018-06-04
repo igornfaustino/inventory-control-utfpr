@@ -9,6 +9,7 @@ import ApprovedRequests from './approvedRequests/ApprovedRequests';
 import PurchasesHistory from './PurchasesHistory/PurchasesHistory';
 import PurchaseRequisition from './PurchaseRequisition/PurchaseRequisition';
 import EditRequest from './EditRequest/EditRequest';
+import Inventory from './Inventory/Inventory';
 
 const Main = () => (
 	<main>
@@ -22,6 +23,7 @@ const Main = () => (
 			<Route path='/aprovados' component={ApprovedRequests} />
 			<Route path='/requisicao' component={PurchaseRequisition} />
 			<Route path='/compras' component={PurchasesHistory} />
+			<Route path='/almoxarifado' component={Inventory} />
 		</Switch>
 	</main>
 );
