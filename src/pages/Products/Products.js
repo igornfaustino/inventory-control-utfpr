@@ -42,6 +42,7 @@ export default class Products extends React.Component {
 						// siorg: item.siorg,
 						description: item.description,
 						date: moment(item.date).locale('pt-br').format('DD/MM/YYYY'),
+						status: item.status,
 						input: (<Button color="success" onClick={() => {
 							this.handleClick(item)
 						}} type="submit">Solicitar</Button>)
@@ -132,7 +133,7 @@ export default class Products extends React.Component {
 	render() {
 		let data
 		if (this.state.loading === false) {
-			data = <TableList header={['Descrição', 'Data', ' ']} items={this.state.items} />
+			data = <TableList header={['Descrição', 'Data', 'status', '']} items={this.state.items} />
 		} else {
 			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
 				<ClipLoader
