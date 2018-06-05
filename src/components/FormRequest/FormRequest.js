@@ -18,6 +18,8 @@ export default class FormRequest extends React.Component {
 			// edit fields
 			status: 'Pendente',
 			changeJustification: '',
+			itemType: 'Eletronico',
+			priceJustification: '',
 
 			// Normal fields
 			description: '',
@@ -60,6 +62,8 @@ export default class FormRequest extends React.Component {
 				justify: this.props.requisition.justification,
 				quotation: this.props.requisition.quotation,
 				status: this.props.requisition.status,
+				itemType: this.props.requisition.itemType,
+				priceJustification: this.props.requisition.priceJustification,
 				edit: true,
 				_id: this.props.requisition._id,
 				descriptionValid: true,
@@ -128,6 +132,7 @@ export default class FormRequest extends React.Component {
 			quantityValid: false,
 			justifyValid: false,
 			formValid: false,
+			changeJustificationValid: false,
 		});
 
 
@@ -137,11 +142,16 @@ export default class FormRequest extends React.Component {
 			qtd: this.state.quantity,
 			status: this.state.status,
 			changeJustification: this.state.changeJustification,
+			priceJustification: this.state.priceJustification,
+			itemType: this.state.itemType,
 			quotation: await this.preparePriceEdit()
 		}).then(res => {
 			console.log(res)
 			if (res.status === 200) {
 				alert("Atualizado com sucesso")
+				this.setState({
+					changeJustification: ''
+				});
 			} else {
 				alert("Opss.. algo saiu errado");
 				this.setState({
@@ -149,6 +159,7 @@ export default class FormRequest extends React.Component {
 					quantityValid: true,
 					justifyValid: true,
 					formValid: true,
+					changeJustificationValid: true,
 				});
 			}
 		}).catch(err => {
@@ -159,6 +170,7 @@ export default class FormRequest extends React.Component {
 				quantityValid: true,
 				justifyValid: true,
 				formValid: true,
+				changeJustificationValid: true,				
 			});
 		});
 	}
@@ -373,7 +385,7 @@ export default class FormRequest extends React.Component {
 	render() {
 		const { descriptionValid, quantityValid, justifyValid } = this.state
 
-		// Only edit status if in edit screen
+		// Only shows if in edit screen
 		const edit = this.state.edit ? (
 			<div>
 				<FormGroup row style={marginRight}>
@@ -388,11 +400,29 @@ export default class FormRequest extends React.Component {
 						</Input>
 					</Col>
 				</FormGroup>
+				<FormGroup row style={marginRight}>
+					<Label for="descriptionArea" sm={2}>Tipo do Item:</Label>
+					<Col sm={7}>
+						<Input type="select" name="itemType" id="status" onChange={(event) => this.handleUserInput(event)} value={this.state.itemType} >
+							<option value="Eletronico" >Eletronico</option>
+							<option value="Escolar" >Escolar</option>
+							{/* <option>5</option> */}
+						</Input>
+					</Col>
+				</FormGroup>
+				<hr />
+				<FormGroup row style={marginRight}>
+					<Label for="justifyArea" sm={2}>Justificativa para a cotação:</Label>
+					<Col sm={7}>
+						<Input value={this.state.priceJustification} type="textarea" id="justifyArea" name="priceJustification" onChange={(event) => this.handleUserInput(event)}
+							placeholder="Adicione uma justificativa caso necessario.." />
+					</Col>
+				</FormGroup>
 				<hr />
 				<FormGroup row style={marginRight}>
 					<Label for="justifyArea" sm={2}>*Motivo da Modificação:</Label>
 					<Col sm={7}>
-						<Input value={this.state.onChange} type="textarea" id="justifyArea" name="changeJustification" onChange={(event) => this.handleUserInput(event)}
+						<Input value={this.state.changeJustification} type="textarea" id="justifyArea" name="changeJustification" onChange={(event) => this.handleUserInput(event)}
 							placeholder="Justificativa para tal modificação" />
 					</Col>
 				</FormGroup>
