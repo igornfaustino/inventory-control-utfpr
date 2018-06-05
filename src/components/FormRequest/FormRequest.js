@@ -79,6 +79,7 @@ export default class FormRequest extends React.Component {
 			this.setState({
 				siorg: this.props.location.state.product.siorg,
 				description: this.props.location.state.product.description,
+				quantity: this.props.location.state.product.qtd,
 				descriptionValid: true
 			});
 		}
