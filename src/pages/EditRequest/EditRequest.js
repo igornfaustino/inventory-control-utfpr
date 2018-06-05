@@ -1,6 +1,6 @@
 import React from 'react';
 import '../Home/Home.css';
-import FormRequest from "../NewRequests/FormRequest";
+import FormRequest from "../../components/FormRequest/FormRequest";
 import { loadRequisition } from "../../components/PurchaseRequisition/connectAPI";
 
 import { ClipLoader } from 'react-spinners';
