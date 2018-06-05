@@ -22,6 +22,7 @@ export default class FormRequest extends React.Component {
 			priceJustification: '',
 
 			// Normal fields
+			siorg: '',
 			description: '',
 			quantity: '',
 			justify: '',
@@ -57,6 +58,7 @@ export default class FormRequest extends React.Component {
 		console.log(this.props)
 		if (this.props.requisition) {
 			this.setState({
+				siorg: this.props.requisition.siorg,
 				description: this.props.requisition.description,
 				quantity: this.props.requisition.qtd,
 				justify: this.props.requisition.justification,
@@ -75,6 +77,7 @@ export default class FormRequest extends React.Component {
 		}
 		if (this.props.location.state && this.props.location.state.product) {
 			this.setState({
+				siorg: this.props.location.state.product.siorg,
 				description: this.props.location.state.product.description,
 				descriptionValid: true
 			});
@@ -137,6 +140,7 @@ export default class FormRequest extends React.Component {
 
 
 		axios.put('/requisition/' + this.state._id, {
+			siorg: this.state.siorg,
 			description: this.state.description,
 			justification: this.state.justify,
 			qtd: this.state.quantity,
@@ -229,6 +233,7 @@ export default class FormRequest extends React.Component {
 		});
 
 		axios.post('/requisition/', {
+			siorg: this.state.siorg,
 			description: this.state.description,
 			justification: this.state.justify,
 			qtd: this.state.quantity,
@@ -447,13 +452,16 @@ export default class FormRequest extends React.Component {
 			history = this.state.history.map((value) => {
 				return (
 					<div key={value._id}>
-						<p><span style={{ fontWeight: 'bold' }}>Justificativa da alteração:</span> {value.changeJustification}</p>
-						<p><span style={{ fontWeight: 'bold' }}>data de alteração:</span> {moment(value.date).format("DD/MM/YYYY")}</p>
+						<p><span style={{ fontWeight: 'bold' }}>Justificativa da Alteração:</span> {value.changeJustification}</p>
+						<p><span style={{ fontWeight: 'bold' }}>Data de Alteração:</span> {moment(value.date).format("DD/MM/YYYY")}</p>
 						<br />
+						<p><span style={{ fontWeight: 'bold' }}>Siorg:</span> {value.siorg}</p>
 						<p><span style={{ fontWeight: 'bold' }}>Descrição:</span> {value.description}</p>
 						<p><span style={{ fontWeight: 'bold' }}>Justificativa:</span> {value.justification}</p>
 						<p><span style={{ fontWeight: 'bold' }}>Quantidade:</span> {value.qtd}</p>
 						<p><span style={{ fontWeight: 'bold' }}>Status:</span> {value.status}</p>
+						<p><span style={{ fontWeight: 'bold' }}>Tipo do Item:</span> {value.itemType}</p>
+						<p><span style={{ fontWeight: 'bold' }}>Justificativa da Cotação:</span> {value.priceJustification}</p>
 						<hr />
 					</div>
 				)
@@ -480,6 +488,15 @@ export default class FormRequest extends React.Component {
 					}}>
 						<FormGroup row style={marginRight}>
 						</FormGroup>
+						<div className={`form-group${this.errorClass(this.state.formErrors.description)}`}>
+							<FormGroup row style={marginRight}>
+								<Label sm={2}>Siorg:</Label>
+								<Col sm={7}>
+									<Input value={this.state.siorg} type="text" name="siorg" onChange={(event) => this.handleUserInput(event)}
+										placeholder="Numero do SIORG" />
+								</Col>
+							</FormGroup>
+						</div>
 						<div className={`form-group${this.errorClass(this.state.formErrors.description)}`}>
 							<FormGroup row style={marginRight}>
 								<Label for="descriptionArea" sm={2}>Descrição:</Label>
