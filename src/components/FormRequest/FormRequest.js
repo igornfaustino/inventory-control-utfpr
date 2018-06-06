@@ -80,7 +80,9 @@ export default class FormRequest extends React.Component {
 				siorg: this.props.location.state.product.siorg,
 				description: this.props.location.state.product.description,
 				quantity: this.props.location.state.product.qtd,
-				descriptionValid: true
+				descriptionValid: true,
+				quantityValid: true,
+
 			});
 		}
 	}
@@ -175,7 +177,7 @@ export default class FormRequest extends React.Component {
 				quantityValid: true,
 				justifyValid: true,
 				formValid: true,
-				changeJustificationValid: true,				
+				changeJustificationValid: true,
 			});
 		});
 	}
@@ -221,7 +223,7 @@ export default class FormRequest extends React.Component {
 	}
 
 	submitRequest = async () => {
-		if (!this.state.changeJustificationValid || !this.state.descriptionValid || !this.state.quantityValid || !this.state.justifyValid) {
+		if (!this.state.descriptionValid || !this.state.quantityValid || !this.state.justifyValid) {
 			alert("Preencha todos os campos");
 			return;
 		}
@@ -244,6 +246,7 @@ export default class FormRequest extends React.Component {
 			if (res.status === 200) {
 				alert("Solicitação cadastrada")
 				this.setState({
+					siorg: '',
 					description: '',
 					quantity: '',
 					justify: '',
@@ -455,7 +458,7 @@ export default class FormRequest extends React.Component {
 					<div key={value._id}>
 						<p><span style={{ fontWeight: 'bold' }}>Justificativa da Alteração:</span> {value.changeJustification}</p>
 						<p><span style={{ fontWeight: 'bold' }}>Data de Alteração:</span> {moment(value.date).format("DD/MM/YYYY")}</p>
-						<br />
+						<hr />
 						<p><span style={{ fontWeight: 'bold' }}>Siorg:</span> {value.siorg}</p>
 						<p><span style={{ fontWeight: 'bold' }}>Descrição:</span> {value.description}</p>
 						<p><span style={{ fontWeight: 'bold' }}>Justificativa:</span> {value.justification}</p>
@@ -463,7 +466,7 @@ export default class FormRequest extends React.Component {
 						<p><span style={{ fontWeight: 'bold' }}>Status:</span> {value.status}</p>
 						<p><span style={{ fontWeight: 'bold' }}>Tipo do Item:</span> {value.itemType}</p>
 						<p><span style={{ fontWeight: 'bold' }}>Justificativa da Cotação:</span> {value.priceJustification}</p>
-						<hr />
+						<hr style={{ border: '0', height: '1px', background: '#333' }} />
 					</div>
 				)
 			})
