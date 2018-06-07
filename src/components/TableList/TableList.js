@@ -2,8 +2,12 @@ import React from 'react';
 import {
 	Table,
 	Input,
-	Container
+	Container,
+	FormGroup,
+	Col
 } from 'reactstrap';
+import { Icon } from 'react-icons-kit'
+import { minus, chevronUp, chevronDown } from 'react-icons-kit/fa/'
 
 import '../../pages/Pages.css';
 import './TableList.css';
@@ -18,13 +22,14 @@ export default class TableList extends React.Component {
 			tableItems: [].concat(props.items),
 			filterStr: '',
 			filter: null,
+			desc: false,
 			validHeaders: [],
 		};
 	}
 
 	componentDidMount() {
 		let validHeaders = this.state.headerItems.map((header, index) => {
-			if (header != "" && header != " ") {
+			if (header !== "" && header !== " ") {
 				return index
 			}
 			return -1
@@ -37,25 +42,59 @@ export default class TableList extends React.Component {
 	}
 
 	render() {
-		const HeaderItems = this.state.headerItems.map((item, index) => <th key={index} onClick={() => {
-			if (this.state.filter != index) {
-				this.setState({
-					filter: index
-				})
-			} else {
-				this.setState({
-					filter: null
-				})
+		const HeaderItems = this.state.headerItems.map((item, index) => {
+			let onClick = () => {
+				if (this.state.filter !== index && !this.state.desc) {
+					this.setState({
+						filter: index
+					})
+				} else if (!this.state.desc) {
+					this.setState({
+						desc: true
+					})
+				} else {
+					this.setState({
+						filter: null,
+						desc: false
+					})
+				}
 			}
-		}} >{item}</th>);
+
+			if (this.state.filter == index && !this.state.desc) {
+				return <th key={index} onClick={onClick
+				} >{item}<span style={{
+					margin: 10,
+					padding: 'auto',
+					fontWeight: 'normal'
+				}}><Icon icon={chevronDown} /></span></th>
+			} else if (this.state.filter == index && this.state.desc) {
+				return <th key={index} onClick={onClick
+				} >{item}<span style={{
+					margin: 10,
+					padding: 'auto',
+					fontWeight: 'normal'
+				}}><Icon icon={chevronUp} /></span></th>
+			} else if (item != '') {
+				return <th key={index} onClick={onClick
+				} >{item}<span style={{
+					margin: 10,
+					padding: 'auto',
+					fontWeight: 'normal'
+				}}><Icon icon={minus} /></span></th>
+			} else {
+				return <th key={index} onClick={onClick
+				} >{item}</th>
+			}
+		});
 
 		// Show table itens
 		let TableItems = this.state.tableItems.filter((item) => {
 			// Filter table
 			let valid = false;
-			let filter = Object.keys(item).map((key, index) => {
+			Object.keys(item).map((key, index) => {
 				if (key.charAt(0) !== '_')
 					valid = valid || item[key].toString().toLowerCase().includes(this.state.filterStr.toLowerCase())
+				return key
 			});
 			return valid;
 		});
@@ -66,9 +105,11 @@ export default class TableList extends React.Component {
 				delete y._id
 				let keyX = Object.keys(x)
 				let keyY = Object.keys(y)
-				
-				console.log(x[keyX[this.state.filter]])
-				return x[keyX[this.state.filter]] > y[keyY[this.state.filter]] 
+
+				if (this.state.desc) {
+					return x[keyX[this.state.filter]] < y[keyY[this.state.filter]]
+				}
+				return x[keyX[this.state.filter]] > y[keyY[this.state.filter]]
 			}))
 		}
 
@@ -99,17 +140,28 @@ export default class TableList extends React.Component {
 		console.log(this.state.validHeaders)
 		return (
 			<div>
-				<Input type="text" placeholder="Busca..." value={this.state.filterStr} onChange={(e) => this.setState({ filterStr: e.target.value })} />
-				<Table responsive>
-					<thead>
-						<tr>
-							{HeaderItems}
-						</tr>
-					</thead>
-					<tbody>
-						{TableItems}
-					</tbody>
-				</Table>
+				<Container fluid>
+					<FormGroup row style={{ marginBottom: '0px' }}>
+						<Col md="8"></Col>
+						<Col md="4">
+							<Input style={{
+								marginTop: '5px',
+							}} type="text" placeholder="Busca..." value={this.state.filterStr} onChange={(e) => this.setState({ filterStr: e.target.value })} />
+						</Col>
+					</FormGroup>
+					<Table hover style={{
+						marginTop: '5px',
+					}}>
+						<thead>
+							<tr>
+								{HeaderItems}
+							</tr>
+						</thead>
+						<tbody>
+							{TableItems}
+						</tbody>
+					</Table>
+				</Container>
 			</div>
 		);
 	}

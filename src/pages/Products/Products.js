@@ -37,12 +37,13 @@ export default class Products extends React.Component {
 				let requisitions = response.data.requisitions;
 				let items = []
 				requisitions.forEach((item) => {
+					// console.log()
 					items.push({
 						_id: item._id,
 						siorg: item.siorg,
 						description: item.description,
 						qtd: item.qtd,
-						date: moment(item.date).locale('pt-br').format('DD/MM/YYYY'),
+						date: moment(item.history[item.history.length -1].date).locale('pt-br').format('DD/MM/YYYY'),
 						status: item.status,
 						input: (<Button color="success" onClick={() => {
 							this.handleClick(item)

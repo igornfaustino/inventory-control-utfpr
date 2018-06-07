@@ -459,13 +459,13 @@ export default class FormRequest extends React.Component {
 						<p><span style={{ fontWeight: 'bold' }}>Justificativa da Alteração:</span> {value.changeJustification}</p>
 						<p><span style={{ fontWeight: 'bold' }}>Data de Alteração:</span> {moment(value.date).format("DD/MM/YYYY")}</p>
 						<hr />
-						<p><span style={{ fontWeight: 'bold' }}>Siorg:</span> {value.siorg}</p>
-						<p><span style={{ fontWeight: 'bold' }}>Descrição:</span> {value.description}</p>
-						<p><span style={{ fontWeight: 'bold' }}>Justificativa:</span> {value.justification}</p>
-						<p><span style={{ fontWeight: 'bold' }}>Quantidade:</span> {value.qtd}</p>
-						<p><span style={{ fontWeight: 'bold' }}>Status:</span> {value.status}</p>
-						<p><span style={{ fontWeight: 'bold' }}>Tipo do Item:</span> {value.itemType}</p>
-						<p><span style={{ fontWeight: 'bold' }}>Justificativa da Cotação:</span> {value.priceJustification}</p>
+						<p><span style={{ fontWeight: 'bold' }}>Siorg:</span> {(value.siorg && value.siorg !== '') ? value.siorg : ' - '}</p>
+						<p><span style={{ fontWeight: 'bold' }}>Descrição:</span> {(value.description && value.description !== '') ? value.description : ' - '}</p>
+						<p><span style={{ fontWeight: 'bold' }}>Justificativa:</span> {(value.justification && value.justification !== '') ? value.justification : ' - '}</p>
+						<p><span style={{ fontWeight: 'bold' }}>Quantidade:</span> {(value.qtd && value.qtd !== '') ? value.qtd : ' - '}</p>
+						<p><span style={{ fontWeight: 'bold' }}>Status:</span> {(value.status && value.status !== '') ? value.status : ' - '}</p>
+						<p><span style={{ fontWeight: 'bold' }}>Tipo do Item:</span> {(value.itemType && value.itemType !== '') ? value.itemType : ' - '}</p>
+						<p><span style={{ fontWeight: 'bold' }}>Justificativa da Cotação:</span> {(value.priceJustification && value.priceJustification !== '') ? value.priceJustification : ' - '}</p>
 						<hr style={{ border: '0', height: '1px', background: '#333' }} />
 					</div>
 				)
