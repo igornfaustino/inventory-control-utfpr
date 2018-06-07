@@ -54,7 +54,7 @@ export default class Inventory extends React.Component {
 						...item,
 						edit:<Button color="primary" onClick={ ()=>{
 							this.props.history.push({
-								pathname: `/editarsolicitacoes/${item._id}`, //MUDAR PARA EDITAR EQUIPAMENTOS
+								pathname: `'/editarequipamento/${item._id}`,
 								id:item._id
 								})
 						} } type="submit">Editar</Button> 
@@ -78,7 +78,7 @@ export default class Inventory extends React.Component {
 
 	handleClick(e) {
 		this.props.history.push({
-			pathname: '/novasolicitacoes', //MUDAR PARA CADASTRAR ITENS
+			pathname: '/novoproduto',
 			state: { product: e }
 		})
 	}

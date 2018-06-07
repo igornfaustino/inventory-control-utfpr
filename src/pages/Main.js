@@ -10,6 +10,7 @@ import PurchasesHistory from './PurchasesHistory/PurchasesHistory';
 import PurchaseRequisition from './PurchaseRequisition/PurchaseRequisition';
 import EditRequest from './EditRequest/EditRequest';
 import Inventory from './Inventory/Inventory';
+//import NewProduct from './NewProduct/NewProduct';
 
 const Main = () => (
 	<main>
@@ -24,6 +25,9 @@ const Main = () => (
 			<Route path='/requisicao' component={PurchaseRequisition} />
 			<Route path='/compras' component={PurchasesHistory} />
 			<Route path='/almoxarifado' component={Inventory} />
+			{/* <Route path='/editarequipamento/:id' component={CHOPTIAN} /> */}
+			{/* <Route path='/novoproduto' component={NewProduct} /> CLÁUDIA AQUI */}
+
 		</Switch>
 	</main>
 );
