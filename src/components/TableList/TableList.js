@@ -44,9 +44,10 @@ export default class TableList extends React.Component {
 	render() {
 		const HeaderItems = this.state.headerItems.map((item, index) => {
 			let onClick = () => {
-				if (this.state.filter !== index && !this.state.desc) {
+				if (this.state.filter !== index) {
 					this.setState({
-						filter: index
+						filter: index,
+						desc: false
 					})
 				} else if (!this.state.desc) {
 					this.setState({
