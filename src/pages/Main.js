@@ -12,7 +12,7 @@ import EditRequest from './EditRequest/EditRequest';
 import Inventory from './Inventory/Inventory';
 import EquipmentsEdit from './EquipmentEditing/EquipmentEditing';
 import EquipmentDetailsView from './EquipmentDetails/EquipmentDetailsView'
-//import NewProduct from './NewProduct/NewProduct';
+import NewProduct from './NewProduct/NewProduct';
 
 const Main = () => (
 	<main>
@@ -29,7 +29,8 @@ const Main = () => (
 			<Route path='/almoxarifado' component={Inventory} />
 			<Route path='/editarequipamento/:id' component={EquipmentsEdit} />
 			<Route path='/detalhesequipamento/:id' component={EquipmentDetailsView} />
-			{/* <Route path='/novoproduto' component={NewProduct} /> CLÁUDIA AQUI */}
+			<Route path='/novoproduto' component={NewProduct} />
+
 		</Switch>
 	</main>
 );

@@ -11,8 +11,8 @@ class App extends Component {
 		return (
 			<BrowserRouter>
 				<div className="App">
-					{/* <Main></Main> */}
-					<NewProduct></NewProduct>
+					<Main></Main>
+					{/* <NewProduct></NewProduct> */}
 				</div>
 			</BrowserRouter>
 		);
