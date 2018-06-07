@@ -19,38 +19,26 @@ export default class Inventory extends React.Component {
 		super(props);
 		this.handleClick = this.handleClick.bind(this);
 		this.state = {
-			loading: false,
+			loading: true,
 			term: 'teste',
 			isDisabled: true,
 			checkedCount: 0,
-            items: [{
-				_id: 89,
-				siorg: 1111,
-				solicitor: "item.solicitor",
-				description: "item.description",
-				origin: "item.origin",
-				equipmentType: "item.equipmentType",
-				quantity: 2,
-				equipmentState: "item.equipmentState",
-				locationHistory: "item.locationHistory",
-				input: (<Button color="primary" onClick={() => {
-					//this.handleClick(item)
-				}} type="submit">Editar</Button>)		
-			}]
+            items: []
 		};
 	}
 
 	componentWillMount() {
-	//	this.getEquipments();
+		this.getEquipments();
 	}
 
 	getEquipments = () => {
 		axios.get('/equipments').then(response => {
+			console.log(response)
 			if (response.status === 200) {
 				let equipments = response.data.equipments;
 				let items = []
 				equipments.forEach((item) => {
-					item.push({
+					items.push({
 						...item,
 						edit:<Button color="primary" onClick={ ()=>{
 							this.props.history.push({
@@ -68,7 +56,7 @@ export default class Inventory extends React.Component {
 				
 				this.setState({
 					items,
-					// loading: false
+					loading: false
 				})
 			}
 		}).catch(ex => {

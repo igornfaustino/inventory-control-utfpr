@@ -41,7 +41,7 @@ export default class ApprovedRequests extends React.Component {
 						siorg: item.siorg,
 						description: item.description,
 						qtd: item.qtd,
-						date: moment(item.date).locale('pt-br').format('DD/MM/YYYY'),
+						date: moment(item.history[item.history.length -1].date).locale('pt-br').format('DD/MM/YYYY'),
 						stauts: item.status,
 
 						edit:<Button color="primary" onClick={ ()=>{

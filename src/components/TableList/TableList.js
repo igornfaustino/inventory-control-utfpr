@@ -74,7 +74,7 @@ export default class TableList extends React.Component {
 					padding: 'auto',
 					fontWeight: 'normal'
 				}}><Icon icon={chevronUp} /></span></th>
-			} else if (item != '') {
+			} else if (item != '' && item != ' ') {
 				return <th key={index} onClick={onClick
 				} >{item}<span style={{
 					margin: 10,
