@@ -1,18 +1,8 @@
 import React from 'react';
-import { Button, Table } from 'reactstrap';
-import { ClipLoader } from 'react-spinners';
+import { Table } from 'reactstrap';
 import { Container } from 'reactstrap'
 
 import '../Pages.css';
-
-import TableList from '../../components/TableList/TableList';
-import SubHeader from '../../components/SubHeader/SubHeader';
-
-import { Link } from 'react-router-dom';
-import Header from '../../components/Header/Header';
-
-import axios from 'axios';
-import moment from 'moment';
 
 export default class EquipmentDetails extends React.Component {
 	constructor(props) {
@@ -27,6 +17,7 @@ export default class EquipmentDetails extends React.Component {
 			equipmentType: '',
 			quantity: '',
 			equipmentState: '',
+			supplier: {},
 			locationHistory: [
 				// 	{
 				// 	date: '',
@@ -37,65 +28,12 @@ export default class EquipmentDetails extends React.Component {
 			],
 		};
 		this.componentWillMount = this.componentWillMount.bind(this)
-		// justification: String,
-		// locationType: String,
-		// 2location: String, */}
 	}
+
 	componentWillMount() {
 		this.setState({ ...this.props.equipment })
 	}
-	/*componentWillMount() {
-		this.getRequistions();
-	}
 
-	getRequistions = () => {
-		axios.get('/requisitions').then(response => {
-			if (response.status === 200) {
-				let requisitions = response.data.requisitions;
-				let items = []
-				requisitions.forEach((item) => {
-					items.push({
-						_id: item._id,
-						// siorg: item.siorg,
-						description: item.description,
-						date: moment(item.date).locale('pt-br').format('DD/MM/YYYY'),
-						input:(<Button color="success" onClick={() => {
-							this.handleClick(item)
-						}} type="submit">Solicitar</Button>),
-
-						edit: (<Link to={`editarsolicitacoes/${item._id}`}>
-						Editar
-					  </Link>)
-					})
-				})
-				// items = items.filter(item => {
-				// 	return item.status === 'aprovado'
-				// });
-				
-				this.setState({
-					items,
-					loading: false
-				})
-			}
-		}).catch(ex => {
-			console.error(ex, ex.response);
-		})
-	}
-
-	handleClick(e) {
-		this.props.history.push({
-			pathname: '/novasolicitacoes',
-			state: { product: e }
-		})
-	}
-
-	onChange = (event) => {
-		this.setState({ term: event.target.value });
-	}*/
-	// 								{/* date: 1Date,
-	// justification: String,
-	// locationType: String,
-	// 2location: String, */}
 	historyItems() {
 		let historyItems = []
 		this.state.locationHistory.forEach((item, index) => {
@@ -112,11 +50,8 @@ export default class EquipmentDetails extends React.Component {
 	}
 
 	render() {
-
 		return (
 			<div>
-				<Header></Header>
-				<SubHeader title="Almoxarifado > Detalhes do Equipamento"></SubHeader>
 				<Container>
 					<Table bordered condensed hover>
 						<tbody>
@@ -146,9 +81,23 @@ export default class EquipmentDetails extends React.Component {
 									{this.state.description}
 								</td>
 							</tr>
-
 						</tbody>
-
+					</Table>
+					<Table bordered condensed hover>
+						<thead>
+							<tr>
+								<td colSpan="4" class="font-weight-bold text-center">Informações do Fornecedor</td>
+							</tr>
+							<tr>
+								<td colSpan="1" class="font-weight-bold">Data</td>
+								<td colSpan="1" class="font-weight-bold">Local</td>
+								<td colSpan="1" class="font-weight-bold">Tipo do Local</td>
+								<td colSpan="1" class="font-weight-bold">Justificativa</td>
+							</tr>
+						</thead>
+						<tbody>
+							{/* {this.historyItems()} */}
+						</tbody>
 					</Table>
 					<Table bordered condensed hover>
 						<thead>
@@ -156,7 +105,6 @@ export default class EquipmentDetails extends React.Component {
 								<td colSpan="4" class="font-weight-bold text-center">Histórico do Equipamento</td>
 							</tr>
 							<tr>
-
 								<td colSpan="1" class="font-weight-bold">Data</td>
 								<td colSpan="1" class="font-weight-bold">Local</td>
 								<td colSpan="1" class="font-weight-bold">Tipo do Local</td>
@@ -172,9 +120,3 @@ export default class EquipmentDetails extends React.Component {
 		);
 	}
 }
-
-EquipmentDetails.propTypes = {
-	equipments: PropTypes.object.isRequired,
-};
-
-export default EquipmentDetails;

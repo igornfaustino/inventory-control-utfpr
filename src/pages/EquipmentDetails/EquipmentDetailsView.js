@@ -2,9 +2,12 @@ import React from 'react';
 import '../../pages/Pages.css';
 
 import { ClipLoader } from 'react-spinners';
-// import { loadPurchaseRequisition } from './connectAPI';
+
 import EquipmentDetails from './EquipmentDetails'
 import axios from 'axios';
+import Header from '../../components/Header/Header';
+
+import SubHeader from '../../components/SubHeader/SubHeader';
 
 export default class EquipmentDetailsView extends React.Component {
     constructor(props) {
@@ -17,14 +20,14 @@ export default class EquipmentDetailsView extends React.Component {
                 equipment: {}
             }
         };
-        this.componentDidMount = this.componentDidMount.bind(this)
+        this.componentWillMount = this.componentWillMount.bind(this)
     };
 
-    componentDidMount() {
+    componentWillMount() {
         try {
             const data = this.state.data
-            this.loadEquipmentDetails(this.state.match.params.id).then((value) => {
-                data.equipment = value.equipments
+            loadEquipmentDetails(this.state.match.params.id).then((value) => {
+                data.equipment = value.equipment
                 this.setState(
                     {
                         data: data,
@@ -36,42 +39,6 @@ export default class EquipmentDetailsView extends React.Component {
         catch (error) {
             console.log(error)
         }
-    }
-
-    loadEquipmentDetails(id) {
-        return await axios.get('/equipment/' + id).then(response => {
-            if (response.status === 200) {
-                let equipment = response.data.equipment;
-                equipment.locationHistory = prepareHistoryItems(equipment.locationHistory)
-                return ({
-                    equipments: equipment,
-                    loading: false
-                })
-            }
-        }).catch(ex => {
-            console.error(ex, ex.response);
-        })
-    }
-    // date: Date,
-    // justification: String,
-    // locationType: String,
-    // location: String,
-    prepareHistoryItems(historyItems) {
-        let newHistoryItems = []
-        historyItems.forEach((item) => {
-            if (item.item) {
-                newHistoryItems.push(
-                    {
-                        _id: item.item._id,
-                        date: item.item.date,
-                        justification: item.item.justification,
-                        locationType: item.item.locationType,
-                        location: item.item.location,
-                    }
-                )
-            }
-        })
-        return newrequisitionItems
     }
 
     render() {
@@ -92,8 +59,23 @@ export default class EquipmentDetailsView extends React.Component {
 
         return (
             <div>
+                <Header></Header>
+                <SubHeader title="Almoxarifado >> Detalhes do Equipamento"></SubHeader>
                 {data}
             </div>
         );
     }
+}
+
+export async function loadEquipmentDetails(id) {
+    return await axios.get('/equipment/' + id).then(response => {
+        if (response.status === 200) {
+            return ({
+                equipment: response.data.equipment,
+                loading: false
+            })
+        }
+    }).catch(ex => {
+        console.error(ex, ex.response);
+    })
 }
