@@ -42,10 +42,17 @@ export default class Inventory extends React.Component {
 						...item,
 						edit:<Button color="primary" onClick={ ()=>{
 							this.props.history.push({
-								pathname: `'/editarequipamento/${item._id}`,
+								pathname: `editarequipamento/${item._id}`,
 								id:item._id
 								})
-						} } type="submit">Editar</Button> 
+						} } type="submit">Editar</Button> ,
+
+						view:<Button color="secondary" onClick={ ()=>{
+							this.props.history.push({
+								pathname: `detalhesequipamento/${item._id}`,
+								id:item._id
+								})
+						} } type="submit">Visualizar</Button> ,
 					})
 				})
 				
@@ -78,7 +85,7 @@ export default class Inventory extends React.Component {
 	render() {
 		let data
 		if (this.state.loading === false) {
-			data = <TableList header={['SIORG', 'Solicitante', 'Descrição', 'Origem', 'Tipo', 'Quantidade', 'Estado', 'Localização',' ']} items={this.state.items} />
+			data = <TableList header={['SIORG', 'Solicitante', 'Descrição', 'Origem', 'Tipo', 'Quantidade', 'Estado', 'Localização','', '', '']} items={this.state.items} />
 		
 		} else {
 			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
