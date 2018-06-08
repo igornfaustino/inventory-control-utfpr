@@ -11,6 +11,7 @@ import PurchaseRequisition from './PurchaseRequisition/PurchaseRequisition';
 import EditRequest from './EditRequest/EditRequest';
 import Inventory from './Inventory/Inventory';
 import EquipmentsEdit from './EquipmentEditing/EquipmentEditing';
+import EquipmentDetailsView from './EquipmentDetails/EquipmentDetailsView'
 //import NewProduct from './NewProduct/NewProduct';
 
 const Main = () => (
@@ -27,6 +28,7 @@ const Main = () => (
 			<Route path='/compras' component={PurchasesHistory} />
 			<Route path='/almoxarifado' component={Inventory} />
 			<Route path='/editarequipamento/:id' component={EquipmentsEdit} />
+			<Route path='/detalhesequipamento/:id' component={EquipmentDetailsView} />
 			{/* <Route path='/novoproduto' component={NewProduct} /> CLÁUDIA AQUI */}
 		</Switch>
 	</main>
