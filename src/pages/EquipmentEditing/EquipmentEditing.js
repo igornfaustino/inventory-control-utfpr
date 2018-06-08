@@ -3,6 +3,7 @@ import {Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFoote
 import axios from 'axios';
 import Header from '../../components/Header/Header';
 import moment from 'moment'
+import SubHeader from '../../components/SubHeader/SubHeader'
 
 export default class EquipmentsEdit extends React.Component {
     componentDidMount() {
@@ -124,6 +125,8 @@ export default class EquipmentsEdit extends React.Component {
         return (
             <div>
                 <Header></Header>
+                
+                <SubHeader title='Almoxarifado >> Editar Equipamento'></SubHeader>
                 <div className="margin-left" style={{marginRight: "20px"}}>
                     <Form>
                         <FormGroup row>
