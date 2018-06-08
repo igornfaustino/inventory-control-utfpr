@@ -35,14 +35,18 @@ export default class EquipmentsEdit extends React.Component {
         let field = event.target.name;
         let equipment = this.state.equipment;
         equipment[field] = event.target.value;
-        return this.setState({equipment: equipment});
+        return this.setState({
+            changed: true,
+            equipment: equipment});
     }
 
     onChangeLocation(event) {
         let field = event.target.name;
         let location = this.state.locationHistory;
         location[field] = event.target.value;
-        return this.setState({locationHistory: location});
+        return this.setState({
+            changed: true,
+            locationHistory: location});
     }
 
     constructor(props) {
@@ -52,21 +56,21 @@ export default class EquipmentsEdit extends React.Component {
 
         this.state = {
             equipment: {
-                siorg: 123,
-                buyer: 'test Buyer',
-                solicitor: 'test Solicitor',
-                description: 'descrição',
-                origin: 'origem',
-                equipmentType: 'tecnológico',
-                quantity: 32,
-                equipmentState: 'dasd'
+                siorg: null,
+                buyer: '',
+                solicitor: 'test ',
+                description: '',
+                origin: '',
+                equipmentType: '',
+                quantity: null,
+                equipmentState: ''
             },
             locationHistory: {
-                date: moment(date).format('YYYY-MM-DD'),
-                justification: 'asdas',
-                locationType: 'adsa',
-                location: 'asdsa'
+                justification: '',
+                locationType: '',
+                location: ''
             },
+            changed: false,
             modal: false
         };
         this.componentDidMount = this.componentDidMount.bind(this)
@@ -210,7 +214,7 @@ export default class EquipmentsEdit extends React.Component {
                         </FormGroup>
                         <Button color="primary" onClick={this.toggle}>Movimentar</Button>
                         <div align="right">
-                            <Button color="secondary" onClick={this.savebutton}>Salvar Alterações</Button>
+                            <Button color="secondary" onClick={this.savebutton} disabled={!this.state.changed} >Salvar Alterações</Button>
                         </div>
                     </Form>
                     <Modal size='lg' isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
@@ -255,7 +259,7 @@ export default class EquipmentsEdit extends React.Component {
 
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="danger" onClick={this.toggle}>Fechar</Button>
+                            <Button color="danger" onClick={this.toggle} >Fechar</Button>
                         </ModalFooter>
                     </Modal>
                 </div>
