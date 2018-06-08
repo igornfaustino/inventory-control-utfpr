@@ -65,22 +65,30 @@ export default class TableList extends React.Component {
 				return <th key={index} onClick={onClick
 				} >{item}<span style={{
 					margin: 10,
-					padding: 'auto',
-					fontWeight: 'normal'
+					padding: 12,
+					fontWeight: 'normal',
+					verticalAlign: 'sub'
 				}}><Icon icon={chevronDown} /></span></th>
 			} else if (this.state.filter == index && this.state.desc) {
-				return <th key={index} onClick={onClick
+				return <th key={index} style={{
+					paddingTop: 10,
+					paddingBottom: 16
+				}} onClick={onClick
 				} >{item}<span style={{
 					margin: 10,
-					padding: 'auto',
-					fontWeight: 'normal'
+					marginTop: 1,
+					padding: 12,
+					paddingTop: 3,
+					fontWeight: 'normal',
+					verticalAlign: 'baseline'
 				}}><Icon icon={chevronUp} /></span></th>
 			} else if (item != '' && item != ' ') {
 				return <th key={index} onClick={onClick
 				} >{item}<span style={{
 					margin: 10,
-					padding: 'auto',
-					fontWeight: 'normal'
+					padding: 12,
+					fontWeight: 'normal',
+					verticalAlign: 'sub'
 				}}><Icon icon={minus} /></span></th>
 			} else {
 				return <th key={index} onClick={onClick
