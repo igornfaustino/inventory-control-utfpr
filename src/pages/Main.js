@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Login from './Login/Login';
 import Home from './Home/Home';
 import NewRequests from './NewRequests/NewRequests';
@@ -10,6 +10,7 @@ import PurchasesHistory from './PurchasesHistory/PurchasesHistory';
 import PurchaseRequisition from './PurchaseRequisition/PurchaseRequisition';
 import EditRequest from './EditRequest/EditRequest';
 import Inventory from './Inventory/Inventory';
+import EquipmentsEdit from './EquipmentEditing/EquipmentEditing';
 //import NewProduct from './NewProduct/NewProduct';
 
 const Main = () => (
@@ -25,9 +26,8 @@ const Main = () => (
 			<Route path='/requisicao' component={PurchaseRequisition} />
 			<Route path='/compras' component={PurchasesHistory} />
 			<Route path='/almoxarifado' component={Inventory} />
-			{/* <Route path='/editarequipamento/:id' component={CHOPTIAN} /> */}
+			<Route path='/editarequipamento/:id' component={EquipmentsEdit} />
 			{/* <Route path='/novoproduto' component={NewProduct} /> CLÁUDIA AQUI */}
-
 		</Switch>
 	</main>
 );
