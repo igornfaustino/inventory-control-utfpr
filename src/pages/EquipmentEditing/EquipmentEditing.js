@@ -11,9 +11,9 @@ export default class EquipmentsEdit extends React.Component {
             axios.get('/equipment/' + id).then(response => {
 
                 if (response.status === 200) {
-                    if(response.data.equipment.locationHistory.length){
+                    if (response.data.equipment.locationHistory.length) {
                         this.setState({
-                            locationHistory: response.data.equipment.locationHistory[response.data.equipment.locationHistory.length-1]
+                            locationHistory: response.data.equipment.locationHistory[0]
                         });
 
                     }
@@ -74,20 +74,12 @@ export default class EquipmentsEdit extends React.Component {
         this.onChangeLocation = this.onChangeLocation.bind(this)
         this.toggle = this.toggle.bind(this)
         this.savebutton = this.savebutton.bind(this)
-        this.changeEquipamentHistory = this.changeEquipamentHistory.bind(this)
     }
 
     toggle() {
         this.setState({
             modal: !this.state.modal
         });
-    }
-
-    changeEquipamentHistory() {
-        return (this.state.locationHistory.justification !== this.state.equipment.locationHistory.justification ||
-                this.state.locationHistory.location !== this.state.equipment.locationHistory.location ||
-                this.state.locationHistory.locationType !== this.state.equipment.locationHistory.locationType)
-
     }
 
     savebutton(event) {
@@ -97,28 +89,17 @@ export default class EquipmentsEdit extends React.Component {
             axios.put('/equipment/' + this.state.equipment._id, this.state.equipment).then(response => {
                 if (response.status === 200) {
                     try {
+                        axios.post('/equipments/' + this.state.equipment._id + '/move', this.state.locationHistory).then(response => {
 
-                        let history = true
-                        if (this.changeEquipamentHistory()) {
-                            history = false
+                            if (response.status === 200) {
+                                console.log(response)
+                                alert("Atualizado e movimentado com sucesso!")
+                            }
 
-                            axios.post('/equipments/' + this.state.equipment._id + '/move',this.state.locationHistory).then(response => {
-
-                                if (response.status === 200) {
-                                    console.log(response)
-                                    history = true
-                                }
-                                if (history) {
-                                    alert("Atualizado com sucesso!")
-                                }
-                            }).catch(ex => {
-                                alert("Não Foi possivel conectar ao servidor")
-                                console.error(ex, ex.response);
-                            })
-                        }
-                        if (history) {
-                            alert("Atualizado com sucesso!")
-                        }
+                        }).catch(ex => {
+                            alert("Não Foi possivel conectar ao servidor")
+                            console.error(ex, ex.response);
+                        })
                     }
                     catch (e) {
                         console.error(e)
