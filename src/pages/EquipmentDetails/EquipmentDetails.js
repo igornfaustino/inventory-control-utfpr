@@ -1,13 +1,12 @@
 import React from 'react';
 import { Table } from 'reactstrap';
 import { Container } from 'reactstrap'
-
 import '../Pages.css';
+import moment from 'moment';
 
 export default class EquipmentDetails extends React.Component {
 	constructor(props) {
 		super(props);
-		// this.handleClick = this.handleClick.bind(this);
 		this.state = {
 			siorg: '',
 			buyer: '',
@@ -17,15 +16,8 @@ export default class EquipmentDetails extends React.Component {
 			equipmentType: '',
 			quantity: '',
 			equipmentState: '',
-			supplier: {},
-			locationHistory: [
-				// 	{
-				// 	date: '',
-				// 	justification: '',
-				// 	locationType: '',
-				// 	location: '',
-				// }
-			],
+			// supplier: {},
+			locationHistory: [],
 		};
 		this.componentWillMount = this.componentWillMount.bind(this)
 	}
@@ -39,8 +31,7 @@ export default class EquipmentDetails extends React.Component {
 		this.state.locationHistory.forEach((item, index) => {
 			historyItems.push(
 				<tr>
-					{/* <td>{index + 1}</td> */}
-					<td>{item.date}</td>
+					<td>{moment(item.date).locale('pt-br').format('DD/MM/YYYY')}</td>
 					<td>{item.location}</td>
 					<td>{item.locationType}</td>
 					<td>{item.justification}</td>
@@ -83,22 +74,27 @@ export default class EquipmentDetails extends React.Component {
 							</tr>
 						</tbody>
 					</Table>
-					<Table bordered condensed hover>
+					{/* <Table bordered condensed hover>
 						<thead>
 							<tr>
 								<td colSpan="4" class="font-weight-bold text-center">Informações do Fornecedor</td>
 							</tr>
 							<tr>
-								<td colSpan="1" class="font-weight-bold">Data</td>
-								<td colSpan="1" class="font-weight-bold">Local</td>
-								<td colSpan="1" class="font-weight-bold">Tipo do Local</td>
-								<td colSpan="1" class="font-weight-bold">Justificativa</td>
+								<td colSpan="1" class="font-weight-bold">CNPJ</td>
+								<td colSpan="1" class="font-weight-bold">Nome</td>
+								<td colSpan="1" class="font-weight-bold">Telefone</td>
+								<td colSpan="1" class="font-weight-bold">Endereço</td>
 							</tr>
 						</thead>
 						<tbody>
-							{/* {this.historyItems()} */}
+							<tr>
+								<td>{this.state.supplier.cnpj}</td>
+								<td>{this.state.supplier.name}</td>
+								<td>{this.state.supplier.phone}</td>
+								<td>{this.state.supplier.address.street + ", " + this.state.supplier.address.number + ", " + this.state.supplier.address.city + ", " + this.state.supplier.address.state + ", " + this.state.supplier.address.country}</td>
+							</tr>
 						</tbody>
-					</Table>
+					</Table> */}
 					<Table bordered condensed hover>
 						<thead>
 							<tr>

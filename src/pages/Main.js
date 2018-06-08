@@ -22,7 +22,7 @@ const Main = () => (
 			<Route path='/aprovados' component={ApprovedRequests} />
 			<Route path='/requisicao' component={PurchaseRequisition} />
 			<Route path='/compras' component={PurchasesHistory} />
-			<Route path='/detalhesequipamento' component={EquipmentDetailsView} />
+			<Route path='/detalhesequipamento/:id' component={EquipmentDetailsView} />
 		</Switch>
 	</main>
 );

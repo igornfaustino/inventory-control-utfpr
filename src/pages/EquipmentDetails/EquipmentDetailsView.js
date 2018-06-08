@@ -50,13 +50,11 @@ export default class EquipmentDetailsView extends React.Component {
                 />
             </div>
         )
-
         if (this.state.loading === false) {
             data =
                 (<EquipmentDetails equipment={this.state.data.equipment}
                 />)
         }
-
         return (
             <div>
                 <Header></Header>
