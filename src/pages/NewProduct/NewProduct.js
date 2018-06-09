@@ -131,12 +131,14 @@ export default class NewProduct extends React.Component {
 	}
 
 	//Function to connect with the database and save a new equipment
-	submitRequest = async () => {
+	submitRequest = () => {
 		if (!this.state.siorgValid || !this.state.buyerValid || !this.state.requesterValid || !this.state.descriptionValid
 			|| !this.state.originValid || !this.state.typeValid || !this.state.quantityValid || !this.state.stateValid) {
 			alert("Preencha todos os campos");
 			return;
 		}
+
+		console.log(this.state)
 
 		this.setState({
 			siorgValid: false,
@@ -150,13 +152,14 @@ export default class NewProduct extends React.Component {
 			formValid: false,
 		});
 
+
 		axios.post('/equipment/', {
 			siorg: this.state.siorg,
 			buyer: this.state.buyer,
 			solicitor: this.state.requester,
 			description: this.state.description,
 			origin: this.state.origin,
-			equipmentType: this.state.state.type,
+			equipmentType: this.state.type,
 			quantity: this.state.quantity,
 			equipmentState: this.state.state,
 		}).then(res => {
@@ -210,7 +213,7 @@ export default class NewProduct extends React.Component {
 	render() {
 
 		const { siorgValid, buyerValid, requesterValid, descriptionValid, originValid, typeValid, quantityValid, stateValid} = this.state
-
+		console.log(this.state)
 		return (
 			<div>
 				{/* Alert to show that there are things unsaved */}

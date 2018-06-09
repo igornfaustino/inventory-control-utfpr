@@ -39,7 +39,14 @@ export default class Inventory extends React.Component {
 				let items = []
 				equipments.forEach((item) => {
 					items.push({
-						...item,
+						siorg: item.siorg,
+						solicitor: item.solicitor,
+						description: item.description,
+						origin: item.origin,
+						type: item.equipmentType,
+						qtd: item.quantity,
+						state: item.equipmentState,
+						location: item.locationHistory[0],
 						edit:<Button color="primary" onClick={ ()=>{
 							this.props.history.push({
 								pathname: `editarequipamento/${item._id}`,
