@@ -135,7 +135,9 @@ export default class TableList extends React.Component {
 				});
 
 				// create line with itens
-				let line = (<tr key={index}>
+				let line = (<tr key={index} style={{
+					textAlign: 'center'
+				}}>
 					{lineItens}
 				</tr>);
 

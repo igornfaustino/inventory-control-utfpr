@@ -138,7 +138,7 @@ export default class NewProduct extends React.Component {
 			return;
 		}
 
-		console.log(this.state)
+		// console.log(this.state)
 
 		this.setState({
 			siorgValid: false,
@@ -213,7 +213,7 @@ export default class NewProduct extends React.Component {
 	render() {
 
 		const { siorgValid, buyerValid, requesterValid, descriptionValid, originValid, typeValid, quantityValid, stateValid} = this.state
-		console.log(this.state)
+		// console.log(this.state)
 		return (
 			<div>
 				{/* Alert to show that there are things unsaved */}
