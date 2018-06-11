@@ -49,15 +49,16 @@ export default class Products extends React.Component {
 
                 requisitions.forEach((item) => {
                     let price = this.state.validPrice;
-                    if (item.quotation.length)
+                    if (item.quotation)
                         price.average = item.quotation.map((x) => x.price).reduce((a, b) => a + b, 0) / item.quotation.length;
                     // console.log()
+                    price.average = price.average? price.average : 0;
                     items.push({
                         _id: item._id,
                         siorg: item.siorg,
                         description: item.description,
                         qtd: item.qtd,
-                        average: "R$ " + price.average.toFixed(2),
+                        average: "R$ " + price.average.toFixed(2).toString(),
                         date: moment(item.history[item.history.length - 1].date).locale('pt-br').format('DD/MM/YYYY'),
                         status: item.status,
                         input: (<Button color="success" onClick={() => {
