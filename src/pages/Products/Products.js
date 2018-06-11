@@ -39,18 +39,6 @@ export default class Products extends React.Component {
         this.getRequistions();
     }
 
-    validQuotation = (quotation) => {
-        let price = this.state.validPrice;
-        if (quotation)
-            price.average = quotation.map((x) => x.price).reduce((a, b) => a + b, 0) / quotation.length;
-        quotation.forEach((item, index) => {
-            // console.log(item)
-            if (item.price === '' || price.average * price.min > item.price || price.average * price.max < item.price)
-                return 'F'
-        })
-        return 'V'
-    }
-
     getRequistions = () => {
         axios.get('/requisitions').then(response => {
             if (response.status === 200) {
@@ -72,7 +60,6 @@ export default class Products extends React.Component {
                         average: "R$ " + price.average.toFixed(2),
                         date: moment(item.history[item.history.length - 1].date).locale('pt-br').format('DD/MM/YYYY'),
                         status: item.status,
-                        valid: this.validQuotation(item.quotation),
                         input: (<Button color="success" onClick={() => {
                             this.handleClick(item)
                         }} type="submit">Solicitar</Button>),
@@ -162,7 +149,7 @@ export default class Products extends React.Component {
 
     render() {
         let data = (!this.state.loading) ?
-            <TableList header={['SIORG', 'Descrição', 'Qtd', 'Média item', 'Data', 'Status', 'Valido', '']}
+            <TableList header={['SIORG', 'Descrição', 'Qtd', 'Média das cotações', 'Data', 'Status', '']}
                        items={this.state.items}/> :
             <div className='sweet-loading' style={{display: 'flex', justifyContent: 'center', margin: 100}}>
                 <ClipLoader
