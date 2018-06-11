@@ -40,15 +40,15 @@ export default class ApprovedRequests extends React.Component {
         let price = this.state.validPrice;
         // if (quotation.length)
         //     price.average = quotation.map((x) => x.price).reduce((a, b) => a + b, 0) / quotation.length;
-        let error = 0
+        let error = 0;
         // console.log(quotation)
         quotation.forEach((item, index) => {
             // console.log(item)
             if (!item.price || price.average * price.min > item.price || price.average * price.max < item.price)
                 error++
-        })
+        });
         return error
-    }
+    };
 
     // TODO: change filter
     getRequistions = () => {
@@ -67,7 +67,9 @@ export default class ApprovedRequests extends React.Component {
                         siorg: item.siorg,
                         description: item.description,
                         qtd: item.qtd,
+                        min: "R$ " + (price.average * price.min).toFixed(2).toString(),
                         average: "R$ " + price.average.toFixed(2).toString(),
+                        max: "R$ " + (price.average * price.max).toFixed(2).toString(),
                         invalid: this.validQuotation(item.quotation),
                         date: moment(item.history[item.history.length - 1].date).locale('pt-br').format('DD/MM/YYYY'),
                         stauts: item.status,
@@ -108,13 +110,13 @@ export default class ApprovedRequests extends React.Component {
 
     render() {
         let data = (this.state.loading === false) ?
-            <TableList header={['SIORG', 'Descrição', 'Qtd','Média das cotações', 'Nº de Cotações inválidas', 'Data', 'Status', '']} items={this.state.items}/> :
+            <TableList header={['SIORG', 'Descrição', 'Qtd','60%','Média','130%', 'Nº de Cotações inválidas', 'Data', 'Status', '']} items={this.state.items}/> :
             <div className='sweet-loading' style={{display: 'flex', justifyContent: 'center', margin: 100}}>
                 <ClipLoader
                     color={'#123abc'}
                     loading={this.state.loading}
                 />
-            </div>
+            </div>;
         return (
             <div>
                 <Header/>

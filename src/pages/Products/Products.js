@@ -45,7 +45,7 @@ export default class Products extends React.Component {
                 let requisitions = response.data.requisitions;
 
                 let items = [];
-                console.log(requisitions)
+                console.log(requisitions);
 
                 requisitions.forEach((item) => {
                     let price = this.state.validPrice;

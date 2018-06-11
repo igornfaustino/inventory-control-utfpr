@@ -57,7 +57,7 @@ export default class NewRequest extends React.Component {
         }
         return (
             <div>
-                <Header></Header>
+                <Header/>
                 {data}
             </div>
         )

@@ -111,22 +111,22 @@ export class PurchaseForm extends React.Component {
 
     removeRequest() {
         let rows = this.state.requisitionItens;
-        let n = []
+        let n = [];
         for(let i=0;i<rows.length;i++){
             if (!rows[i].selected) {
                 n.push(rows[i])
             }
         }
-        console.log(n)
+        console.log(n);
         this.setState({
             requisitionItens: n
-        })
+        });
 
         this.props.onChangeRequest(n)
     }
 
     toggleIn() {
-        let date = this.state.data.requisitions
+        let date = this.state.data.requisitions;
         date = date.map((item) => {
             let N_item = item;
             N_item.selected = false;
