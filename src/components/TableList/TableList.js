@@ -130,14 +130,19 @@ export default class TableList extends React.Component {
 
 					// itens starts with '_' are meta itens.. then they are ignored on table's render...
 					if (key.charAt(0) !== '_')
-						return <td key={index}>{item[key]}</td>;
+						return <td key={index} style={{
+							textAlign: 'justify',
+							maxWidth: '50ch',
+							overflow: 'hidden',
+							textOverflow: 'ellipsis',
+							whiteSpace: 'pre-line',
+		
+						}}>{item[key]}</td>;
 					return null
 				});
 
 				// create line with itens
-				let line = (<tr key={index} style={{
-					textAlign: 'center'
-				}}>
+				let line = (<tr key={index}>
 					{lineItens}
 				</tr>);
 

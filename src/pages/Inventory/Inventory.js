@@ -46,7 +46,7 @@ export default class Inventory extends React.Component {
 						type: item.equipmentType,
 						qtd: item.quantity,
 						state: item.equipmentState,
-						location: item.locationHistory[0].location,
+						location: item.locationHistory[0]? item.locationHistory[0].location: 'Em Estoque',
 						edit:<Button color="primary" onClick={ ()=>{
 							this.props.history.push({
 								pathname: `editarequipamento/${item._id}`,
