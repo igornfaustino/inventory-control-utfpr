@@ -70,6 +70,7 @@ export default class ApprovedRequests extends React.Component {
                         min: "R$ " + (price.average * price.min).toFixed(2).toString(),
                         average: "R$ " + price.average.toFixed(2).toString(),
                         max: "R$ " + (price.average * price.max).toFixed(2).toString(),
+                        qtdItens: item.quotation.length.toString(),
                         invalid: this.validQuotation(item.quotation),
                         date: moment(item.history[item.history.length - 1].date).locale('pt-br').format('DD/MM/YYYY'),
                         stauts: item.status,
@@ -80,7 +81,6 @@ export default class ApprovedRequests extends React.Component {
                                 id: item._id
                             })
                         }} type="submit">Editar</Button>
-
                     })
                 });
                 // items = items.filter(item => {
@@ -110,7 +110,7 @@ export default class ApprovedRequests extends React.Component {
 
     render() {
         let data = (this.state.loading === false) ?
-            <TableList header={['SIORG', 'Descrição', 'Qtd','60%','Média','130%', 'Nº de Cotações inválidas', 'Data', 'Status', '']} items={this.state.items}/> :
+            <TableList header={['SIORG', 'Descrição', 'Qtd','60%','Média','130%','Cotações Cadastradas', 'Nº de Cotações inválidas', 'Data', 'Status', '']} items={this.state.items}/> :
             <div className='sweet-loading' style={{display: 'flex', justifyContent: 'center', margin: 100}}>
                 <ClipLoader
                     color={'#123abc'}
@@ -121,9 +121,7 @@ export default class ApprovedRequests extends React.Component {
             <div>
                 <Header/>
                 <SubHeader title="Solicitações"/>
-
                 {data}
-
             </div>
         );
     }
