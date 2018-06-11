@@ -61,7 +61,7 @@ export default class PurchasesHistory extends React.Component {
 		axios.get('/purchase').then(response => {
 			if (response.status === 200) {
 				let purchases = response.data.purchases;
-				let items = []
+				let items = [];
 				purchases.forEach((item) => {
 					items.push({
 						_id: item._id,
@@ -83,7 +83,7 @@ export default class PurchasesHistory extends React.Component {
 		}).catch(ex => {
 			console.error(ex, ex.response);
 		})
-	}
+	};
 
 	//Aqui tem que mudar para a página de edição de compras!!!!
 	handleClick(e) {
@@ -95,10 +95,10 @@ export default class PurchasesHistory extends React.Component {
 
 	onChange = (event) => {
 		this.setState({ term: event.target.value });
-	}
+	};
 
 	render() {
-		let data
+		let data;
 		if (this.state.loading === false) {
 			data = <TableList header={['Descrição', 'Custo', 'Data', ' ']} items={this.state.items} />
 		} else {

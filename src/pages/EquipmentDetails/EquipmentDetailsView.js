@@ -12,7 +12,7 @@ import SubHeader from '../../components/SubHeader/SubHeader';
 export default class EquipmentDetailsView extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props)
+        console.log(props);
         this.state = {
             match: props.match,
             loading: true,
@@ -25,9 +25,9 @@ export default class EquipmentDetailsView extends React.Component {
 
     componentWillMount() {
         try {
-            const data = this.state.data
+            const data = this.state.data;
             loadEquipmentDetails(this.state.match.params.id).then((value) => {
-                data.equipment = value.equipment
+                data.equipment = value.equipment;
                 this.setState(
                     {
                         data: data,
@@ -49,7 +49,7 @@ export default class EquipmentDetailsView extends React.Component {
                     loading={this.state.loading}
                 />
             </div>
-        )
+        );
         if (this.state.loading === false) {
             data =
                 (<EquipmentDetails equipment={this.state.data.equipment}

@@ -11,7 +11,7 @@ export default class EditPurchase extends React.Component {
 		super(props);
         this.savePurchase = this.savePurchase.bind(this);
         this.updatePurchaseState = this.updatePurchaseState.bind(this);
-        this.ChangeRequest= this.ChangeRequest.bind(this)
+        this.ChangeRequest= this.ChangeRequest.bind(this);
 
         this.state = {
             match: props.match,
@@ -24,10 +24,10 @@ export default class EditPurchase extends React.Component {
     };
     componentDidMount(){
         try{
-            const data=this.state.data
+            const data=this.state.data;
             loadPurchaseRequisition(this.state.match.params.id).then((value)=>{
-              console.log(value)
-              data.purchase=value.purchases
+              console.log(value);
+              data.purchase=value.purchases;
               this.setState(
                 {
                   data: data,
@@ -61,7 +61,7 @@ export default class EditPurchase extends React.Component {
       }
     ChangeRequest(requestlist) {
         const data = this.state.data;
-        data.purchase.requisitionItems=requestlist
+        data.purchase.requisitionItems=requestlist;
         this.setState({data: data});
     }
 
@@ -71,7 +71,7 @@ export default class EditPurchase extends React.Component {
             color={'#123abc'}
             loading={this.state.loading}
         />
-    </div>)
+    </div>);
     if (this.state.loading === false) {
     data=<PurchaseForm
             purchase={this.state.data.purchase} 

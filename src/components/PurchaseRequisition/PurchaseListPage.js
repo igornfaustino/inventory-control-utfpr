@@ -18,8 +18,8 @@ export default class PurchaseListPage extends React.Component {
             match: props.match,
             purchaselist: []
         };
-        this.RenderViewAction = this.RenderViewAction.bind(this)
-        this.RenderEditAction = this.RenderEditAction.bind(this)
+        this.RenderViewAction = this.RenderViewAction.bind(this);
+        this.RenderEditAction = this.RenderEditAction.bind(this);
         this.componentWillMount = this.componentWillMount.bind(this)
     }
     componentWillMount() {
@@ -40,7 +40,7 @@ export default class PurchaseListPage extends React.Component {
     }
 
     RenderEditAction = (index) => {
-        const id = this.state.purchaselist[index]._id
+        const id = this.state.purchaselist[index]._id;
         return (
             <Button color="primary" onClick={ ()=>{
                 this.props.history.push({
@@ -48,9 +48,9 @@ export default class PurchaseListPage extends React.Component {
                 })
             } } type="submit">Editar</Button> 
         );
-    }
+    };
     RenderViewAction = (index) => {
-        const id = this.state.purchaselist[index]._id
+        const id = this.state.purchaselist[index]._id;
         return (
             <Button color="secondary" onClick={ ()=>{
                 this.props.history.push({
@@ -59,21 +59,21 @@ export default class PurchaseListPage extends React.Component {
             } } type="submit">Visualizar</Button> 
 
         );
-    }
+    };
     render() {
 
-        let items = []
+        let items = [];
         this.state.purchaselist.forEach((item, index) => {
-            let price = 0
+            let price = 0;
             item.requisitionItems.forEach((requisition) => {
-                let pricequotation = 0
+                let pricequotation = 0;
                 if (requisition.quotation) {
                     requisition.quotation.forEach(qt => {
                         pricequotation = pricequotation + qt.price
-                    })
+                    });
                     price = price + requisition.qtd * (pricequotation / requisition.quotation.length)
                 }
-            })
+            });
             items.push({
                 management: item.management,
                 requester: item.requester,
@@ -82,13 +82,13 @@ export default class PurchaseListPage extends React.Component {
                 renderEditAction: this.RenderEditAction(index),
                 renderViewAction: this.RenderViewAction(index),
             })
-        })
+        });
         let data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
             <ClipLoader
                 color={'#123abc'}
                 loading={this.state.loading}
             />
-        </div>)
+        </div>);
         if (this.state.loading === false) {
             data = (
                 <div>

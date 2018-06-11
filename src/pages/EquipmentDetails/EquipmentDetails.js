@@ -27,7 +27,7 @@ export default class EquipmentDetails extends React.Component {
 	}
 
 	historyItems() {
-		let historyItems = []
+		let historyItems = [];
 		this.state.locationHistory.forEach((item, index) => {
 			historyItems.push(
 				<tr>
@@ -36,7 +36,7 @@ export default class EquipmentDetails extends React.Component {
 					<td>{item.locationType}</td>
 					<td>{item.justification}</td>
 				</tr>)
-		})
+		});
 		return historyItems
 	}
 

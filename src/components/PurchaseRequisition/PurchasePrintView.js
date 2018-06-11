@@ -6,7 +6,7 @@ import {Container} from 'reactstrap'
 export class PurchasePrintView extends React.Component {
 
     constructor(props) {
-      super(props)
+      super(props);
 
       this.state={
         management: '',
@@ -16,8 +16,8 @@ export class PurchasePrintView extends React.Component {
         sector: '',
         requester: '',
         requisitionItems: [],
-      }
-      this.componentWillMount=this.componentWillMount.bind(this)
+      };
+      this.componentWillMount=this.componentWillMount.bind(this);
       this.prepareJustify=this.prepareJustify.bind(this)
     }
 
@@ -25,14 +25,14 @@ export class PurchasePrintView extends React.Component {
       this.setState( {...this.props.purchase})
     }
     prepareJustify(){
-        let justification=""
+        let justification="";
         this.state.requisitionItems.forEach((element,index) => {
             justification+= "O item "+(index+1)+" é "+element.justification+". "
-        })
+        });
         return justification
     }
     prepareItem(){
-        let itens=[]
+        let itens=[];
          this.state.requisitionItems.forEach( (item,index)=>{
             itens.push(
             <tr>
@@ -41,33 +41,33 @@ export class PurchasePrintView extends React.Component {
                 <td>{item.qtd}</td>
                 <td>R$ {item.quotation.map( (item)=> item.price)/item.quotation.length},00</td>
             </tr>)
-        })
+        });
         return itens
     }
     prepareCustoDosItem(){
-        let itens=[]
-        let category=[]
-        let find=false
+        let itens=[];
+        let category=[];
+        let find=false;
         this.state.requisitionItems.forEach( (requisition,index)=>{
-            let valor=requisition.qtd*requisition.quotation.map( (item)=> item.price)/requisition.quotation.length
+            let valor=requisition.qtd*requisition.quotation.map( (item)=> item.price)/requisition.quotation.length;
             if(category.includes(requisition.catedory)){
-                itens[category.indexOf(requisition.catedory)].itens.push(index+1)
-                itens[category.indexOf(requisition.catedory)].valor+=valor
+                itens[category.indexOf(requisition.catedory)].itens.push(index+1);
+                itens[category.indexOf(requisition.catedory)].valor+=valor;
                 find=true
             }
             if(!find){
-                category.push(requisition.catedory)
-                let item={catedory:requisition.catedory,itens:[index+1],valor:valor}
+                category.push(requisition.catedory);
+                let item={catedory:requisition.catedory,itens:[index+1],valor:valor};
                 itens.push(item)
             }
-        })
+        });
 
         return itens.map( (item)=>{
-            let itens_requisicao=""
-            console.log(item.itens)
+            let itens_requisicao="";
+            console.log(item.itens);
             item.itens.forEach( (item)=>{
                 itens_requisicao= itens_requisicao+item+", "
-            })
+            });
             return (
                 <tr>
                 <td>{item.catedory? item.catedory: "Não definido"}</td>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from 'reactstrap';
-import { ClipLoader } from 'react-spinners';
+import {Button} from 'reactstrap';
+import {ClipLoader} from 'react-spinners';
 
 import CSVReader from "react-csv-reader";
 
@@ -16,159 +16,189 @@ import moment from 'moment';
 
 
 export default class Products extends React.Component {
-	constructor(props) {
-		super(props);
-		this.handleClick = this.handleClick.bind(this);
-		this.state = {
-			canUpload: false,
-			loading: true,
-			items: [],
-			csv: null
-		};
-	}
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+        this.state = {
+            canUpload: false,
+            loading: true,
+            items: [],
 
-	componentWillMount() {
-		this.getRequistions();
-	}
+            // Validate Price
+            validPrice: {
+                min: 0.6,
+                max: 1.3,
+                average: 0
+            },
 
-	getRequistions = () => {
-		axios.get('/requisitions').then(response => {
-			if (response.status === 200) {
-				let requisitions = response.data.requisitions;
-				let items = []
-				requisitions.forEach((item) => {
-					// console.log()
-					items.push({
-						_id: item._id,
-						siorg: item.siorg,
-						description: item.description,
-						qtd: item.qtd,
-						date: moment(item.history[item.history.length -1].date).locale('pt-br').format('DD/MM/YYYY'),
-						status: item.status,
-						input: (<Button color="success" onClick={() => {
-							this.handleClick(item)
-						}} type="submit">Solicitar</Button>)
-					})
-				});
+            csv: null
+        };
+    }
 
-				this.setState({
-					items,
-					loading: false
-				});
-			}
-		}).catch(ex => {
-			console.error(ex, ex.response);
-		})
-	}
+    componentWillMount() {
+        this.getRequistions();
+    }
 
-	handleClick(e) {
-		this.props.history.push({
-			pathname: '/novasolicitacoes',
-			state: { product: e }
-		})
-	}
+    validQuotation = (quotation) => {
+        let price = this.state.validPrice;
+        if (quotation)
+            price.average = quotation.map((x) => x.price).reduce((a, b) => a + b, 0) / quotation.length;
+        quotation.forEach((item, index) => {
+            // console.log(item)
+            if (item.price === '' || price.average * price.min > item.price || price.average * price.max < item.price)
+                return 'F'
+        })
+        return 'V'
+    }
 
-	handleForce = data => {
-		let body = data.slice(0); // make copy
-		body.splice(0, 1);
-		let header = data[0]
-		header.forEach((value, id) => {
-			if (value.toLocaleLowerCase() === 'descrição' || value.toLocaleLowerCase() === 'descricao' || value.toLocaleLowerCase() === 'description') {
-				header[id] = 'description'
-			} else if (value.toLocaleLowerCase() === 'qtd' || value.toLocaleLowerCase() === 'quantidade') {
-				header[id] = 'qtd'
-			} else if (value.toLocaleLowerCase() === 'siorg') {
-				header[id] = 'siorg'
-			} else if (value.toLocaleLowerCase() === 'date' || value.toLocaleLowerCase() === 'data') {
-				header[id] = 'date'
-			} else if (value.toLocaleLowerCase() === 'status' || value.toLocaleLowerCase() === 'situação') {
-				header[id] = 'status'
-			}else {
-				header[id] = ''
-			}
-		});
+    getRequistions = () => {
+        axios.get('/requisitions').then(response => {
+            if (response.status === 200) {
+                let requisitions = response.data.requisitions;
 
-		let csv = []
-		body.forEach((value, id) => {
-			let object = {}
-			if (value !== '' && value.length !== 1) {
-				value.forEach((value, id) => {
-					if (header[id] !== '')
-						object[header[id]] = value
-				})
-				csv.push(object)
-			}
-		});
+                let items = [];
+                console.log(requisitions)
 
-		this.setState({
-			csv,
-			canUpload: true
-		});
-	};
+                requisitions.forEach((item) => {
+                    let price = this.state.validPrice;
+                    if (item.quotation.length)
+                        price.average = item.quotation.map((x) => x.price).reduce((a, b) => a + b, 0) / item.quotation.length;
+                    // console.log()
+                    items.push({
+                        _id: item._id,
+                        siorg: item.siorg,
+                        description: item.description,
+                        qtd: item.qtd,
+                        average: "R$ " + price.average.toFixed(2),
+                        date: moment(item.history[item.history.length - 1].date).locale('pt-br').format('DD/MM/YYYY'),
+                        status: item.status,
+                        valid: this.validQuotation(item.quotation),
+                        input: (<Button color="success" onClick={() => {
+                            this.handleClick(item)
+                        }} type="submit">Solicitar</Button>),
+                    })
+                });
 
-	submitSheet = async () => {
-		this.setState({
-			canUpload: false
-		});
-		let { csv } = this.state;
-		let error = []
-		for (let i = 0; i < csv.length; i++) {
-			try {
-				let res = await axios.post('/requisition', csv[i])
-				if (res.status !== 200) {
-					error.push(i + 1)
-				}
-			}
-			catch (ex) {
-				error.push(i + 1)
-			}
-		}
+                this.setState({
+                    items,
+                    loading: false
+                });
+            }
+        }).catch(ex => {
+            console.error(ex, ex.response);
+        })
+    };
 
-		if (error.length === 0) {
-			alert('Planilha importada com sucesso')
-			window.location.reload();
-		} else {
-			alert('As segintes linhas não foram inseridas com sucesso' + error.toString())
-		}
-	}
+    handleClick(e) {
+        this.props.history.push({
+            pathname: '/novasolicitacoes',
+            state: {product: e}
+        })
+    }
 
-	render() {
-		let data
-		if (this.state.loading === false) {
-			data = <TableList header={['SIORG','Descrição', 'Qtd','Data', 'status', '']} items={this.state.items} />
-		} else {
-			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
-				<ClipLoader
-					color={'#123abc'}
-					loading={this.state.loading}
-				/>
-			</div>)
-		}
-		return (
-			<div>
-				<Header></Header>
-				<SubHeader title="Histórico de pedidos"></SubHeader>
-				<div>
-					{data}
-					<div align="left" className="margin-left">
-						<div className="margin-left-small">
-							<p>Importe os dados da solicitação de uma planilha CSV</p>
-						</div>
+    handleForce = data => {
+        let body = data.slice(0); // make copy
+        body.splice(0, 1);
+        let header = data[0];
+        header.forEach((value, id) => {
+            if (value.toLocaleLowerCase() === 'descrição' || value.toLocaleLowerCase() === 'descricao' || value.toLocaleLowerCase() === 'description') {
+                header[id] = 'description'
+            } else if (value.toLocaleLowerCase() === 'qtd' || value.toLocaleLowerCase() === 'quantidade') {
+                header[id] = 'qtd'
+            } else if (value.toLocaleLowerCase() === 'siorg') {
+                header[id] = 'siorg'
+            } else if (value.toLocaleLowerCase() === 'date' || value.toLocaleLowerCase() === 'data') {
+                header[id] = 'date'
+            } else if (value.toLocaleLowerCase() === 'status' || value.toLocaleLowerCase() === 'situação') {
+                header[id] = 'status'
+            } else {
+                header[id] = ''
+            }
+        });
 
-						<CSVReader
-							cssClass="react-csv-input"
-							onFileLoaded={this.handleForce}
-						/>
+        let csv = [];
+        body.forEach((value, id) => {
+            let object = {};
+            if (value !== '' && value.length !== 1) {
+                value.forEach((value, id) => {
+                    if (header[id] !== '')
+                        object[header[id]] = value
+                });
+                csv.push(object)
+            }
+        });
 
-						<Button disabled={!this.state.canUpload} type="button" color="secondary" style={ {marginBottom:'5px'} } className="btn btn-primary margin-top" onClick={() => {
-							this.submitSheet()
-						}}>
-							Enviar planilha
-       					</Button>
+        this.setState({
+            csv,
+            canUpload: true
+        });
+    };
 
-					</div>
-				</div>
-			</div >
-		);
-	}
+    submitSheet = async () => {
+        this.setState({
+            canUpload: false
+        });
+        let {csv} = this.state;
+        let error = [];
+        for (let i = 0; i < csv.length; i++) {
+            try {
+                let res = await axios.post('/requisition', csv[i]);
+                if (res.status !== 200) {
+                    error.push(i + 1)
+                }
+            }
+            catch (ex) {
+                error.push(i + 1)
+            }
+        }
+
+        if (error.length === 0) {
+            alert('Planilha importada com sucesso');
+            window.location.reload();
+        } else {
+            alert('As segintes linhas não foram inseridas com sucesso' + error.toString())
+        }
+    };
+
+    render() {
+        let data = (!this.state.loading) ?
+            <TableList header={['SIORG', 'Descrição', 'Qtd', 'Média item', 'Data', 'Status', 'Valido', '']}
+                       items={this.state.items}/> :
+            <div className='sweet-loading' style={{display: 'flex', justifyContent: 'center', margin: 100}}>
+                <ClipLoader
+                    color={'#123abc'}
+                    loading={this.state.loading}
+                />
+            </div>;
+
+        return (
+            <div>
+                <Header/>
+                <SubHeader
+                    title="Histórico de pedidos"
+                />
+                <div>
+                    {data}
+                    <div align="left" className="margin-left">
+                        <div className="margin-left-small">
+                            <p>Importe os dados da solicitação de uma planilha CSV</p>
+                        </div>
+
+                        <CSVReader
+                            cssClass="react-csv-input"
+                            onFileLoaded={this.handleForce}
+                        />
+
+                        <Button disabled={!this.state.canUpload} type="button" color="secondary"
+                                style={{marginBottom: '5px'}} className="btn btn-primary margin-top" onClick={() => {
+                            this.submitSheet()
+                        }}>
+                            Enviar planilha
+                        </Button>
+
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }

@@ -9,7 +9,7 @@ import moment from 'moment';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 axios.defaults.baseURL = "http://localhost:8080/api";
-moment().locale('pt-br')
+moment().locale('pt-br');
 
 ReactDOM.render((
 	<App />

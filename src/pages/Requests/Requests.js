@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from 'reactstrap';
-import { ClipLoader } from 'react-spinners';
+import {Button} from 'reactstrap';
+import {ClipLoader} from 'react-spinners';
 
 import '../Pages.css';
 
@@ -14,90 +14,115 @@ import moment from 'moment'
 
 
 export default class ApprovedRequests extends React.Component {
-	constructor(props) {
-		super(props);
-		this.handleClick = this.handleClick.bind(this);
-		this.state = {
-			term: 'teste',
-			isDisabled: true,
-			checkedCount: 0,
-			items: []
-		};
-	}
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+        this.state = {
+            term: 'teste',
+            isDisabled: true,
+            checkedCount: 0,
+            items: [],
 
-	componentWillMount() {
-		this.getRequistions();
-	}
+            // Validate Price
+            validPrice: {
+                min: 0.6,
+                max: 1.3,
+                average: 0
+            },
+        };
+    }
 
-	// TODO: change filter
-	getRequistions = () => {
-		axios.get('/requisitions').then(response => {
-			if (response.status === 200) {
-				let requisitions = response.data.requisitions;
-				let items = []
-				requisitions.forEach((item) => {
-					items.push({
-						_id: item._id,
-						siorg: item.siorg,
-						description: item.description,
-						qtd: item.qtd,
-						date: moment(item.history[item.history.length -1].date).locale('pt-br').format('DD/MM/YYYY'),
-						stauts: item.status,
+    componentWillMount() {
+        this.getRequistions();
+    }
 
-						edit:<Button color="primary" onClick={ ()=>{
-							this.props.history.push({
-								pathname: `/editarsolicitacoes/${item._id}`,
-								id:item._id
-								})
-						} } type="submit">Editar</Button> 
-						
-					})
-				})
-				// items = items.filter(item => {
-				// 	return item.status === 'aprovado'
-				// });
-				
-				this.setState({
-					items,
-					loading: false
-				})
-			}
-		}).catch(ex => {
-			console.error(ex, ex.response);
-		})
-	}
+    validQuotation = (quotation) => {
+        let price = this.state.validPrice;
+        // if (quotation.length)
+        //     price.average = quotation.map((x) => x.price).reduce((a, b) => a + b, 0) / quotation.length;
+        let error = 0
+        // console.log(quotation)
+        quotation.forEach((item, index) => {
+            // console.log(item)
+            if (!item.price || price.average * price.min > item.price || price.average * price.max < item.price)
+                error++
+        })
+        return error
+    }
 
-	handleClick(e) {
-		this.props.history.push({
-			pathname: '/novasolicitacoes',
-			state: { product: e }
-		})
-	}
+    // TODO: change filter
+    getRequistions = () => {
+        axios.get('/requisitions').then(response => {
+            if (response.status === 200) {
+                let requisitions = response.data.requisitions;
+                let items = [];
+                requisitions.forEach((item) => {
+                    let price = this.state.validPrice;
+                    if (item.quotation)
+                        price.average = item.quotation.map((x) => x.price).reduce((a, b) => a + b, 0) / item.quotation.length;
 
-	onChange = (event) => {
-		this.setState({ term: event.target.value });
-	}
+                    price.average = price.average? price.average : 0;
+                    items.push({
+                        _id: item._id,
+                        siorg: item.siorg,
+                        description: item.description,
+                        qtd: item.qtd,
+                        average: "R$ " + price.average.toFixed(2).toString(),
+                        invalid: this.validQuotation(item.quotation),
+                        date: moment(item.history[item.history.length - 1].date).locale('pt-br').format('DD/MM/YYYY'),
+                        stauts: item.status,
 
-	render() {
-		let data
-		if (this.state.loading === false) {
-			data = <TableList header={['SIORG','Descrição', 'Qtd', 'Data', 'Status', '']} items={this.state.items} />
-		} else {
-			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
-				<ClipLoader
-					color={'#123abc'}
-					loading={this.state.loading}
-				/>
-			</div>)
-		}
-		return (
-			<div>
-				<Header></Header>
-				<SubHeader title="Solicitações"></SubHeader>
+                        edit: <Button color="primary" onClick={() => {
+                            this.props.history.push({
+                                pathname: `/editarsolicitacoes/${item._id}`,
+                                id: item._id
+                            })
+                        }} type="submit">Editar</Button>
 
-				{data}
+                    })
+                });
+                // items = items.filter(item => {
+                // 	return item.status === 'aprovado'
+                // });
 
-			</div >
-		);
-	}
+                this.setState({
+                    items,
+                    loading: false
+                })
+            }
+        }).catch(ex => {
+            console.error(ex, ex.response);
+        })
+    };
+
+    handleClick(e) {
+        this.props.history.push({
+            pathname: '/novasolicitacoes',
+            state: {product: e}
+        })
+    }
+
+    onChange = (event) => {
+        this.setState({term: event.target.value});
+    };
+
+    render() {
+        let data = (this.state.loading === false) ?
+            <TableList header={['SIORG', 'Descrição', 'Qtd','Média item', 'N° invalidos', 'Data', 'Status', '']} items={this.state.items}/> :
+            <div className='sweet-loading' style={{display: 'flex', justifyContent: 'center', margin: 100}}>
+                <ClipLoader
+                    color={'#123abc'}
+                    loading={this.state.loading}
+                />
+            </div>
+        return (
+            <div>
+                <Header/>
+                <SubHeader title="Solicitações"/>
+
+                {data}
+
+            </div>
+        );
+    }
 }

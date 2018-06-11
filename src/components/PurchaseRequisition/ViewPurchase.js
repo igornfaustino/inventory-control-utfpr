@@ -10,7 +10,7 @@ import PurchasePrintView from './PurchasePrintView'
 export default class ViewPurchase extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props)
+        console.log(props);
         this.state = {
             match: props.match,
             loading: true,
@@ -22,9 +22,9 @@ export default class ViewPurchase extends React.Component {
     };
     componentDidMount() {
         try {
-            const data = this.state.data
+            const data = this.state.data;
             loadPurchaseRequisition(this.state.match.params.id).then((value) => {
-                data.purchase = value.purchases
+                data.purchase = value.purchases;
                 this.setState(
                     {
                         data: data,
@@ -45,7 +45,7 @@ export default class ViewPurchase extends React.Component {
                 loading={this.state.loading}
             />
         </div>
-        )
+        );
         if(this.state.loading === false){
             data=
             (<PurchasePrintView

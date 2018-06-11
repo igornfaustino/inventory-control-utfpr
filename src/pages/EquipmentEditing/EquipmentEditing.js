@@ -2,12 +2,11 @@ import React from 'react';
 import {Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import axios from 'axios';
 import Header from '../../components/Header/Header';
-import moment from 'moment'
 import SubHeader from '../../components/SubHeader/SubHeader'
 
 export default class EquipmentsEdit extends React.Component {
     componentDidMount() {
-        let id = this.props.match.params.id
+        let id = this.props.match.params.id;
         try {
             axios.get('/equipment/' + id).then(response => {
 
@@ -38,7 +37,8 @@ export default class EquipmentsEdit extends React.Component {
         equipment[field] = event.target.value;
         return this.setState({
             changed: true,
-            equipment: equipment});
+            equipment: equipment
+        });
     }
 
     onChangeLocation(event) {
@@ -47,13 +47,12 @@ export default class EquipmentsEdit extends React.Component {
         location[field] = event.target.value;
         return this.setState({
             changed: true,
-            locationHistory: location});
+            locationHistory: location
+        });
     }
 
     constructor(props) {
         super(props);
-
-        let date = new Date()
 
         this.state = {
             equipment: {
@@ -74,10 +73,10 @@ export default class EquipmentsEdit extends React.Component {
             changed: false,
             modal: false
         };
-        this.componentDidMount = this.componentDidMount.bind(this)
-        this.onChange = this.onChange.bind(this)
-        this.onChangeLocation = this.onChangeLocation.bind(this)
-        this.toggle = this.toggle.bind(this)
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.onChangeLocation = this.onChangeLocation.bind(this);
+        this.toggle = this.toggle.bind(this);
         this.savebutton = this.savebutton.bind(this)
     }
 
@@ -97,12 +96,12 @@ export default class EquipmentsEdit extends React.Component {
                         axios.post('/equipments/' + this.state.equipment._id + '/move', this.state.locationHistory).then(response => {
 
                             if (response.status === 200) {
-                                console.log(response)
+                                console.log(response);
                                 alert("Atualizado e movimentado com sucesso!")
                             }
 
                         }).catch(ex => {
-                            alert("Não Foi possivel conectar ao servidor")
+                            alert("Não Foi possivel conectar ao servidor");
                             console.error(ex, ex.response);
                         })
                     }
@@ -112,7 +111,7 @@ export default class EquipmentsEdit extends React.Component {
                 }
             })
                 .catch(ex => {
-                    alert("Não Foi possivel conectar ao servidor")
+                    alert("Não Foi possivel conectar ao servidor");
                     console.error(ex, ex.response);
                 })
         }
@@ -125,7 +124,7 @@ export default class EquipmentsEdit extends React.Component {
         return (
             <div>
                 <Header></Header>
-                
+
                 <SubHeader title='Almoxarifado >> Editar Equipamento'></SubHeader>
                 <div className="margin-left" style={{marginRight: "20px"}}>
                     <Form>
@@ -217,7 +216,8 @@ export default class EquipmentsEdit extends React.Component {
                         </FormGroup>
                         <Button color="primary" onClick={this.toggle}>Movimentar</Button>
                         <div align="right">
-                            <Button color="secondary" onClick={this.savebutton} disabled={!this.state.changed} >Salvar Alterações</Button>
+                            <Button color="secondary" onClick={this.savebutton} disabled={!this.state.changed}>Salvar
+                                Alterações</Button>
                         </div>
                     </Form>
                     <Modal size='lg' isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
@@ -262,7 +262,7 @@ export default class EquipmentsEdit extends React.Component {
 
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="danger" onClick={this.toggle} >Fechar</Button>
+                            <Button color="danger" onClick={this.toggle}>Fechar</Button>
                         </ModalFooter>
                     </Modal>
                 </div>

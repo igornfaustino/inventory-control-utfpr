@@ -32,7 +32,7 @@ export default class ApprovedRequests extends React.Component {
 		axios.get('/requisitions').then(response => {
 			if (response.status === 200) {
 				let requisitions = response.data.requisitions;
-				let items = []
+				let items = [];
 				requisitions.forEach((item) => {
 					items.push({
 						_id: item._id,
@@ -44,7 +44,7 @@ export default class ApprovedRequests extends React.Component {
 							this.handleClick(item)
 						}} type="submit">Solicitar</Button>)
 					})
-				})
+				});
 				
 				console.log(requisitions);
 				items = items.filter(item => {
@@ -59,7 +59,7 @@ export default class ApprovedRequests extends React.Component {
 		}).catch(ex => {
 			console.error(ex, ex.response);
 		})
-	}
+	};
 
 	//Comentar depois: controla adição dos itens - habilita botao quando um item está marcado
 	handleClick(e) {
@@ -71,10 +71,10 @@ export default class ApprovedRequests extends React.Component {
 
 	onChange = (event) => {
 		this.setState({ term: event.target.value });
-	}
+	};
 
 	render() {
-		let data
+		let data;
 		if (this.state.loading === false) {
 			data = <TableList header={['Descrição', 'Data', ' ']} items={this.state.items} />
 		} else {

@@ -14,7 +14,7 @@ export default class EditRequest extends React.Component {
         this.state={
             loading:true,
             requisition:{}
-        }
+        };
         this.componentWillMount=this.componentWillMount.bind(this)
     }
     componentWillMount() {
@@ -38,7 +38,7 @@ export default class EditRequest extends React.Component {
             color={'#123abc'}
             loading={this.state.loading}
         />
-    </div>)
+    </div>);
         if(this.state.loading===false){
             data=<FormRequest 
                 location={this.props.location} 
