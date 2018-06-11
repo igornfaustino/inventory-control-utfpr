@@ -108,7 +108,7 @@ export default class ApprovedRequests extends React.Component {
 
     render() {
         let data = (this.state.loading === false) ?
-            <TableList header={['SIORG', 'Descrição', 'Qtd','Média item', 'N° invalidos', 'Data', 'Status', '']} items={this.state.items}/> :
+            <TableList header={['SIORG', 'Descrição', 'Qtd','Média das cotações', 'Nº de Cotações inválidas', 'Data', 'Status', '']} items={this.state.items}/> :
             <div className='sweet-loading' style={{display: 'flex', justifyContent: 'center', margin: 100}}>
                 <ClipLoader
                     color={'#123abc'}
