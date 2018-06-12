@@ -101,7 +101,7 @@ export default class TableList extends React.Component {
         });
 
         if (this.state.filter != null) {
-            console.log(TableItems.sort((x, y) => {
+            TableItems.sort((x, y) => {
                 delete x._id;
                 delete y._id;
                 let keyX = Object.keys(x);
@@ -111,7 +111,7 @@ export default class TableList extends React.Component {
                     return x[keyX[this.state.filter]] < y[keyY[this.state.filter]]
                 }
                 return x[keyX[this.state.filter]] > y[keyY[this.state.filter]]
-            }))
+            })
         }
 
         TableItems = TableItems.map((item, index) => {

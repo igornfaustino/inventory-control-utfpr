@@ -4,7 +4,7 @@ export async function loadRequisition(id) {
 
     return await axios.get('/requisition/' + id).then(response => {
         if (response.status === 200) {
-            console.log(response.data)
+            // console.log(response.data)
             return ({
                 requisition: response.data.requisition,
                 loading: false
@@ -15,7 +15,7 @@ export async function loadRequisition(id) {
     })
 }
 export async function loadAllRequisition() {
-    console.log("Loading Requisitions!");
+    // console.log("Loading Requisitions!");
     return await axios.get('/requisitions').then(response => {
         if (response.status === 200) {
             let requisitions = response.data.requisitions;
@@ -34,7 +34,7 @@ export async function loadPurchaseRequisition(id) {
     return await axios.get('/purchase/' + id).then(response => {
         if (response.status === 200) {
             let purchase = response.data.purchase;
-            console.log(response.data)
+            // console.log(response.data)
             purchase.requisitionItems = prepareRequistionItems(purchase.requisitionItems);
             return ({
                 purchases: purchase,

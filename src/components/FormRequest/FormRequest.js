@@ -71,7 +71,7 @@ export default class FormRequest extends React.Component {
             let quotation = this.props.requisition.quotation;
 
             price.average = quotation.map((x) => parseFloat(x.price)).reduce((a, b) => a + b, 0) / quotation.length;
-            console.log( this.props.requisition)
+            // console.log( this.props.requisition)
             this.setState({
                     siorg: this.props.requisition.siorg,
                     description: this.props.requisition.description,
@@ -200,7 +200,7 @@ export default class FormRequest extends React.Component {
                 });
             }
         }).catch(err => {
-            console.log(err);
+            // console.log(err);
             alert("Opss.. algo saiu errado");
             this.setState({
                 descriptionValid: true,
@@ -299,7 +299,7 @@ export default class FormRequest extends React.Component {
                 });
             }
         }).catch(err => {
-            console.log(err);
+            // console.log(err);
             alert("Opss.. algo saiu errado");
             this.setState({
                 descriptionValid: true,

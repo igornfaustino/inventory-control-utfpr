@@ -28,11 +28,11 @@ export default class NewRequest extends React.Component {
                             loading: value.loading
                         }
                     );
-                    console.log(value)
+                    // console.log(value)
                 })
             }
             catch (error) {
-                console.log(error)
+                // console.log(error)
             }
         }
         else {

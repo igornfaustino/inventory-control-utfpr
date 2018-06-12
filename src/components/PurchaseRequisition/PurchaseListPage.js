@@ -47,7 +47,7 @@ export default class PurchaseListPage extends React.Component {
             )
         }
         catch (error) {
-            console.log(error)
+            // console.log(error)
             await sleep(2000)
             this.getRequistions()
         }
@@ -79,7 +79,7 @@ export default class PurchaseListPage extends React.Component {
 
         let items = [];
         this.state.purchaselist.forEach((item, index) => {
-            console.log(item)
+            // console.log(item)
             let pricelist = []
 
             for (let i = 0; i < item.requisitionItems.length; i++) {
@@ -92,7 +92,7 @@ export default class PurchaseListPage extends React.Component {
 
                 pricelist.push(price)
             }
-            console.log(pricelist);
+            // console.log(pricelist);
             let price = this.state.validPrice
             price.average = pricelist.reduce((a, b) => a + b, 0)
             items.push({

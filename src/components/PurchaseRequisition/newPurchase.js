@@ -44,11 +44,11 @@ export class NewPurchasePage extends React.Component {
         event.preventDefault();
         try {
             savePurchaseRequisition(this.state.purchase).then((value) => {
-                console.log(value)
+                // console.log(value)
             })
         }
         catch (error) {
-            console.log(error)
+            // console.log(error)
         }
     }
 

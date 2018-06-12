@@ -84,7 +84,7 @@ export class PurchaseForm extends React.Component {
             })
         }
         catch (error) {
-            console.log(error)
+            // console.log(error)
         }
     }
 
@@ -134,7 +134,7 @@ export class PurchaseForm extends React.Component {
                 n.push(rows[i])
             }
         }
-        console.log(n);
+        // console.log(n);
         this.setState({
             requisitionItens: n
         });
@@ -229,7 +229,7 @@ export class PurchaseForm extends React.Component {
         this.setState({
             requisitionItems: requisitionItens
         });
-        console.log(this.state.requisitionItens)
+        // console.log(this.state.requisitionItens)
     };
 
     onRowModalSelect = (item, isSelect, e) => {
@@ -268,7 +268,7 @@ export class PurchaseForm extends React.Component {
     this.setState({
       requisitionItems: requisitionItens
     })
-    console.log(this.state.requisitionItens)
+    // console.log(this.state.requisitionItens)
   }
   onRowModalSelect = (item, isSelect, e) => {
     let data = this.state.data
@@ -297,7 +297,8 @@ export class PurchaseForm extends React.Component {
   }
 
     render() 
-    {
+    {  
+        // console.log(this.props.purchase.requisitionDate)
         return (
             <Container>
                 <Form
@@ -307,8 +308,8 @@ export class PurchaseForm extends React.Component {
                     <TextInput
                         name="number"
                         label="Numero da Requisição:"
-                        type='string'
-                        size='4'
+                        // type='text'
+                        // size='4'
                         disabled={!this.props.edit}
                         value={this.props.purchase.number}
                         onChange={this.props.onChange}/>
@@ -317,7 +318,7 @@ export class PurchaseForm extends React.Component {
                         name="requisitionDate"
                         label="Data:"
                         type='date'
-                        size='4'
+                        // size='4'
                         disabled={this.props.disabled}
                         value={moment(this.props.purchase.requisitionDate).format("YYYY-MM-DD")}
                         onChange={this.props.onChange}/>
@@ -326,7 +327,7 @@ export class PurchaseForm extends React.Component {
                         name="management"
                         label="Gestão:"
                         disabled={this.props.disabled}
-                        size='4'
+                        // size='4'
                         value={this.props.purchase.management}
                         onChange={this.props.onChange}/>
 
@@ -334,7 +335,7 @@ export class PurchaseForm extends React.Component {
                         name="requester"
                         label="Requisitante:"
                         disabled={this.props.disabled}
-                        size='4'
+                        // size='4'
                         value={this.props.purchase.requester}
                         onChange={this.props.onChange}/>
 
@@ -342,14 +343,14 @@ export class PurchaseForm extends React.Component {
                         name="sector"
                         label="Setor:"
                         disabled={this.props.disabled}
-                        size='4'
+                        // size='4'
                         value={this.props.purchase.sector}
                         onChange={this.props.onChange}/>
 
                     <TextInput
                         name="UGR"
                         label="UGR:"
-                        size='4'
+                        // size='4'
                         disabled={this.props.disabled}
                         value={this.props.purchase.UGR}
                         onChange={this.props.onChange}/>

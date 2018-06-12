@@ -96,7 +96,7 @@ export default class EquipmentsEdit extends React.Component {
                         axios.post('/equipments/' + this.state.equipment._id + '/move', this.state.locationHistory).then(response => {
 
                             if (response.status === 200) {
-                                console.log(response);
+                                // console.log(response);
                                 alert("Atualizado e movimentado com sucesso!")
                             }
 
@@ -116,7 +116,7 @@ export default class EquipmentsEdit extends React.Component {
                 })
         }
         catch (error) {
-            console.log(error)
+            // console.log(error)
         }
     }
 

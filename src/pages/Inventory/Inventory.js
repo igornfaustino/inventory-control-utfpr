@@ -59,7 +59,7 @@ export default class Inventory extends React.Component {
 					})
 				})
 
-				console.log(equipments);
+				// console.log(equipments);
 				// items = items.filter(item => {
 				// 	return item._status === 'aprovado'
 				// });

@@ -23,7 +23,7 @@ export class PurchasePrintView extends React.Component {
 
     componentWillMount(){
       this.setState( {...this.props.purchase})
-      console.log(this.props.purchase)
+    //   console.log(this.props.purchase)
     }
     prepareJustify(){
         let justification="";

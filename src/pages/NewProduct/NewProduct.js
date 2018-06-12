@@ -162,7 +162,7 @@ export default class NewProduct extends React.Component {
 				equipmentType: this.state.type,
 				equipmentState: this.state.state,
 			}).then(res => {
-				console.log(res)
+				// console.log(res)
 				if (res.status === 200) {
 
 				} else {
@@ -180,7 +180,7 @@ export default class NewProduct extends React.Component {
 					});
 				}
 			}).catch(err => {
-				console.log(err)
+				// console.log(err)
 				alert("Opss.. algo saiu errado");
 				this.setState({
 					siorgValid: true,
