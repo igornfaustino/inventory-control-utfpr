@@ -45,10 +45,16 @@ export class PurchaseForm extends React.Component {
         let data = this.props.purchase.requisitionItems;
         let newdata = [];
         data.forEach((requisition, index) => {
-            let price = requisition.quotation.reduce((x, y) => x + y.price, 0) / requisition.quotation.length;
+            let price = 0;
+
+            if (requisition.quotation)
+                price = requisition.quotation.map((x) => x.price * requisition.qtd).reduce((a, b) => a + b, 0) / requisition.quotation.length;
+
             newdata.push({
                 ...data[index],
                 price: price,
+                min: price * this.state.validPrice.min,
+                max: price * this.state.validPrice.max,
                 selected: false
             })
         });
@@ -87,7 +93,14 @@ export class PurchaseForm extends React.Component {
         data.requisitions.forEach((value, index) => {
             if (value.selected) {
                 if (rows.filter(item => item.description === value.description).length === 0) {
-                    rows.push(value);
+                    let y = value;
+
+                    if (y.quotation)
+                        y['price'] = value.quotation.map((x) => x.price).reduce((a, b) => a + b, 0) / y.quotation.length;
+                        y.min = y.price * this.state.validPrice.min,
+                        y.max = y.price * this.state.validPrice.max,
+
+                    rows.push(y);
                     data.requisitions[index].selected = false;
                 }
             }
@@ -315,11 +328,27 @@ export class PurchaseForm extends React.Component {
                                            tdStyle={{width: '15%'}}
                                            thStyle={{width: '15%'}}
                                            dataSort={true}>Quantidade</TableHeaderColumn>
+
+                        <TableHeaderColumn dataField='min'
+                                           dataFormat={this.priceFormatter}
+                                           tdStyle={{width: '15%'}}
+                                           thStyle={{width: '15%'}}
+                                           dataSort={true}>Preço min</TableHeaderColumn>
+
                         <TableHeaderColumn dataField='price'
                                            dataFormat={this.priceFormatter}
                                            tdStyle={{width: '15%'}}
                                            thStyle={{width: '15%'}}
-                                           dataSort={true}>Preço</TableHeaderColumn>
+                                           dataSort={true}>Preço médio</TableHeaderColumn>
+
+
+
+                        <TableHeaderColumn dataField='max'
+                                           dataFormat={this.priceFormatter}
+                                           tdStyle={{width: '15%'}}
+                                           thStyle={{width: '15%'}}
+                                           dataSort={true}>Preço máx</TableHeaderColumn>
+
                         <TableHeaderColumn tdStyle={{width: '14%'}} thStyle={{width: '14%'}} dataField='status'
                                            dataSort={true}>Status</TableHeaderColumn>
                     </BootstrapTable>

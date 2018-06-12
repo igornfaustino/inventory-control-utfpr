@@ -109,7 +109,7 @@ export default class PurchaseListPage extends React.Component {
         if (this.state.loading === false) {
             data = (
                 <div>
-                    <TableList header={['Gestão', 'Requisitante', 'Data', 'N° itens', 'Custo 60%' ,'Custo medio','Custo 130%', '', '']}
+                    <TableList header={['Gestão', 'Requisitante', 'Data', 'N° itens', 'Custo min' ,'Custo medio','Custo max', '', '']}
                                items={items}/>
 
                     <Container className="float-right" style={{marginTop: '40px',}}>
