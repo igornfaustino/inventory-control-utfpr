@@ -202,8 +202,9 @@ export class PurchaseForm extends React.Component {
     ButtonFinishRequest = () => {
         if (!this.props.disabled) {
             return (
-                <Container className="float-right" style={{margin: '10px'}}>
+                // <Container className="float-right" style={{margin: '10px'}}>
                     <Button
+                        style={{marginTop: '10px'}}
                         color="secondary"
                         className="float-right"
                         size="sm"
@@ -213,7 +214,7 @@ export class PurchaseForm extends React.Component {
                     >
                         Salvar Alterações
                     </Button>
-                </Container>
+                // </Container>
             )
         }
         else {

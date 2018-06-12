@@ -256,7 +256,7 @@ export default class EquipmentsEdit extends React.Component {
 
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="danger" onClick={this.toggle}>Fechar</Button>
+                            <Button color="secondary" onClick={this.toggle}>Movimentar</Button>
                         </ModalFooter>
                     </Modal>
                 </div>
