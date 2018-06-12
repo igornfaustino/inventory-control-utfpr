@@ -466,7 +466,8 @@ export default class FormRequest extends React.Component {
                 </FormGroup>
                 <hr/>
                 <FormGroup row style={marginRight}>
-                    <Label for="justifyArea" sm={2}>*Motivo da Modificação:</Label>
+                <p style={{ marginTop: "10px", color: "red" }}>*</p>
+                    <Label for="justifyArea" sm={2}>Motivo da Modificação:</Label>
                     <Col sm={7}>
                         <Input value={this.state.changeJustification} type="textarea" id="justifyArea"
                                name="changeJustification" onChange={(event) => this.handleUserInput(event)}
@@ -563,6 +564,7 @@ export default class FormRequest extends React.Component {
                         </div>
                         <div className={`form-group${this.errorClass(this.state.formErrors.description)}`}>
                             <FormGroup row style={marginRight}>
+                            <p style={{ marginTop: "10px", color: "red" }}>*</p>
                                 <Label for="descriptionArea" sm={2}>Descrição:</Label>
                                 <Col sm={7}>
                                     <Input value={this.state.description} type="textarea" id="descriptionArea"
@@ -574,6 +576,7 @@ export default class FormRequest extends React.Component {
                         <div className={`form-group
                  ${this.errorClass(this.state.formErrors.quantity)}`}>
                             <FormGroup row style={marginRight}>
+                            <p style={{ marginTop: "10px", color: "red" }}>*</p>
                                 <Label for="quantityArea" sm={2}>Quantidade:</Label>
                                 <Col sm={1}>
                                     <Input value={this.state.quantity} type="number" id="quantityArea" name="quantity"
@@ -584,6 +587,7 @@ export default class FormRequest extends React.Component {
                         <div className={`form-group
                  ${this.errorClass(this.state.formErrors.justify)}`}>
                             <FormGroup row style={marginRight}>
+                            <p style={{ marginTop: "10px", color: "red" }}>*</p>
                                 <Label for="justifyArea" sm={2}>Justificativa:</Label>
                                 <Col sm={7}>
                                     <Input value={this.state.justify} type="textarea" id="justifyArea" name="justify"
