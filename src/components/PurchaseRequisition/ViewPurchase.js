@@ -10,7 +10,6 @@ import PurchasePrintView from './PurchasePrintView'
 export default class ViewPurchase extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props);
         this.state = {
             match: props.match,
             loading: true,

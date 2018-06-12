@@ -65,14 +65,13 @@ export default class FormRequest extends React.Component {
 
 
     componentWillMount() {
-        console.log(this.props);
         if (this.props.requisition) {
             let price = this.state.validPrice;
 
             let quotation = this.props.requisition.quotation;
 
             price.average = quotation.map((x) => parseFloat(x.price)).reduce((a, b) => a + b, 0) / quotation.length;
-
+            console.log( this.props.requisition)
             this.setState({
                     siorg: this.props.requisition.siorg,
                     description: this.props.requisition.description,
@@ -185,7 +184,6 @@ export default class FormRequest extends React.Component {
             itemType: this.state.itemType,
             quotation: await this.preparePriceEdit()
         }).then(res => {
-            console.log(res);
             if (res.status === 200) {
                 alert("Atualizado com sucesso");
                 this.setState({
@@ -215,7 +213,6 @@ export default class FormRequest extends React.Component {
     };
     validateQuotation = (quotation) => {
         let price = this.state.validPrice;
-        console.log(price, quotation);
         if (!quotation.price)
             return 'Preço requerido';
         if (price.average * price.min > quotation.price)
@@ -227,7 +224,6 @@ export default class FormRequest extends React.Component {
     };
 
     async preparePrice() {
-        console.log(this.state.quotation);
         let prices = this.state.quotation;
         for (let i = 0; i < prices.length; i++) {
             if (prices[i].requisitionType.toLocaleUpperCase() === 'PDF') {
@@ -242,12 +238,10 @@ export default class FormRequest extends React.Component {
         prices = prices.filter((price) => {
             return (price.reference !== '')
         });
-        console.log(prices);
         return prices
     }
 
     async preparePriceEdit() {
-        console.log(this.state.quotation);
         let prices = this.state.quotation;
         for (let i = 0; i < prices.length; i++) {
             if (prices[i].rawFile) {
@@ -262,7 +256,6 @@ export default class FormRequest extends React.Component {
         prices = prices.filter((price) => {
             return (price.reference !== '')
         });
-        console.log(prices);
         return prices
     }
 
@@ -286,7 +279,6 @@ export default class FormRequest extends React.Component {
             qtd: this.state.quantity,
             quotation: await this.preparePrice()
         }).then(res => {
-            console.log(res);
             if (res.status === 200) {
                 alert("Solicitação cadastrada");
                 this.setState({
@@ -417,7 +409,6 @@ export default class FormRequest extends React.Component {
             loadingHistory: true
         });
         axios.get('/requisition/' + this.props.requisition._id).then((res) => {
-            console.log(res.data.requisition.history);
             this.setState({
                 history: res.data.requisition.history,
                 loadingHistory: false
