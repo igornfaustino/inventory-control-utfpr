@@ -12,6 +12,7 @@ import Header from '../../components/Header/Header';
 import axios from 'axios';
 import moment from 'moment'
 
+import { sleep } from '../../utils/sleep'
 
 export default class ApprovedRequests extends React.Component {
 	constructor(props) {
@@ -30,8 +31,9 @@ export default class ApprovedRequests extends React.Component {
 	}
 
 	// TODO: change filter
-	getRequistions = () => {
-		axios.get('/requisitions').then(response => {
+	getRequistions = async () => {
+		try {
+			const response = await axios.get('/requisitions')
 			if (response.status === 200) {
 				let requisitions = response.data.requisitions;
 				let items = []
@@ -41,30 +43,32 @@ export default class ApprovedRequests extends React.Component {
 						siorg: item.siorg,
 						description: item.description,
 						qtd: item.qtd,
-						date: moment(item.history[item.history.length -1].date).locale('pt-br').format('DD/MM/YYYY'),
+						date: moment(item.history[item.history.length - 1].date).locale('pt-br').format('DD/MM/YYYY'),
 						stauts: item.status,
 
-						edit:<Button color="primary" onClick={ ()=>{
+						edit: <Button color="primary" onClick={() => {
 							this.props.history.push({
 								pathname: `/editarsolicitacoes/${item._id}`,
-								id:item._id
-								})
-						} } type="submit">Editar</Button> 
-						
+								id: item._id
+							})
+						}} type="submit">Editar</Button>
+
 					})
 				})
 				// items = items.filter(item => {
 				// 	return item.status === 'aprovado'
 				// });
-				
+
 				this.setState({
 					items,
 					loading: false
 				})
 			}
-		}).catch(ex => {
+		} catch (ex) {
 			console.error(ex, ex.response);
-		})
+			await sleep(2000)
+			this.getRequistions()
+		}
 	}
 
 	handleClick(e) {
@@ -81,7 +85,7 @@ export default class ApprovedRequests extends React.Component {
 	render() {
 		let data
 		if (this.state.loading === false) {
-			data = <TableList header={['SIORG','Descrição', 'Qtd', 'Data', 'Status', '']} items={this.state.items} />
+			data = <TableList header={['SIORG', 'Descrição', 'Qtd', 'Data', 'Status', '']} items={this.state.items} />
 		} else {
 			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
 				<ClipLoader

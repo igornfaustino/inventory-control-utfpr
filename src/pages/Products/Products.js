@@ -14,6 +14,8 @@ import Header from '../../components/Header/Header';
 import axios from 'axios';
 import moment from 'moment';
 
+import { sleep } from '../../utils/sleep'
+
 
 export default class Products extends React.Component {
 	constructor(props) {
@@ -31,8 +33,9 @@ export default class Products extends React.Component {
 		this.getRequistions();
 	}
 
-	getRequistions = () => {
-		axios.get('/requisitions').then(response => {
+	getRequistions = async () => {
+		try {
+			const response = await axios.get('/requisitions');
 			if (response.status === 200) {
 				let requisitions = response.data.requisitions;
 				let items = []
@@ -43,7 +46,7 @@ export default class Products extends React.Component {
 						siorg: item.siorg,
 						description: item.description,
 						qtd: item.qtd,
-						date: moment(item.history[item.history.length -1].date).locale('pt-br').format('DD/MM/YYYY'),
+						date: moment(item.history[item.history.length - 1].date).locale('pt-br').format('DD/MM/YYYY'),
 						status: item.status,
 						input: (<Button color="success" onClick={() => {
 							this.handleClick(item)
@@ -56,9 +59,11 @@ export default class Products extends React.Component {
 					loading: false
 				});
 			}
-		}).catch(ex => {
+		} catch (ex) {
 			console.error(ex, ex.response);
-		})
+			await sleep(2000)
+			this.getRequistions();
+		}
 	}
 
 	handleClick(e) {
@@ -83,7 +88,7 @@ export default class Products extends React.Component {
 				header[id] = 'date'
 			} else if (value.toLocaleLowerCase() === 'status' || value.toLocaleLowerCase() === 'situação') {
 				header[id] = 'status'
-			}else {
+			} else {
 				header[id] = ''
 			}
 		});
@@ -135,7 +140,7 @@ export default class Products extends React.Component {
 	render() {
 		let data
 		if (this.state.loading === false) {
-			data = <TableList header={['SIORG','Descrição', 'Qtd','Data', 'status', '']} items={this.state.items} />
+			data = <TableList header={['SIORG', 'Descrição', 'Qtd', 'Data', 'status', '']} items={this.state.items} />
 		} else {
 			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
 				<ClipLoader
@@ -160,7 +165,7 @@ export default class Products extends React.Component {
 							onFileLoaded={this.handleForce}
 						/>
 
-						<Button disabled={!this.state.canUpload} type="button" color="secondary" style={ {marginBottom:'5px'} } className="btn btn-primary margin-top" onClick={() => {
+						<Button disabled={!this.state.canUpload} type="button" color="secondary" style={{ marginBottom: '5px' }} className="btn btn-primary margin-top" onClick={() => {
 							this.submitSheet()
 						}}>
 							Enviar planilha

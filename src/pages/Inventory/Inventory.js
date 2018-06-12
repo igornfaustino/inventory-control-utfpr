@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 import { ClipLoader } from 'react-spinners';
-import {BootstrapTable, TableHeaderColumn,SearchField} from 'react-bootstrap-table';
+import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table';
 
 import '../Pages.css';
 // import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -9,9 +9,10 @@ import '../Pages.css';
 import TableList from '../../components/TableList/TableList';
 import SubHeader from '../../components/SubHeader/SubHeader';
 import Header from '../../components/Header/Header';
-
 import axios from 'axios';
 import moment from 'moment'
+
+import {sleep} from '../../utils/sleep'
 
 
 export default class Inventory extends React.Component {
@@ -23,7 +24,7 @@ export default class Inventory extends React.Component {
 			term: 'teste',
 			isDisabled: true,
 			checkedCount: 0,
-            items: []
+			items: []
 		};
 	}
 
@@ -31,9 +32,9 @@ export default class Inventory extends React.Component {
 		this.getEquipments();
 	}
 
-	getEquipments = () => {
-		axios.get('/equipments').then(response => {
-			console.log(response)
+	getEquipments = async () => {
+		try {
+			let response = await axios.get('/equipments')
 			if (response.status === 200) {
 				let equipments = response.data.equipments;
 				let items = []
@@ -44,36 +45,39 @@ export default class Inventory extends React.Component {
 						origin: item.origin,
 						type: item.equipmentType,
 						state: item.equipmentState,
-						location: item.locationHistory[0]? item.locationHistory[0].location: 'Em Estoque',
-						edit:<Button color="primary" onClick={ ()=>{
+						location: item.locationHistory[0] ? item.locationHistory[0].location : 'Em Estoque',
+						edit: <Button color="primary" onClick={() => {
 							this.props.history.push({
 								pathname: `editarequipamento/${item._id}`,
-								id:item._id
-								})
-						} } type="submit">Editar</Button> ,
+								id: item._id
+							})
+						}} type="submit">Editar</Button>,
 
-						view:<Button color="secondary" onClick={ ()=>{
+						view: <Button color="secondary" onClick={() => {
 							this.props.history.push({
 								pathname: `detalhesequipamento/${item._id}`,
-								id:item._id
-								})
-						} } type="submit">Visualizar</Button> ,
+								id: item._id
+							})
+						}} type="submit">Visualizar</Button>,
 					})
 				})
-				
+
 				console.log(equipments);
 				// items = items.filter(item => {
 				// 	return item._status === 'aprovado'
 				// });
-				
+
 				this.setState({
 					items,
 					loading: false
 				})
 			}
-		}).catch(ex => {
+		}
+		catch (ex) {
 			console.error(ex, ex.response);
-		})
+			await sleep(2000)
+			this.getEquipments();
+		}
 	}
 
 	handleClick(e) {
@@ -90,8 +94,8 @@ export default class Inventory extends React.Component {
 	render() {
 		let data
 		if (this.state.loading === false) {
-			data = <TableList header={['SIORG', 'Descrição', 'Origem', 'Tipo', 'Estado', 'Localização','', '', '']} items={this.state.items} />
-		
+			data = <TableList header={['SIORG', 'Descrição', 'Origem', 'Tipo', 'Estado', 'Localização', '', '', '']} items={this.state.items} />
+
 		} else {
 			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
 				<ClipLoader
@@ -104,11 +108,11 @@ export default class Inventory extends React.Component {
 			<div>
 				<Header></Header>
 				<SubHeader title="Almoxarifado"></SubHeader>
-				
-				<Button style={{marginTop: '1%', marginLeft: '1%'}} color="success" onClick={() => { this.handleClick(null)}} type="submit">Cadastrar Item</Button>
-				
+
+				<Button style={{ marginTop: '1%', marginLeft: '1%' }} color="success" onClick={() => { this.handleClick(null) }} type="submit">Cadastrar Item</Button>
+
 				{data}
-				
+
 
 			</div >
 		);

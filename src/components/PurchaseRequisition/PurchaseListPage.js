@@ -9,6 +9,8 @@ import TableList from '../TableList/TableList';
 import moment from 'moment'
 import { ClipLoader } from 'react-spinners';
 
+import { sleep } from '../../utils/sleep'
+
 export default class PurchaseListPage extends React.Component {
 
     constructor(props, context) {
@@ -22,41 +24,47 @@ export default class PurchaseListPage extends React.Component {
         this.RenderEditAction = this.RenderEditAction.bind(this)
         this.componentWillMount = this.componentWillMount.bind(this)
     }
-    componentWillMount() {
-        try {
-            loadAllPurchaseRequisition().then((value) => {
 
-                this.setState(
-                    {
-                        purchaselist: value.purchases,
-                        loading: value.loading
-                    }
-                )
-            })
+    componentWillMount() {
+        this.getRequistions()
+    }
+
+    getRequistions = async () => {
+        try {
+            const value = await loadAllPurchaseRequisition()
+
+            this.setState(
+                {
+                    purchaselist: value.purchases,
+                    loading: value.loading
+                }
+            )
         }
         catch (error) {
             console.log(error)
+            await sleep(2000)
+            this.getRequistions()
         }
     }
 
     RenderEditAction = (index) => {
         const id = this.state.purchaselist[index]._id
         return (
-            <Button color="primary" onClick={ ()=>{
+            <Button color="primary" onClick={() => {
                 this.props.history.push({
                     pathname: `${this.state.match.url}/editar/${id}`,
                 })
-            } } type="submit">Editar</Button> 
+            }} type="submit">Editar</Button>
         );
     }
     RenderViewAction = (index) => {
         const id = this.state.purchaselist[index]._id
         return (
-            <Button color="secondary" onClick={ ()=>{
+            <Button color="secondary" onClick={() => {
                 this.props.history.push({
                     pathname: `${this.state.match.url}/visualizar/${id}`,
-                    })
-            } } type="submit">Visualizar</Button> 
+                })
+            }} type="submit">Visualizar</Button>
 
         );
     }
@@ -93,8 +101,8 @@ export default class PurchaseListPage extends React.Component {
             data = (
                 <div>
                     <TableList header={['Gestão', 'Requisitante', 'Data', 'Custo', '', '']} items={items} />
-                    
-                    <Container className="float-right" style={ {marginTop:'40px',} }>
+
+                    <Container className="float-right" style={{ marginTop: '40px', }}>
                         <Button
                             color="success"
                             href={`${this.state.match.url}/novo`}
