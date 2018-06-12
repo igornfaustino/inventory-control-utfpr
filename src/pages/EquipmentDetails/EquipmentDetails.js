@@ -14,7 +14,6 @@ export default class EquipmentDetails extends React.Component {
 			description: '',
 			origin: '',
 			equipmentType: '',
-			quantity: '',
 			equipmentState: '',
 			// supplier: {},
 			locationHistory: [],
@@ -47,28 +46,26 @@ export default class EquipmentDetails extends React.Component {
 					<Table bordered condensed hover>
 						<tbody>
 							<tr>
-								<td colSpan="3" class="font-weight-bold">SIORG:</td>
-								<td colSpan="3">{this.state.siorg ? this.state.siorg : "SIORG não definido."}</td>
-								<td colSpan="3" class="font-weight-bold">Comprador:</td>
-								<td colSpan="3">{this.state.buyer ? this.state.buyer : "Comprador não informado."}</td>
+								<td class="font-weight-bold">SIORG:</td>
+								<td>{this.state.siorg ? this.state.siorg : "SIORG não definido."}</td>
+								<td class="font-weight-bold">Comprador:</td>
+								<td>{this.state.buyer ? this.state.buyer : "Comprador não informado."}</td>
 							</tr>
 							<tr>
-								<td colSpan="3" class="font-weight-bold">Solicitante:</td>
-								<td colSpan="3">{this.state.solicitor ? this.state.solicitor : "Solicitante não definido."}</td>
-								<td colSpan="3" class="font-weight-bold">Origem:</td>
-								<td colSpan="3">{this.state.origin}</td>
+								<td class="font-weight-bold">Solicitante:</td>
+								<td>{this.state.solicitor ? this.state.solicitor : "Solicitante não definido."}</td>
+								<td class="font-weight-bold">Origem:</td>
+								<td>{this.state.origin}</td>
 							</tr>
 							<tr>
-								<td colSpan="2" class="font-weight-bold">Quantidade:</td>
-								<td colSpan="2">{this.state.quantity}</td>
-								<td colSpan="2" class="font-weight-bold">Tipo do Equipamento:</td>
-								<td colSpan="2">{this.state.equipmentType}</td>
-								<td colSpan="2" class="font-weight-bold">Estado do Equipamento:</td>
-								<td colSpan="2">{this.state.equipmentState}</td>
+								<td class="font-weight-bold">Tipo do Equipamento:</td>
+								<td>{this.state.equipmentType}</td>
+								<td class="font-weight-bold">Estado do Equipamento:</td>
+								<td>{this.state.equipmentState}</td>
 							</tr>
 							<tr>
-								<td colSpan="2" class="font-weight-bold">Descrição:</td>
-								<td colSpan="10">
+								<td class="font-weight-bold">Descrição:</td>
+								<td colSpan="3">
 									{this.state.description}
 								</td>
 							</tr>
@@ -101,10 +98,10 @@ export default class EquipmentDetails extends React.Component {
 								<td colSpan="4" class="font-weight-bold text-center">Histórico do Equipamento</td>
 							</tr>
 							<tr>
-								<td colSpan="1" class="font-weight-bold">Data</td>
-								<td colSpan="1" class="font-weight-bold">Local</td>
-								<td colSpan="1" class="font-weight-bold">Tipo do Local</td>
-								<td colSpan="1" class="font-weight-bold">Justificativa</td>
+								<td class="font-weight-bold">Data</td>
+								<td class="font-weight-bold">Local</td>
+								<td class="font-weight-bold">Tipo do Local</td>
+								<td class="font-weight-bold">Justificativa</td>
 							</tr>
 						</thead>
 						<tbody>
