@@ -40,11 +40,9 @@ export default class Inventory extends React.Component {
 				equipments.forEach((item) => {
 					items.push({
 						siorg: item.siorg,
-						solicitor: item.solicitor,
 						description: item.description,
 						origin: item.origin,
 						type: item.equipmentType,
-						qtd: item.quantity,
 						state: item.equipmentState,
 						location: item.locationHistory[0]? item.locationHistory[0].location: 'Em Estoque',
 						edit:<Button color="primary" onClick={ ()=>{
@@ -92,7 +90,7 @@ export default class Inventory extends React.Component {
 	render() {
 		let data
 		if (this.state.loading === false) {
-			data = <TableList header={['SIORG', 'Solicitante', 'Descrição', 'Origem', 'Tipo', 'Quantidade', 'Estado', 'Localização','', '', '']} items={this.state.items} />
+			data = <TableList header={['SIORG', 'Descrição', 'Origem', 'Tipo', 'Estado', 'Localização','', '', '']} items={this.state.items} />
 		
 		} else {
 			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
