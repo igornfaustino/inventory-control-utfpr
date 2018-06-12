@@ -43,28 +43,28 @@ export default class EquipmentDetails extends React.Component {
 		return (
 			<div>
 				<Container>
-					<Table bordered condensed hover>
+					<Table bordered condensed="true" hover>
 						<tbody>
 							<tr>
-								<td class="font-weight-bold">SIORG:</td>
+								<td className="font-weight-bold">SIORG:</td>
 								<td>{this.state.siorg ? this.state.siorg : "SIORG não definido."}</td>
-								<td class="font-weight-bold">Comprador:</td>
+								<td className="font-weight-bold">Comprador:</td>
 								<td>{this.state.buyer ? this.state.buyer : "Comprador não informado."}</td>
 							</tr>
 							<tr>
-								<td class="font-weight-bold">Solicitante:</td>
+								<td className="font-weight-bold">Solicitante:</td>
 								<td>{this.state.solicitor ? this.state.solicitor : "Solicitante não definido."}</td>
-								<td class="font-weight-bold">Origem:</td>
+								<td className="font-weight-bold">Origem:</td>
 								<td>{this.state.origin}</td>
 							</tr>
 							<tr>
-								<td class="font-weight-bold">Tipo do Equipamento:</td>
+								<td className="font-weight-bold">Tipo do Equipamento:</td>
 								<td>{this.state.equipmentType}</td>
-								<td class="font-weight-bold">Estado do Equipamento:</td>
+								<td className="font-weight-bold">Estado do Equipamento:</td>
 								<td>{this.state.equipmentState}</td>
 							</tr>
 							<tr>
-								<td class="font-weight-bold">Descrição:</td>
+								<td className="font-weight-bold">Descrição:</td>
 								<td colSpan="3">
 									{this.state.description}
 								</td>
@@ -74,13 +74,13 @@ export default class EquipmentDetails extends React.Component {
 					{/* <Table bordered condensed hover>
 						<thead>
 							<tr>
-								<td colSpan="4" class="font-weight-bold text-center">Informações do Fornecedor</td>
+								<td colSpan="4" className="font-weight-bold text-center">Informações do Fornecedor</td>
 							</tr>
 							<tr>
-								<td colSpan="1" class="font-weight-bold">CNPJ</td>
-								<td colSpan="1" class="font-weight-bold">Nome</td>
-								<td colSpan="1" class="font-weight-bold">Telefone</td>
-								<td colSpan="1" class="font-weight-bold">Endereço</td>
+								<td colSpan="1" className="font-weight-bold">CNPJ</td>
+								<td colSpan="1" className="font-weight-bold">Nome</td>
+								<td colSpan="1" className="font-weight-bold">Telefone</td>
+								<td colSpan="1" className="font-weight-bold">Endereço</td>
 							</tr>
 						</thead>
 						<tbody>
@@ -92,16 +92,16 @@ export default class EquipmentDetails extends React.Component {
 							</tr>
 						</tbody>
 					</Table> */}
-					<Table bordered condensed hover>
+					<Table bordered condensed="true" hover>
 						<thead>
 							<tr>
-								<td colSpan="4" class="font-weight-bold text-center">Histórico do Equipamento</td>
+								<td colSpan="4" className="font-weight-bold text-center">Histórico do Equipamento</td>
 							</tr>
 							<tr>
-								<td class="font-weight-bold">Data</td>
-								<td class="font-weight-bold">Local</td>
-								<td class="font-weight-bold">Tipo do Local</td>
-								<td class="font-weight-bold">Justificativa</td>
+								<td className="font-weight-bold">Data</td>
+								<td className="font-weight-bold">Local</td>
+								<td className="font-weight-bold">Tipo do Local</td>
+								<td className="font-weight-bold">Justificativa</td>
 							</tr>
 						</thead>
 						<tbody>

@@ -61,7 +61,7 @@ export default class Products extends React.Component {
 						siorg: item.siorg,
 						description: item.description,
 						qtd: item.qtd,
-						average: "R$ " + price.average.toFixed(2).toString(),
+						// average: "R$ " + price.average.toFixed(2).toString(),
 						date: moment(item.history[item.history.length - 1].date).locale('pt-br').format('DD/MM/YYYY'),
 						status: item.status,
 						input: (<Button color="success" onClick={() => {
@@ -155,7 +155,7 @@ export default class Products extends React.Component {
 
 	render() {
 		let data = (!this.state.loading) ?
-			<TableList header={['SIORG', 'Descrição', 'Qtd', 'Média das cotações', 'Data', 'Status', '']}
+			<TableList header={['SIORG', 'Descrição', 'Qtd', 'Data', 'Status', '']}
 				items={this.state.items} /> :
 			<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
 				<ClipLoader

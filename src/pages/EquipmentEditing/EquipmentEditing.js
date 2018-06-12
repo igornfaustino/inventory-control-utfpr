@@ -56,13 +56,13 @@ export default class EquipmentsEdit extends React.Component {
 
         this.state = {
             equipment: {
-                siorg: null,
+                siorg: '',
                 buyer: '',
                 solicitor: 'test ',
                 description: '',
                 origin: '',
                 equipmentType: '',
-                quantity: null,
+                // quantity: 1,
                 equipmentState: ''
             },
             locationHistory: {
@@ -191,16 +191,6 @@ export default class EquipmentsEdit extends React.Component {
                                     id="equipmentType"
                                     placeholder="Tipo do produto"
                                     value={this.state.equipment.equipmentType}
-                                    onChange={this.onChange} />
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for="quantity" sm={2}>Quantidade:</Label>
-                            <Col sm={1}>
-                                <Input type="number"
-                                    name="quantity"
-                                    id="quantity"
-                                    value={this.state.equipment.quantity}
                                     onChange={this.onChange} />
                             </Col>
                         </FormGroup>

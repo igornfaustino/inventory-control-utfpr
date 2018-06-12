@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 import { ClipLoader } from 'react-spinners';
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table';
 
 import '../Pages.css';
 import TableList from '../../components/TableList/TableList';

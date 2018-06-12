@@ -98,10 +98,11 @@ export class PurchaseForm extends React.Component {
                 if (rows.filter(item => item.description === value.description).length === 0) {
                     let y = value;
 
-                    if (y.quotation)
+                    if (y.quotation){
                         y['price'] = value.quotation.map((x) => x.price).reduce((a, b) => a + b, 0) / y.quotation.length;
-                        y.min = y.price * this.state.validPrice.min,
-                        y.max = y.price * this.state.validPrice.max,
+                        y.min = y.price * this.state.validPrice.min;
+                        y.max = y.price * this.state.validPrice.max;
+                    }
 
                     rows.push(y);
                     data.requisitions[index].selected = false;

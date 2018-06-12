@@ -1,12 +1,12 @@
 import React from 'react';
-import {loadAllPurchaseRequisition} from "./connectAPI";
+import { loadAllPurchaseRequisition } from "./connectAPI";
 // Import React Table
 import "react-table/react-table.css";
 import SubHeader from '../SubHeader/SubHeader';
-import {Button, Container} from 'reactstrap'
+import { Button } from 'reactstrap'
 import TableList from '../TableList/TableList';
 import moment from 'moment'
-import {ClipLoader} from 'react-spinners';
+import { ClipLoader } from 'react-spinners';
 
 import { sleep } from '../../utils/sleep'
 
@@ -107,7 +107,7 @@ export default class PurchaseListPage extends React.Component {
                 renderViewAction: this.RenderViewAction(index),
             })
         });
-        let data = (<div className='sweet-loading' style={{display: 'flex', justifyContent: 'center', margin: 100}}>
+        let data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
             <ClipLoader
                 color={'#123abc'}
                 loading={this.state.loading}
@@ -116,24 +116,17 @@ export default class PurchaseListPage extends React.Component {
         if (this.state.loading === false) {
             data = (
                 <div>
-                    <TableList header={['Gestão', 'Requisitante', 'Data', 'N° itens', 'Custo min' ,'Custo medio','Custo max', '', '']}
-                               items={items}/>
-
-                    <Container className="float-right" style={{marginTop: '40px',}}>
-                        <Button
-                            color="success"
-                            href={`${this.state.match.url}/novo`}
-                            className="float-right"
-                        >
-                            Nova Requisição
-                        </Button>
-                    </Container>
+                    <Button color="success" href={`${this.state.match.url}/novo`} style={{ marginTop: '1%', marginLeft: '1%' }}>
+                        Nova Requisição
+                    </Button>
+                    <TableList header={['Gestão', 'Requisitante', 'Data', 'N° itens', 'Custo min', 'Custo medio', 'Custo max', '', '']}
+                        items={items} />
                 </div>
             )
         }
         return (
             <div>
-                <SubHeader title="Listagem de Requisições"/>
+                <SubHeader title="Listagem de Requisições" />
                 {data}
             </div>
         )
