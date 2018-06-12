@@ -326,7 +326,11 @@ export class PurchaseForm extends React.Component {
                             bgColor: '#e4ecf5'
                         }}
                         deleteRow>
-                        <TableHeaderColumn dataField='description' dataSort={true} isKey>Descrição</TableHeaderColumn>
+                        <TableHeaderColumn dataField='_id'
+                                           tdStyle={{width: '0%'}}
+                                           thStyle={{width: '0%'}} dataSort={false} isKey>key</TableHeaderColumn>
+                        
+                        <TableHeaderColumn dataField='description' dataSort={true} >Descrição</TableHeaderColumn>
                         <TableHeaderColumn dataField='qtd'
                                            tdStyle={{width: '15%'}}
                                            thStyle={{width: '15%'}}
