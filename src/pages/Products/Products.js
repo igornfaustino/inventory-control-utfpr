@@ -14,6 +14,8 @@ import Header from '../../components/Header/Header';
 import axios from 'axios';
 import moment from 'moment';
 
+import { sleep } from '../../utils/sleep'
+
 
 export default class Products extends React.Component {
     constructor(props) {
@@ -40,6 +42,7 @@ export default class Products extends React.Component {
     }
 
     getRequistions = () => {
+        try{
         axios.get('/requisitions').then(response => {
             if (response.status === 200) {
                 let requisitions = response.data.requisitions;
@@ -75,6 +78,11 @@ export default class Products extends React.Component {
         }).catch(ex => {
             console.error(ex, ex.response);
         })
+    } catch (ex) {
+        console.error(ex, ex.response);
+        sleep(2000)
+        this.getRequistions();
+    }
     };
 
     handleClick(e) {

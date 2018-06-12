@@ -151,173 +151,152 @@ export default class NewProduct extends React.Component {
 
         // console.log(this.state)
 
-        this.setState({
-            siorgValid: false,
-            buyerValid: false,
-            requesterValid: false,
-            descriptionValid: false,
-            originValid: false,
-            typeValid: false,
-            quantityValid: false,
-            stateValid: false,
-            formValid: false,
-        });
+		for (var i=0; i<this.state.quantity; i++){
+            
+			axios.post('/equipment/', {
+				siorg: this.state.siorg,
+				buyer: this.state.buyer,
+				solicitor: this.state.requester,
+				description: this.state.description,
+				origin: this.state.origin,
+				equipmentType: this.state.type,
+				equipmentState: this.state.state,
+			}).then(res => {
+				console.log(res)
+				if (res.status === 200) {
 
+				} else {
+					alert("Opss.. algo saiu errado");
+					this.setState({
+						siorgValid: true,
+						buyerValid: true,
+						requesterValid: true,
+						descriptionValid: true,
+						originValid: true,
+						typeValid: true,
+						quantityValid: true,
+						stateValid: true,
+						formValid: true,
+					});
+				}
+			}).catch(err => {
+				console.log(err)
+				alert("Opss.. algo saiu errado");
+				this.setState({
+					siorgValid: true,
+					buyerValid: true,
+					requesterValid: true,
+					descriptionValid: true,
+					originValid: true,
+					typeValid: true,
+					quantityValid: true,
+					stateValid: true,
+					formValid: true,
+				});
+			});
+		}
+		
+		this.setState({
+			siorg: '',
+			buyer: '',
+			requester: '',
+			description: '',
+			origin: '',
+			type: '',
+			quantity: '',
+			state: '',
+			
+			formErrors: { siorg: '', buyer: '', requester: '', description: '', origin: '', type: '', quantity: '', state: '' },
+			
+		});
+		alert("Solicitação cadastrada")
+		
+	}
 
-        axios.post('/equipment/', {
-            siorg: this.state.siorg,
-            buyer: this.state.buyer,
-            solicitor: this.state.requester,
-            description: this.state.description,
-            origin: this.state.origin,
-            equipmentType: this.state.type,
-            quantity: this.state.quantity,
-            equipmentState: this.state.state,
-        }).then(res => {
-            console.log(res);
-            if (res.status === 200) {
-                alert("Solicitação cadastrada");
-                this.setState({
-                    siorg: '',
-                    buyer: '',
-                    requester: '',
-                    description: '',
-                    origin: '',
-                    type: '',
-                    quantity: '',
-                    state: '',
+    render(){
 
-                    formErrors: {
-                        siorg: '',
-                        buyer: '',
-                        requester: '',
-                        description: '',
-                        origin: '',
-                        type: '',
-                        quantity: '',
-                        state: ''
-                    },
+		const { siorgValid, buyerValid, requesterValid, descriptionValid, originValid, typeValid, quantityValid, stateValid } = this.state
+		// console.log(this.state)
+		return (
+			<div>
+				{/* Alert to show that there are things unsaved */}
+				<Prompt
+					when={siorgValid || buyerValid || requesterValid || descriptionValid || originValid || typeValid ||
+						quantityValid || stateValid}
+					message="tem certeza que deseja sair desta página? Todas as suas alterações serão perdidas"
+				/>
 
-                });
-            } else {
-                alert("Opss.. algo saiu errado");
-                this.setState({
-                    siorgValid: true,
-                    buyerValid: true,
-                    requesterValid: true,
-                    descriptionValid: true,
-                    originValid: true,
-                    typeValid: true,
-                    quantityValid: true,
-                    stateValid: true,
-                    formValid: true,
-                });
-            }
-        }).catch(err => {
-            console.log(err);
-            alert("Opss.. algo saiu errado");
-            this.setState({
-                siorgValid: true,
-                buyerValid: true,
-                requesterValid: true,
-                descriptionValid: true,
-                originValid: true,
-                typeValid: true,
-                quantityValid: true,
-                stateValid: true,
-                formValid: true,
-            });
-        });
-    };
+				<Header></Header>
+				<SubHeader title="Cadastro de item"></SubHeader>
+				<div className="margin-left">
+					<Form>
+						<FormGroup row>
+							<p style={{ marginTop: "10px", color: "red" }}>*</p>
+							<Label for="siorgCode" sm={2}>Código do SIORG:</Label>
+							<Col sm={2}>
+								<Input value={this.state.siorg} type="text" name="siorg" id="siorgCode" onChange={(event) => this.handleUserInput(event)} placeholder="Número Siorg" />
+							</Col>
+						</FormGroup>
+						<FormGroup row>
+							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 
-    render() {
+							<Label for="buyerArea" sm={2}>Comprador:</Label>
+							<Col sm={4}>
+								<Input value={this.state.buyer} type="text" name="buyer" id="buyerArea" onChange={(event) => this.handleUserInput(event)} placeholder="Pessoa que comprou o produto" />
+							</Col>
+						</FormGroup>
+						<FormGroup row>
+							<p style={{ marginTop: "10px", color: "red" }}>*</p>
+							<Label for="requesterArea" sm={2}>Solicitante:</Label>
+							<Col sm={4}>
+								<Input value={this.state.requester} type="text" name="requester" id="requesterArea" onChange={(event) => this.handleUserInput(event)} placeholder="Pessoa que solicitou o produto" />
+							</Col>
+						</FormGroup>
+						<FormGroup row>
+							<p style={{ marginTop: "10px", color: "red" }}>*</p>
+							<Label for="descriptionArea" sm={2}>Descrição:</Label>
+							<Col sm={7}>
+								<Input value={this.state.description} type="textarea" name="description" id="descriptionArea" onChange={(event) => this.handleUserInput(event)} placeholder="Descrição detalhada do produto" />
+							</Col>
+						</FormGroup>
+						<FormGroup row>
+							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 
-        const {siorgValid, buyerValid, requesterValid, descriptionValid, originValid, typeValid, quantityValid, stateValid} = this.state;
-        // console.log(this.state)
-        return (
-            <div>
-                {/* Alert to show that there are things unsaved */}
-                <Prompt
-                    when={siorgValid || buyerValid || requesterValid || descriptionValid || originValid || typeValid ||
-                    quantityValid || stateValid}
-                    message="tem certeza que deseja sair desta página? Todas as suas alterações serão perdidas"
-                />
-
-                <Header/>
-                <SubHeader title="Cadastro de item"/>
-                <div className="margin-left">
-                    <Form>
-                        <FormGroup row>
-                            <Label for="siorgCode" sm={2}>Código do SIORG:</Label>
-                            <Col sm={2}>
-                                <Input value={this.state.siorg} type="text" name="siorg" id="siorgCode"
-                                       onChange={(event) => this.handleUserInput(event)} placeholder="Número Siorg"/>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for="buyerArea" sm={2}>Comprador:</Label>
-                            <Col sm={4}>
-                                <Input value={this.state.buyer} type="text" name="buyer" id="buyerArea"
-                                       onChange={(event) => this.handleUserInput(event)}
-                                       placeholder="Pessoa que comprou o produto"/>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for="requesterArea" sm={2}>Solicitante:</Label>
-                            <Col sm={4}>
-                                <Input value={this.state.requester} type="text" name="requester" id="requesterArea"
-                                       onChange={(event) => this.handleUserInput(event)}
-                                       placeholder="Pessoa que solicitou o produto"/>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for="descriptionArea" sm={2}>Descrição:</Label>
-                            <Col sm={7}>
-                                <Input value={this.state.description} type="textarea" name="description"
-                                       id="descriptionArea" onChange={(event) => this.handleUserInput(event)}
-                                       placeholder="Descrição detalhada do produto"/>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for="originArea" sm={2}>Origem:</Label>
-                            <Col sm={3}>
-                                <Input value={this.state.origin} type="text" name="origin" id="originArea"
-                                       onChange={(event) => this.handleUserInput(event)}
-                                       placeholder="Origem do produto"/>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for="typeArea" sm={2}>Tipo:</Label>
-                            <Col sm={3}>
-                                <Input value={this.state.type} type="text" name="type" id="typeArea"
-                                       onChange={(event) => this.handleUserInput(event)} placeholder="Tipo do produto"/>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for="quantityArea" sm={2}>Quantidade:</Label>
-                            <Col sm={1}>
-                                <Input value={this.state.quantity} type="number" name="quantity"
-                                       onChange={(event) => this.handleUserInput(event)} id="quantityArea"/>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for="stateArea" sm={2}>Estado:</Label>
-                            <Col sm={2}>
-                                <Input value={this.state.state} type="text" name="state" id="stateArea"
-                                       onChange={(event) => this.handleUserInput(event)}
-                                       placeholder="Estado do produto"/>
-                            </Col>
-                        </FormGroup>
-                    </Form>
-                    <div align="right" className="margin-right">
-                        <Button type="submit" color="success" disabled={!this.state.formValid}
-                                onClick={this.submitRequest}>
-                            Cadastrar Produto
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        );
+							<Label for="originArea" sm={2}>Origem:</Label>
+							<Col sm={3}>
+								<Input value={this.state.origin} type="text" name="origin" id="originArea" onChange={(event) => this.handleUserInput(event)} placeholder="Origem do produto" />
+							</Col>
+						</FormGroup>
+						<FormGroup row>
+							<p style={{ marginTop: "10px", color: "red" }}>*</p>
+							<Label for="typeArea" sm={2}>Tipo:</Label>
+							<Col sm={3}>
+								<Input value={this.state.type} type="text" name="type" id="typeArea" onChange={(event) => this.handleUserInput(event)} placeholder="Tipo do produto" />
+							</Col>
+						</FormGroup>
+						<FormGroup row>
+							<p style={{ marginTop: "10px", color: "red" }}>*</p>
+							<Label for="quantityArea" sm={2}>Quantidade:</Label>
+							<Col sm={1}>
+								<Input value={this.state.quantity} type="number" name="quantity" onChange={(event) => this.handleUserInput(event)} id="quantityArea" />
+							</Col>
+						</FormGroup>
+						<FormGroup row>
+							<p style={{ marginTop: "10px", color: "red" }}>*</p>
+							<Label for="stateArea" sm={2}>Status:</Label>
+							<Col sm={2}>
+								<Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" />
+							</Col>
+						</FormGroup>
+					</Form>
+					<div align="right" className="margin-right">
+						<Button type="submit" color="success" disabled={!this.state.formValid} onClick={this.submitRequest}>
+							Cadastrar Produto
+						</Button>
+					</div>
+				</div>
+			</div>
+		);
 
     }
 }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {ButtonGroup, Form} from 'react-bootstrap';
 import {Button, Container, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import moment from 'moment'
-import {loadAllRequisition} from './connectAPI';
+import { loadAllRequisition } from './connectAPI';
 
 import {BootstrapTable, SearchField, TableHeaderColumn} from 'react-bootstrap-table';
 
@@ -37,7 +37,7 @@ export class PurchaseForm extends React.Component {
         this.toggleOut = this.toggleOut.bind(this);
         this.toggleIn = this.toggleIn.bind(this);
         this.removeRequest = this.removeRequest.bind(this);
-        this.AddRequest = this.AddRequest.bind(this)
+        this.AddRequest = this.AddRequest.bind(this);
 
     }
 
@@ -139,7 +139,7 @@ export class PurchaseForm extends React.Component {
         });
 
         this.props.onChangeRequest(n)
-    }
+    };
 
     toggleIn() {
         let date = this.state.data.requisitions;
@@ -152,13 +152,13 @@ export class PurchaseForm extends React.Component {
             data: {...this.state.data, requisitions: date},
             modal: true
         })
-    }
+    };
 
     toggleOut() {
         this.setState({
             modal: false
         })
-    }
+    };
 
     ButtonAddRequest = () => {
         if (!this.props.disabled) {
@@ -179,6 +179,7 @@ export class PurchaseForm extends React.Component {
             )
         }
     };
+
     isDisabled = () => {
         return (
             this.props.purchase.requester.length > 0 &&
@@ -188,6 +189,7 @@ export class PurchaseForm extends React.Component {
             this.props.purchase.requester.length > 0
         ) ? false : true
     };
+
     CustonModalSearch = props => {
         return (
             <SearchField
@@ -195,6 +197,7 @@ export class PurchaseForm extends React.Component {
                 placeholder={"Buscar"}/>
         );
     };
+
     ButtonFinishRequest = () => {
         if (!this.props.disabled) {
             return (
@@ -216,6 +219,7 @@ export class PurchaseForm extends React.Component {
             return ("")
         }
     };
+
     onRowSelect = (item, isSelect, e) => {
         let requisitionItens = this.state.requisitionItens;
         let index = requisitionItens.indexOf(item);
@@ -254,9 +258,45 @@ export class PurchaseForm extends React.Component {
 
     priceFormatter(cell, row) {
         return `R$ ${cell.toFixed(2)}`;
-    }
+    };
 
-    render() {
+  onRowSelect = (item, isSelect, e) => {
+    let requisitionItens = this.state.requisitionItens
+    let index = requisitionItens.indexOf(item)
+    requisitionItens[index] = { ...requisitionItens[index], selected: isSelect }
+    this.setState({
+      requisitionItems: requisitionItens
+    })
+    console.log(this.state.requisitionItens)
+  }
+  onRowModalSelect = (item, isSelect, e) => {
+    let data = this.state.data
+    let index = data.requisitions.indexOf(item)
+    data.requisitions[index] = { ...data.requisitions[index], selected: isSelect }
+    this.setState({
+      requisitionItems: data
+    })
+  }
+
+  CustomButtonGroupModal = props => {
+    return (
+      <ButtonGroup>
+        <Button type='button'
+          size="sm"
+          className={`btn btn-success`}
+          onClick={() => { this.AddRequest() }}>
+          Adicionar Selecionados
+          </Button>
+      </ButtonGroup>
+    );
+  }
+
+  priceFormatter=(cell, row)=>{
+    return `R$ ${cell.toFixed(2)}`;
+  }
+
+    render() 
+    {
         return (
             <Container>
                 <Form

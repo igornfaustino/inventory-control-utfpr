@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
+import { Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import axios from 'axios';
 import Header from '../../components/Header/Header';
 import SubHeader from '../../components/SubHeader/SubHeader'
@@ -126,92 +126,93 @@ export default class EquipmentsEdit extends React.Component {
                 <Header></Header>
 
                 <SubHeader title='Almoxarifado >> Editar Equipamento'></SubHeader>
-                <div className="margin-left" style={{marginRight: "20px"}}>
+                <div className="margin-left" style={{ marginRight: "20px" }}>
                     <Form>
                         <FormGroup row>
                             <Label for="siorg" sm={2}>Código do SIORG:</Label>
                             <Col sm={2}>
                                 <Input type="text"
-                                       name="siorg"
-                                       id="siorg"
-                                       value={this.state.equipment.siorg}
-                                       onChange={this.onChange}/>
+                                    name="siorg"
+                                    id="siorg"
+                                    value={this.state.equipment.siorg}
+                                    onChange={this.onChange} />
                             </Col>
                         </FormGroup>
                         <FormGroup row>
                             <Label for="buyer" sm={2}>Comprador:</Label>
                             <Col sm={4}>
                                 <Input type="text"
-                                       name="buyer"
-                                       id="buyer"
-                                       placeholder="Pessoa que comprou o produto"
-                                       value={this.state.equipment.buyer}
-                                       onChange={this.onChange}/>
+                                    name="buyer"
+                                    id="buyer"
+                                    placeholder="Pessoa que comprou o produto"
+                                    value={this.state.equipment.buyer}
+                                    onChange={this.onChange} />
                             </Col>
                         </FormGroup>
                         <FormGroup row>
+
                             <Label for="solicitor" sm={2}>Solicitante:</Label>
                             <Col sm={4}>
                                 <Input type="text"
-                                       name="solicitor"
-                                       id="solicitor"
-                                       placeholder="Pessoa que solicitou o produto"
-                                       value={this.state.equipment.solicitor}
-                                       onChange={this.onChange}/>
+                                    name="solicitor"
+                                    id="solicitor"
+                                    placeholder="Pessoa que solicitou o produto"
+                                    value={this.state.equipment.solicitor}
+                                    onChange={this.onChange} />
                             </Col>
                         </FormGroup>
                         <FormGroup row>
                             <Label for="description" sm={2}>Descrição:</Label>
                             <Col sm={7}>
                                 <Input type="textarea"
-                                       name="description"
-                                       id="description"
-                                       placeholder="Descrição detalhada do produto"
-                                       value={this.state.equipment.description}
-                                       onChange={this.onChange}/>
+                                    name="description"
+                                    id="description"
+                                    placeholder="Descrição detalhada do produto"
+                                    value={this.state.equipment.description}
+                                    onChange={this.onChange} />
                             </Col>
                         </FormGroup>
                         <FormGroup row>
                             <Label for="origin" sm={2}>Origem:</Label>
                             <Col sm={3}>
                                 <Input type="text"
-                                       name="origin"
-                                       id="origin"
-                                       placeholder="Origem do produto"
-                                       value={this.state.equipment.origin}
-                                       onChange={this.onChange}/>
+                                    name="origin"
+                                    id="origin"
+                                    placeholder="Origem do produto"
+                                    value={this.state.equipment.origin}
+                                    onChange={this.onChange} />
                             </Col>
                         </FormGroup>
                         <FormGroup row>
                             <Label for="equipmentType" sm={2}>Tipo:</Label>
                             <Col sm={3}>
                                 <Input type="text"
-                                       name="equipmentType"
-                                       id="equipmentType"
-                                       placeholder="Tipo do produto"
-                                       value={this.state.equipment.equipmentType}
-                                       onChange={this.onChange}/>
+                                    name="equipmentType"
+                                    id="equipmentType"
+                                    placeholder="Tipo do produto"
+                                    value={this.state.equipment.equipmentType}
+                                    onChange={this.onChange} />
                             </Col>
                         </FormGroup>
                         <FormGroup row>
                             <Label for="quantity" sm={2}>Quantidade:</Label>
                             <Col sm={1}>
                                 <Input type="number"
-                                       name="quantity"
-                                       id="quantity"
-                                       value={this.state.equipment.quantity}
-                                       onChange={this.onChange}/>
+                                    name="quantity"
+                                    id="quantity"
+                                    value={this.state.equipment.quantity}
+                                    onChange={this.onChange} />
                             </Col>
                         </FormGroup>
                         <FormGroup row>
                             <Label for="equipmentState" sm={2}>Estado:</Label>
                             <Col sm={2}>
                                 <Input type="text"
-                                       name="equipmentState"
-                                       id="equipmentState"
-                                       placeholder="Estado do produto"
-                                       value={this.state.equipment.equipmentState}
-                                       onChange={this.onChange}/>
+                                    name="equipmentState"
+                                    id="equipmentState"
+                                    placeholder="Estado do produto"
+                                    value={this.state.equipment.equipmentState}
+                                    onChange={this.onChange} />
                             </Col>
                         </FormGroup>
                         <Button color="primary" onClick={this.toggle}>Movimentar</Button>
@@ -225,38 +226,41 @@ export default class EquipmentsEdit extends React.Component {
                         <ModalBody>
 
                             <FormGroup row>
+                                <p style={{ marginTop: "10px", color: "red" }}>*</p>
                                 <Label for="justification" sm={3}>Descrição:</Label>
                                 <Col sm={6}>
                                     <Input type="textarea"
-                                           name="justification"
-                                           id="justification"
-                                           placeholder="Justificar do local"
-                                           value={this.state.locationHistory.justification}
-                                           onChange={this.onChangeLocation}/>
+                                        name="justification"
+                                        id="justification"
+                                        placeholder="Justificar do local"
+                                        value={this.state.locationHistory.justification}
+                                        onChange={this.onChangeLocation} />
                                 </Col>
                             </FormGroup>
 
                             <FormGroup row>
+                                <p style={{ marginTop: "10px", color: "red" }}>*</p>
                                 <Label for="locationType" sm={3}>Tipo de localização:</Label>
                                 <Col sm={4}>
                                     <Input type="text"
-                                           name="locationType"
-                                           id="locationType"
-                                           placeholder="Sala de aula, projeto, etc.."
-                                           value={this.state.locationHistory.locationType}
-                                           onChange={this.onChangeLocation}/>
+                                        name="locationType"
+                                        id="locationType"
+                                        placeholder="Sala de aula, projeto, etc.."
+                                        value={this.state.locationHistory.locationType}
+                                        onChange={this.onChangeLocation} />
                                 </Col>
                             </FormGroup>
 
                             <FormGroup row>
+                                <p style={{ marginTop: "10px", color: "red" }}>*</p>
                                 <Label for="location" sm={3}>Localização:</Label>
                                 <Col sm={4}>
                                     <Input type="text"
-                                           name="location"
-                                           id="location"
-                                           placeholder="Sala D003"
-                                           value={this.state.locationHistory.location}
-                                           onChange={this.onChangeLocation}/>
+                                        name="location"
+                                        id="location"
+                                        placeholder="Sala D003"
+                                        value={this.state.locationHistory.location}
+                                        onChange={this.onChangeLocation} />
                                 </Col>
                             </FormGroup>
 
