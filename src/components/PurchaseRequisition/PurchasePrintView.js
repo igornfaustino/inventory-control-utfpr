@@ -143,7 +143,6 @@ export class PurchasePrintView extends React.Component {
         </Container>
         )
     }
-    
 }
 
 PurchasePrintView.propTypes = {

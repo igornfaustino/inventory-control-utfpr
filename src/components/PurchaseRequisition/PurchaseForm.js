@@ -57,14 +57,17 @@ export class PurchaseForm extends React.Component {
                 requisitionItens: newdata
             }
         );
-
         try {
             loadAllRequisition().then((value) => {
                 let data = this.state.data;
                 data.requisitions = value.requisition;
                 data.requisitions.forEach((requisition, index) => {
                     let price = requisition.quotation.reduce((x, y) => x + y.price, 0) / requisition.quotation.length;
-                    data.requisitions[index] = {...data.requisitions[index], price: price, selected: false}
+                    data.requisitions[index] = {...data.requisitions[index], 
+                                                price: price? price : 0, 
+                                                maxprice: (price * this.state.validPrice.max)? price * this.state.validPrice.max : 0,
+                                                minprice: (price * this.state.validPrice.min)? price * this.state.validPrice.min : 0,
+                                                selected: false}
                 });
                 this.setState(
                     {
@@ -358,8 +361,21 @@ export class PurchaseForm extends React.Component {
                                 dataFormat={this.priceFormatter}
                                 tdStyle={{width: '15%'}}
                                 thStyle={{width: '15%'}}
+                                dataField='minprice'
+                                dataSort={true}>Preço min</TableHeaderColumn>
+                            <TableHeaderColumn
+                                dataFormat={this.priceFormatter}
+                                tdStyle={{width: '15%'}}
+                                thStyle={{width: '15%'}}
                                 dataField='price'
-                                dataSort={true}>Preço</TableHeaderColumn>
+                                dataSort={true}>Preço médio</TableHeaderColumn>
+                            <TableHeaderColumn
+                                dataFormat={this.priceFormatter}
+                                tdStyle={{width: '15%'}}
+                                thStyle={{width: '15%'}}
+                                dataField='maxprice'
+                                dataSort={true}>Preço máx</TableHeaderColumn>
+                            
                             <TableHeaderColumn tdStyle={{width: '14%'}} thStyle={{width: '14%'}} dataField='status'
                                                dataSort={true}>Status</TableHeaderColumn>
                         </BootstrapTable>
