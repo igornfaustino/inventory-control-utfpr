@@ -10,9 +10,9 @@ import Header from '../../components/Header/Header';
 import {Route, Switch} from 'react-router-dom';
 
 export default class PurchaseRequisition extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+    // constructor(props) {
+    //     super(props);
+    // }
 
     render() {
         return (
@@ -29,6 +29,6 @@ export default class PurchaseRequisition extends React.Component {
     }
 };
 
-PurchaseRequisition.PropTypes = {
+PurchaseRequisition.propTypes = {
     match: PropTypes.object.isRequired
 };
