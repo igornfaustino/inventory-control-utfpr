@@ -29,7 +29,7 @@ export default class EquipmentDetails extends React.Component {
 		let historyItems = [];
 		this.state.locationHistory.forEach((item, index) => {
 			historyItems.push(
-				<tr>
+				<tr key={index}>
 					<td>{moment(item.date).locale('pt-br').format('DD/MM/YYYY')}</td>
 					<td>{item.location}</td>
 					<td>{item.locationType}</td>
