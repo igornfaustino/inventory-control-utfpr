@@ -63,7 +63,8 @@ export default class EquipmentsEdit extends React.Component {
                 origin: '',
                 equipmentType: '',
                 // quantity: 1,
-                equipmentState: ''
+                equipmentState: '',
+                patrimonyNumber: '',
             },
             locationHistory: {
                 justification: '',

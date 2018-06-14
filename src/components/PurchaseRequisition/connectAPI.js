@@ -14,6 +14,7 @@ export async function loadRequisition(id) {
         console.error(ex, ex.response);
     })
 }
+
 export async function loadAllRequisition() {
     // console.log("Loading Requisitions!");
     return await axios.get('/requisitions').then(response => {
@@ -45,6 +46,7 @@ export async function loadPurchaseRequisition(id) {
         console.error(ex, ex.response);
     })
 }
+
 export async function savePurchaseRequisition(purchase) {
     let newpurchase = purchase;
     let newItem = [];
@@ -64,6 +66,7 @@ export async function savePurchaseRequisition(purchase) {
             console.error(ex, ex.response);
         })
 }
+
 export async function updatePurchaseRequisition(purchase) {
     let newpurchase = purchase;
     let newItem = [];
@@ -83,6 +86,7 @@ export async function updatePurchaseRequisition(purchase) {
             console.error(ex, ex.response);
         })
 }
+
 function prepareRequistionItems(requisitionItems) {
 
     let newrequisitionItems = [];
@@ -106,6 +110,7 @@ function prepareRequistionItems(requisitionItems) {
 
     return newrequisitionItems
 }
+
 export async function loadAllPurchaseRequisition() {
     return await axios.get('/purchase').then(response => {
         if (response.status === 200) {

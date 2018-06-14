@@ -632,7 +632,7 @@ export default class FormRequest extends React.Component {
                                                     <FormGroup row style={marginRight}>
                                                         <Label for="priceArea" sm={2}>Preço:</Label>
                                                         <Col sm={6}>
-                                                            <Input type="text" name="price" id="priceArea" size={2}
+                                                            <Input type="text" name="price" id="priceArea"
                                                                    bsSize="sm"
                                                                    placeholder={'R$'}
                                                                    value={quotation.price}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {savePurchaseRequisition} from './connectAPI';
+import { savePurchaseRequisition } from './connectAPI';
 import SubHeader from '../SubHeader/SubHeader';
 
 import PurchaseForm from './PurchaseForm';
@@ -29,7 +29,7 @@ export class NewPurchasePage extends React.Component {
     ChangeRequest(requestlist) {
         const purchase = this.state.purchase;
         purchase.requisitionItems = requestlist;
-        this.setState({purchase: purchase});
+        this.setState({ purchase: purchase });
     }
 
 
@@ -37,7 +37,7 @@ export class NewPurchasePage extends React.Component {
         const field = event.target.name;
         const purchase = this.state.purchase;
         purchase[field] = event.target.value;
-        return this.setState({purchase: purchase});
+        return this.setState({ purchase: purchase });
     }
 
     savePurchase(event) {
@@ -56,7 +56,7 @@ export class NewPurchasePage extends React.Component {
     render() {
         return (
             <div>
-                <SubHeader title="Nova Requisição de Compra"/>
+                <SubHeader title="Nova Requisição de Compra" />
                 <PurchaseForm
                     purchase={this.state.purchase}
                     onSave={this.savePurchase}

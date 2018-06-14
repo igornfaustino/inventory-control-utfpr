@@ -48,7 +48,6 @@ export default class EditPurchase extends React.Component {
         }
     }
 
-
     updatePurchaseState(event) {
         const field = event.target.name;
         const data = this.state.data;
@@ -67,6 +66,7 @@ export default class EditPurchase extends React.Component {
             // console.log(error)
         }
     }
+
     ChangeRequest(requestlist) {
         const data = this.state.data;
         data.purchase.requisitionItems = requestlist;
