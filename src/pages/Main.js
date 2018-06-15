@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import Login from './Login/Login';
 import Home from './Home/Home';
 import NewRequests from './NewRequests/NewRequests';
@@ -30,7 +30,7 @@ const Main = () => (
 			<Route path='/editarequipamento/:id' component={EquipmentsEdit} />
 			<Route path='/detalhesequipamento/:id' component={EquipmentDetailsView} />
 			<Route path='/novoproduto' component={NewProduct} />
-
+			<Redirect from='*' to='/home'/>
 		</Switch>
 	</main>
 );
