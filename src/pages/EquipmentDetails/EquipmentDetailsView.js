@@ -12,7 +12,7 @@ import SubHeader from '../../components/SubHeader/SubHeader';
 export default class EquipmentDetailsView extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props);
+        // console.log(props);
         this.state = {
             match: props.match,
             loading: true,
@@ -37,7 +37,7 @@ export default class EquipmentDetailsView extends React.Component {
             })
         }
         catch (error) {
-            console.log(error)
+            // console.log(error)
         }
     }
 

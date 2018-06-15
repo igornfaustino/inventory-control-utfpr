@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Container } from 'reactstrap';
 import axios from 'axios';
 import Header from '../../components/Header/Header';
 import SubHeader from '../../components/SubHeader/SubHeader'
@@ -63,7 +63,8 @@ export default class EquipmentsEdit extends React.Component {
                 origin: '',
                 equipmentType: '',
                 // quantity: 1,
-                equipmentState: ''
+                equipmentState: '',
+                patrimonyNumber: '',
             },
             locationHistory: {
                 justification: '',
@@ -71,13 +72,43 @@ export default class EquipmentsEdit extends React.Component {
                 location: ''
             },
             changed: false,
-            modal: false
+            modal: false,
+            disabled: false,
         };
         this.componentDidMount = this.componentDidMount.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onChangeLocation = this.onChangeLocation.bind(this);
         this.toggle = this.toggle.bind(this);
         this.savebutton = this.savebutton.bind(this)
+    }
+
+    moveEquipment = () => {
+        if (this.state.locationHistory.justification === '' || this.state.locationHistory.locationType === '' || this.state.locationHistory.location === '') {
+            alert("Preencha todos os campos!")
+            return
+        }
+        this.setState({
+            disabled: true
+        })
+        axios.post('/equipments/' + this.state.equipment._id + '/move', this.state.locationHistory).then(response => {
+            if (response.status === 200) {
+                // console.log(response);
+                this.setState({
+                    disabled: false,
+                    locationHistory: {
+                        justification: '',
+                        locationType: '',
+                        location: ''
+                    }
+                })
+                alert("Equipamento movimentado com sucesso!")
+                this.toggle()
+            }
+
+        }).catch(ex => {
+            alert("Opss.. Algo saiu errado");
+            console.error(ex, ex.response);
+        })
     }
 
     toggle() {
@@ -92,22 +123,7 @@ export default class EquipmentsEdit extends React.Component {
         try {
             axios.put('/equipment/' + this.state.equipment._id, this.state.equipment).then(response => {
                 if (response.status === 200) {
-                    try {
-                        axios.post('/equipments/' + this.state.equipment._id + '/move', this.state.locationHistory).then(response => {
-
-                            if (response.status === 200) {
-                                console.log(response);
-                                alert("Atualizado e movimentado com sucesso!")
-                            }
-
-                        }).catch(ex => {
-                            alert("Não Foi possivel conectar ao servidor");
-                            console.error(ex, ex.response);
-                        })
-                    }
-                    catch (e) {
-                        console.error(e)
-                    }
+                    alert("Equipamento atualizado com sucesso!")
                 }
             })
                 .catch(ex => {
@@ -116,7 +132,7 @@ export default class EquipmentsEdit extends React.Component {
                 })
         }
         catch (error) {
-            console.log(error)
+            // console.log(error)
         }
     }
 
@@ -214,49 +230,49 @@ export default class EquipmentsEdit extends React.Component {
                     <Modal size='lg' isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
                         <ModalHeader toggle={this.toggle}>Movimentar equipamentos</ModalHeader>
                         <ModalBody>
+                            <Container>
+                                <FormGroup row>
+                                    <p style={{ marginTop: "10px", color: "red" }}>*</p>
+                                    <Label for="justification" sm={3}>Justificativa:</Label>
+                                    <Col sm={6}>
+                                        <Input type="textarea"
+                                            name="justification"
+                                            id="justification"
+                                            placeholder="Justificar do local"
+                                            value={this.state.locationHistory.justification}
+                                            onChange={this.onChangeLocation} />
+                                    </Col>
+                                </FormGroup>
 
-                            <FormGroup row>
-                                <p style={{ marginTop: "10px", color: "red" }}>*</p>
-                                <Label for="justification" sm={3}>Descrição:</Label>
-                                <Col sm={6}>
-                                    <Input type="textarea"
-                                        name="justification"
-                                        id="justification"
-                                        placeholder="Justificar do local"
-                                        value={this.state.locationHistory.justification}
-                                        onChange={this.onChangeLocation} />
-                                </Col>
-                            </FormGroup>
+                                <FormGroup row>
+                                    <p style={{ marginTop: "10px", color: "red" }}>*</p>
+                                    <Label for="locationType" sm={3}>Tipo de localização:</Label>
+                                    <Col sm={4}>
+                                        <Input type="text"
+                                            name="locationType"
+                                            id="locationType"
+                                            placeholder="Sala de aula, projeto, etc.."
+                                            value={this.state.locationHistory.locationType}
+                                            onChange={this.onChangeLocation} />
+                                    </Col>
+                                </FormGroup>
 
-                            <FormGroup row>
-                                <p style={{ marginTop: "10px", color: "red" }}>*</p>
-                                <Label for="locationType" sm={3}>Tipo de localização:</Label>
-                                <Col sm={4}>
-                                    <Input type="text"
-                                        name="locationType"
-                                        id="locationType"
-                                        placeholder="Sala de aula, projeto, etc.."
-                                        value={this.state.locationHistory.locationType}
-                                        onChange={this.onChangeLocation} />
-                                </Col>
-                            </FormGroup>
-
-                            <FormGroup row>
-                                <p style={{ marginTop: "10px", color: "red" }}>*</p>
-                                <Label for="location" sm={3}>Localização:</Label>
-                                <Col sm={4}>
-                                    <Input type="text"
-                                        name="location"
-                                        id="location"
-                                        placeholder="Sala D003"
-                                        value={this.state.locationHistory.location}
-                                        onChange={this.onChangeLocation} />
-                                </Col>
-                            </FormGroup>
-
+                                <FormGroup row>
+                                    <p style={{ marginTop: "10px", color: "red" }}>*</p>
+                                    <Label for="location" sm={3}>Localização:</Label>
+                                    <Col sm={4}>
+                                        <Input type="text"
+                                            name="location"
+                                            id="location"
+                                            placeholder="Sala D003"
+                                            value={this.state.locationHistory.location}
+                                            onChange={this.onChangeLocation} />
+                                    </Col>
+                                </FormGroup>
+                            </Container>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="danger" onClick={this.toggle}>Fechar</Button>
+                            <Button color="secondary" onClick={this.moveEquipment} disabled={this.state.locationHistory.justification === '' || this.state.locationHistory.locationType === '' || this.state.locationHistory.location === '' || this.state.disabled}>Movimentar</Button>
                         </ModalFooter>
                     </Modal>
                 </div>

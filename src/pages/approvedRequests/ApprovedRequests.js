@@ -46,7 +46,7 @@ export default class ApprovedRequests extends React.Component {
 					})
 				});
 				
-				console.log(requisitions);
+				// console.log(requisitions);
 				items = items.filter(item => {
 					return item._status === 'aprovado'
 				});

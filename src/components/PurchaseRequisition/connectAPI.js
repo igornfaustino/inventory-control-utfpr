@@ -4,7 +4,7 @@ export async function loadRequisition(id) {
 
     return await axios.get('/requisition/' + id).then(response => {
         if (response.status === 200) {
-            console.log(response.data)
+            // console.log(response.data)
             return ({
                 requisition: response.data.requisition,
                 loading: false
@@ -14,8 +14,9 @@ export async function loadRequisition(id) {
         console.error(ex, ex.response);
     })
 }
+
 export async function loadAllRequisition() {
-    console.log("Loading Requisitions!");
+    // console.log("Loading Requisitions!");
     return await axios.get('/requisitions').then(response => {
         if (response.status === 200) {
             let requisitions = response.data.requisitions;
@@ -34,7 +35,7 @@ export async function loadPurchaseRequisition(id) {
     return await axios.get('/purchase/' + id).then(response => {
         if (response.status === 200) {
             let purchase = response.data.purchase;
-            console.log(response.data)
+            // console.log(response.data)
             purchase.requisitionItems = prepareRequistionItems(purchase.requisitionItems);
             return ({
                 purchases: purchase,
@@ -45,6 +46,7 @@ export async function loadPurchaseRequisition(id) {
         console.error(ex, ex.response);
     })
 }
+
 export async function savePurchaseRequisition(purchase) {
     let newpurchase = purchase;
     let newItem = [];
@@ -64,6 +66,7 @@ export async function savePurchaseRequisition(purchase) {
             console.error(ex, ex.response);
         })
 }
+
 export async function updatePurchaseRequisition(purchase) {
     let newpurchase = purchase;
     let newItem = [];
@@ -83,6 +86,7 @@ export async function updatePurchaseRequisition(purchase) {
             console.error(ex, ex.response);
         })
 }
+
 function prepareRequistionItems(requisitionItems) {
 
     let newrequisitionItems = [];
@@ -106,6 +110,7 @@ function prepareRequistionItems(requisitionItems) {
 
     return newrequisitionItems
 }
+
 export async function loadAllPurchaseRequisition() {
     return await axios.get('/purchase').then(response => {
         if (response.status === 200) {

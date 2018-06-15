@@ -19,6 +19,7 @@ export default class ViewPurchase extends React.Component {
         };
         this.componentDidMount = this.componentDidMount.bind(this)
     };
+
     componentDidMount() {
         try {
             const data = this.state.data;
@@ -33,29 +34,30 @@ export default class ViewPurchase extends React.Component {
             })
         }
         catch (error) {
-            console.log(error)
+            // console.log(error)
         }
     }
+
     render() {
-        let data=(
-        <div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
-            <ClipLoader
-                color={'#123abc'}
-                loading={this.state.loading}
-            />
-        </div>
+        let data = (
+            <div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
+                <ClipLoader
+                    color={'#123abc'}
+                    loading={this.state.loading}
+                />
+            </div>
         );
-        if(this.state.loading === false){
-            data=
-            (<PurchasePrintView
-                purchase={this.state.data.purchase}
-            />)
+        if (this.state.loading === false) {
+            data =
+                (<PurchasePrintView
+                    purchase={this.state.data.purchase}
+                />)
         }
-        
+
         return (
             <div>
                 <SubHeader title="Visualizar Requisição"></SubHeader>
-                { data}
+                {data}
             </div >
         );
     }

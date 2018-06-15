@@ -14,7 +14,7 @@ const TextInput = ({ name, size, label, onChange, placeholder, value, error, hel
       <Row style={{ marginRight: 0, }}>
         {required}
         <Col sm={3} >
-          <Label for={name}  >{label}</Label>
+          <Label htmlFor={name}  >{label}</Label>
         </Col>
         <Col sm={6}>
           <FormControl

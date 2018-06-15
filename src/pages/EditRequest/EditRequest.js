@@ -29,7 +29,7 @@ export default class EditRequest extends React.Component {
             })
           }
           catch(error){
-            console.log(error)
+            // console.log(error)
           }
     }
     render(){
