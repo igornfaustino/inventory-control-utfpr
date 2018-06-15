@@ -1,28 +1,36 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import Home from './Home';
-import NewRequests from './NewRequests';
-import Requests from './Requests';
-import Products from './Products';
+import { Route, Switch } from 'react-router-dom';
+import Login from './Login/Login';
+import Home from './Home/Home';
+import NewRequests from './NewRequests/NewRequests';
+import Requests from './Requests/Requests';
+import Products from './Products/Products';
+import ApprovedRequests from './approvedRequests/ApprovedRequests';
+import PurchasesHistory from './PurchasesHistory/PurchasesHistory';
+import PurchaseRequisition from './PurchaseRequisition/PurchaseRequisition';
+import EditRequest from './EditRequest/EditRequest';
+import Inventory from './Inventory/Inventory';
+import EquipmentsEdit from './EquipmentEditing/EquipmentEditing';
+import EquipmentDetailsView from './EquipmentDetails/EquipmentDetailsView'
+import NewProduct from './NewProduct/NewProduct';
 
-/* EXAMPLE... To see more...
- https://medium.com/@pshrmn/a-simple-react-router-v4-tutorial-7f23ff27adf
-*/
-
-
-// IMPORT HERE THE COMPONENTS THAT WILL BE RENDER!
-// import Schedule from './Schedule'
-
-/**
- * Main page, here you can pass your path and the componet to render...
- */
 const Main = () => (
 	<main>
 		<Switch>
-			<Route exact path='/' component={Home} />
+			<Route exact path='/' component={Login} />
+			<Route path='/home' component={Home} />
 			<Route path='/novasolicitacoes' component={NewRequests} />
+			<Route path='/editarsolicitacoes/:id' component={EditRequest} />
 			<Route path='/solicitacoes' component={Requests} />
 			<Route path='/produtos' component={Products} />
+			<Route path='/aprovados' component={ApprovedRequests} />
+			<Route path='/requisicao' component={PurchaseRequisition} />
+			<Route path='/compras' component={PurchasesHistory} />
+			<Route path='/almoxarifado' component={Inventory} />
+			<Route path='/editarequipamento/:id' component={EquipmentsEdit} />
+			<Route path='/detalhesequipamento/:id' component={EquipmentDetailsView} />
+			<Route path='/novoproduto' component={NewProduct} />
+
 		</Switch>
 	</main>
 );

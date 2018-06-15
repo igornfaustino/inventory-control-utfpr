@@ -3,12 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "bootstrap": "^4.0.0",
+    "axios": "^0.18.0",
+    "bootstrap": "^4.1.0",
+    "chance": "^1.0.16",
+    "moment": "^2.22.1",
+    "namor": "^1.0.1",
+    "prop-types": "^15.6.1",
+    "rc-table": "^6.1.10",
     "react": "^16.3.1",
+    "react-bootstrap": "^0.32.1",
+    "react-bootstrap-table": "^4.3.1",
+    "react-csv-reader": "^0.2.2",
     "react-dom": "^16.3.1",
+    "react-icons-kit": "^1.1.5",
+    "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.1",
+    "react-scripts": "^1.1.4",
+    "react-spinners": "^0.3.2",
+    "react-table": "^6.8.2",
     "reactstrap": "^5.0.0-beta.3"
+  },
+  "resolutions": {
+    "@babel/runtime": "7.0.0-beta.46"
   },
   "scripts": {
     "start": "react-scripts start",

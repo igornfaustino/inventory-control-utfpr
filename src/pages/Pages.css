@@ -1,0 +1,30 @@
+.margin-title{
+    margin-top: 25px;
+}
+
+.font{
+    margin-left: 18px;
+}
+
+.font-header{
+     font-size: 20px;
+}
+
+.font-nav{
+     font-size: 20px;
+}
+
+.btn-add{
+ margin-right: 0%;
+}
+
+.header{
+    margin-top: 2%;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+.font-sb{
+  font-family: 'Poppins', sans-serif;
+  margin-left: 18px;
+}
