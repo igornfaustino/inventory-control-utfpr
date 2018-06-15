@@ -56,7 +56,7 @@ export async function savePurchaseRequisition(purchase) {
     newpurchase.requisitionItems = newItem;
 
     return await axios.post('/purchase', newpurchase).then(response => {
-        if (response.status === 200) {
+        if (response.status === 201) {
             alert("Adicionado com sucesso!");
             return (response.data._id)
         }

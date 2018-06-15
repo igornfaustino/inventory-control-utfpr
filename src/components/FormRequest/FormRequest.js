@@ -230,7 +230,8 @@ export default class FormRequest extends React.Component {
                 let formData = new FormData();
                 formData.append('file', prices[i].rawFile);
                 const file = await axios.post('/file/', formData);
-                prices[i].reference = file.data.fileId
+                if(file.status === 201)
+                    prices[i].reference = file.data.fileId
             }
             delete prices[i].file;
             delete prices[i].rawFile
@@ -248,7 +249,8 @@ export default class FormRequest extends React.Component {
                 let formData = new FormData();
                 formData.append('file', prices[i].rawFile);
                 const file = await axios.post('/file/', formData);
-                prices[i].reference = file.data.fileId
+                if(file.status === 201)                
+                    prices[i].reference = file.data.fileId
             }
             delete prices[i].file;
             delete prices[i].rawFile
@@ -279,7 +281,7 @@ export default class FormRequest extends React.Component {
             qtd: this.state.quantity,
             quotation: await this.preparePrice()
         }).then(res => {
-            if (res.status === 200) {
+            if (res.status === 201) {
                 alert("Solicitação cadastrada");
                 this.setState({
                     siorg: '',
@@ -336,7 +338,7 @@ export default class FormRequest extends React.Component {
         let quotation = this.state.quotation;
         let file = quotation[idx].reference;
         axios.delete('/file/' + file).then(res => {
-            if (res.status === 200) {
+            if (res.status === 204) {
                 quotation[idx].reference = '';
                 this.setState({
                     quotation

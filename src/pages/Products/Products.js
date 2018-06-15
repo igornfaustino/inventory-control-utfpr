@@ -136,7 +136,7 @@ export default class Products extends React.Component {
 		for (let i = 0; i < csv.length; i++) {
 			try {
 				let res = await axios.post('/requisition', csv[i]);
-				if (res.status !== 200) {
+				if (res.status !== 201) {
 					error.push(i + 1)
 				}
 			}

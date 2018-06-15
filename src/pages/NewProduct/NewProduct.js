@@ -163,7 +163,7 @@ export default class NewProduct extends React.Component {
 				equipmentState: this.state.state,
 			}).then(res => {
 				// console.log(res)
-				if (res.status === 200) {
+				if (res.status === 201) {
 
 				} else {
 					alert("Opss.. algo saiu errado");

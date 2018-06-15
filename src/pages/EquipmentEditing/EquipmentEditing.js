@@ -91,7 +91,7 @@ export default class EquipmentsEdit extends React.Component {
             disabled: true
         })
         axios.post('/equipments/' + this.state.equipment._id + '/move', this.state.locationHistory).then(response => {
-            if (response.status === 200) {
+            if (response.status === 201) {
                 // console.log(response);
                 this.setState({
                     disabled: false,
