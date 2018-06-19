@@ -9,7 +9,7 @@ import Header from '../../components/Header/Header';
 import axios from 'axios';
 // import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
-import {sleep} from '../../utils/sleep'
+import { sleep } from '../../utils/sleep'
 
 
 export default class Inventory extends React.Component {
@@ -37,6 +37,7 @@ export default class Inventory extends React.Component {
 				let items = []
 				equipments.forEach((item) => {
 					items.push({
+						patrimonyNumber: item.patrimonyNumber ? item.patrimonyNumber : '-',
 						siorg: item.siorg,
 						description: item.description,
 						origin: item.origin,
@@ -59,7 +60,7 @@ export default class Inventory extends React.Component {
 					})
 				})
 
-				// console.log(equipments);
+				console.log(equipments);
 				// items = items.filter(item => {
 				// 	return item._status === 'aprovado'
 				// });
@@ -91,7 +92,7 @@ export default class Inventory extends React.Component {
 	render() {
 		let data
 		if (this.state.loading === false) {
-			data = <TableList header={['SIORG', 'Descrição', 'Origem', 'Tipo', 'Estado', 'Localização', '', '', '']} items={this.state.items} />
+			data = <TableList header={['Nº de Patrimonio', 'SIORG', 'Descrição', 'Origem', 'Tipo', 'Estado', 'Localização', '', '', '']} items={this.state.items} />
 
 		} else {
 			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>

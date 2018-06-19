@@ -5,6 +5,38 @@ import Header from '../../components/Header/Header';
 import SubHeader from '../../components/SubHeader/SubHeader'
 
 export default class EquipmentsEdit extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            equipment: {
+                isPermanent: false,
+                patrimonyNumber: '',
+                siorg: '',
+                buyer: '',
+                solicitor: 'test ',
+                description: '',
+                origin: '',
+                equipmentType: '',
+                // quantity: 1,
+                equipmentState: '',
+            },
+            locationHistory: {
+                justification: '',
+                locationType: '',
+                location: ''
+            },
+            changed: false,
+            modal: false,
+            disabled: false,
+        };
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.onChangeLocation = this.onChangeLocation.bind(this);
+        this.toggle = this.toggle.bind(this);
+        this.savebutton = this.savebutton.bind(this)
+    }
+
     componentDidMount() {
         let id = this.props.match.params.id;
         try {
@@ -51,36 +83,6 @@ export default class EquipmentsEdit extends React.Component {
         });
     }
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            equipment: {
-                siorg: '',
-                buyer: '',
-                solicitor: 'test ',
-                description: '',
-                origin: '',
-                equipmentType: '',
-                // quantity: 1,
-                equipmentState: '',
-                patrimonyNumber: '',
-            },
-            locationHistory: {
-                justification: '',
-                locationType: '',
-                location: ''
-            },
-            changed: false,
-            modal: false,
-            disabled: false,
-        };
-        this.componentDidMount = this.componentDidMount.bind(this);
-        this.onChange = this.onChange.bind(this);
-        this.onChangeLocation = this.onChangeLocation.bind(this);
-        this.toggle = this.toggle.bind(this);
-        this.savebutton = this.savebutton.bind(this)
-    }
 
     moveEquipment = () => {
         if (this.state.locationHistory.justification === '' || this.state.locationHistory.locationType === '' || this.state.locationHistory.location === '') {
@@ -119,9 +121,12 @@ export default class EquipmentsEdit extends React.Component {
 
     savebutton(event) {
         event.preventDefault();
-
         try {
-            axios.put('/equipment/' + this.state.equipment._id, this.state.equipment).then(response => {
+            let equipment = this.state.equipment;
+            if(!equipment.isPermanent){
+                equipment.patrimonyNumber = ''
+            }
+            axios.put('/equipment/' + equipment._id, equipment).then(response => {
                 if (response.status === 200) {
                     alert("Equipamento atualizado com sucesso!")
                 }
@@ -137,6 +142,16 @@ export default class EquipmentsEdit extends React.Component {
     }
 
     render() {
+        let patrimonyfield = null
+        if (this.state.equipment.isPermanent) {
+            patrimonyfield = (<FormGroup row>
+                <Label for="patrimony" sm={2}>Número de patrimonio:</Label>
+                <Col sm={2}>
+                    <Input value={this.state.equipment.patrimonyNumber} type="text" name="patrimonyNumber" id="patrimony" onChange={this.onChange} placeholder="Número Siorg" />
+                </Col>
+            </FormGroup>)
+        }
+
         return (
             <div>
                 <Header></Header>
@@ -144,6 +159,21 @@ export default class EquipmentsEdit extends React.Component {
                 <SubHeader title='Almoxarifado >> Editar Equipamento'></SubHeader>
                 <div className="margin-left" style={{ marginRight: "20px" }}>
                     <Form>
+                        <FormGroup row>
+                            <Label check>
+                                <Input type="checkbox" checked={this.state.equipment.isPermanent} name="isPermanent" onChange={() => {
+                                    let equipment = this.state.equipment
+                                    //make changes to ingredients
+                                    equipment.isPermanent = !equipment.isPermanent
+                                    this.setState({
+                                        changed: true,
+                                        equipment: equipment
+                                    })
+                                }} />{' '}
+                                Item permanente
+          					</Label>
+                        </FormGroup>
+                        {patrimonyfield}
                         <FormGroup row>
                             <Label for="siorg" sm={2}>Código do SIORG:</Label>
                             <Col sm={2}>
