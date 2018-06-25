@@ -92,7 +92,7 @@ export default class Inventory extends React.Component {
 	render() {
 		let data
 		if (this.state.loading === false) {
-			data = <TableList header={['Nº de Patrimonio', 'SIORG', 'Descrição', 'Origem', 'Tipo', 'Estado', 'Localização', '', '', '']} items={this.state.items} />
+			data = <TableList header={['Nº de Patrimônio', 'SIORG', 'Descrição', 'Origem', 'Tipo', 'Estado', 'Localização', '', '', '']} items={this.state.items} />
 
 		} else {
 			data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>

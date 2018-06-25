@@ -547,11 +547,12 @@ export default class FormRequest extends React.Component {
                         </FormGroup>
                         <div className={`form-group${this.errorClass(this.state.formErrors.description)}`}>
                             <FormGroup row style={marginRight}>
+                                <p style={{ marginTop: "10px", marginLeft: "7px"}}></p>
                                 <Label sm={2}>Siorg:</Label>
                                 <Col sm={7}>
                                     <Input value={this.state.siorg} type="text" name="siorg"
                                            onChange={(event) => this.handleUserInput(event)}
-                                           placeholder="Numero do SIORG"/>
+                                           placeholder="Número do SIORG"/>
                                 </Col>
                             </FormGroup>
                         </div>

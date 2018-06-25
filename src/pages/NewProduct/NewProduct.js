@@ -237,9 +237,9 @@ export default class NewProduct extends React.Component {
 		let patrimonyfield = null
 		if (this.state.isPermanent) {
 			patrimonyfield = (<FormGroup row>
-				<Label for="patrimony" sm={2}>Número de patrimonio:</Label>
+				<Label style={{ marginLeft: "7px"}} for="patrimony" sm={2}>Número de patrimônio:</Label>
 				<Col sm={2}>
-					<Input value={this.state.patrimonyNumber} type="text" name="patrimonyNumber" id="patrimony" onChange={(event) => this.handleUserInput(event)} placeholder="Número Siorg" />
+					<Input value={this.state.patrimonyNumber} type="text" name="patrimonyNumber" id="patrimony" onChange={(event) => this.handleUserInput(event)} placeholder="Número de patrimônio" />
 				</Col>
 			</FormGroup>)
 		}
@@ -258,7 +258,7 @@ export default class NewProduct extends React.Component {
 				<div className="margin-left">
 					<Form>
 						<FormGroup row>
-							<Label check>
+							<Label sm={2} check style={{ marginTop: "10px", marginLeft: "7px"}}>
 								<Input type="checkbox" checked={this.state.isPermanent} name="isPermanent" onChange={() => this.setState({ isPermanent: !this.state.isPermanent })} />{' '}
 								Item permanente
           					</Label>

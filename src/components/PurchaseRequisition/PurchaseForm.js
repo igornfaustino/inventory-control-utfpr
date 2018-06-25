@@ -307,10 +307,9 @@ export class PurchaseForm extends React.Component {
                 <Form
                     style={{ marginTop: 30 }}
                 >
-
                     <TextInput
                         name="number"
-                        label="Numero da Requisição:"
+                        label="Número da Requisição:"
                         // type='text'
                         // size='4'
                         disabled={!this.props.edit}
@@ -385,28 +384,26 @@ export class PurchaseForm extends React.Component {
                             dataFormat={this.priceFormatter}
                             tdStyle={{ width: '15%' }}
                             thStyle={{ width: '15%' }}
-                            dataSort={true}>Preço min</TableHeaderColumn>
+                            dataSort={true}>Preço Mínimo</TableHeaderColumn>
 
                         <TableHeaderColumn dataField='price'
                             dataFormat={this.priceFormatter}
                             tdStyle={{ width: '15%' }}
                             thStyle={{ width: '15%' }}
-                            dataSort={true}>Preço médio</TableHeaderColumn>
-
+                            dataSort={true}>Preço Médio</TableHeaderColumn>
 
 
                         <TableHeaderColumn dataField='max'
                             dataFormat={this.priceFormatter}
                             tdStyle={{ width: '15%' }}
                             thStyle={{ width: '15%' }}
-                            dataSort={true}>Preço máx</TableHeaderColumn>
+                            dataSort={true}>Preço Máximo</TableHeaderColumn>
 
                         <TableHeaderColumn tdStyle={{ width: '14%' }} thStyle={{ width: '14%' }} dataField='status'
                             dataSort={true}>Status</TableHeaderColumn>
                     </BootstrapTable>
 
                     <this.ButtonFinishRequest />
-
 
                 </Form>
                 <Modal isOpen={this.state.modal} toggle={this.toggleOut} size="lg"
