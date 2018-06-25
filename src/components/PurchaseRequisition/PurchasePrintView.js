@@ -33,16 +33,29 @@ export class PurchasePrintView extends React.Component {
         });
         return justification
     }
+    // href={`/editarsolicitacoes/${id}`}
+    // RenderViewAction = (index) => {
+    //     const id = this.state.requisitionItems[index]._id;
+    //     return (
+    //         <Button color="secondary" onClick={() => {
+    //             this.props.history.push({
+    //                 pathname: `/editarsolicitacoes/${id}`,
+    //             })
+    //         }} type="submit">Visualizar</Button>
+    //     );
+    // };
 
     prepareItem() {
         let itens = [];
         this.state.requisitionItems.forEach((item, index) => {
             itens.push(
-                <tr>
+                <tr key={index}>
                     <td>{index + 1}</td>
+                    <td>{item.siorg}</td>
                     <td>{item.description}</td>
                     <td>{item.qtd}</td>
                     <td>R$ {item.quotation.map((item) => item.price).reduce((a, b) => a + b, 0) / item.quotation.length},00</td>
+                    {/* <td>{this.RenderViewAction(index)}</td> */}
                 </tr>)
         });
         return itens
@@ -67,13 +80,13 @@ export class PurchasePrintView extends React.Component {
             }
         });
 
-        return itens.map((item) => {
+        return itens.map((item, index) => {
             let itens_requisicao = "";
             item.itens.forEach((item) => {
                 itens_requisicao = itens_requisicao + item + ", "
             });
             return (
-                <tr>
+                <tr key={index}>
                     <td>{item.catedory ? item.catedory : "Não definido"}</td>
                     <td>{itens_requisicao}</td>
                     <td>R$ {item.valor},00</td>
@@ -116,13 +129,15 @@ export class PurchasePrintView extends React.Component {
                 <Table bordered condensed hover>
                     <thead>
                         <tr>
-                            <td colSpan="4" class="font-weight-bold text-center">Itens Inseridos</td>
+                            <td colSpan="5" class="font-weight-bold text-center">Itens Inseridos</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold">Item</td>
+                            <td class="font-weight-bold">SIORG</td>
                             <td class="font-weight-bold">Descrição</td>
                             <td class="font-weight-bold">Quantidade</td>
                             <td class="font-weight-bold">Valor Unitario</td>
+                            {/* <td class="font-weight-bold"> </td> */}
                         </tr>
                     </thead>
                     <tbody>
