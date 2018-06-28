@@ -27,7 +27,7 @@ export default class NewProduct extends React.Component {
 			origin: '',
 			type: '',
 			quantity: '',
-			state: '',
+			state: [],
 
 			formErrors: {
 				siorg: '',
@@ -37,7 +37,7 @@ export default class NewProduct extends React.Component {
 				origin: '',
 				type: '',
 				quantity: '',
-				state: ''
+				state: []
 			},
 
 			siorgValid: false,
@@ -47,7 +47,7 @@ export default class NewProduct extends React.Component {
 			originValid: false,
 			typeValid: false,
 			quantityValid: false,
-			stateValid: false,
+			// stateValid: false,
 			formValid: false,
 
 		};
@@ -64,7 +64,7 @@ export default class NewProduct extends React.Component {
 		let originValid = this.state.originValid;
 		let typeValid = this.state.typeValid;
 		let quantityValid = this.state.quantityValid;
-		let stateValid = this.state.stateValid;
+		// let stateValid = this.state.stateValid;
 
 		switch (fieldName) {
 			case 'siorg':
@@ -104,10 +104,10 @@ export default class NewProduct extends React.Component {
 				quantityValid = value.length >= 0;
 				fieldValidationErrors.quantity = quantityValid ? '' : 'Campo deve ser preenchido!';
 				break;
-			case 'state':
-				stateValid = value.length >= 0;
-				fieldValidationErrors.state = stateValid ? '' : 'Campo deve ser preenchido!';
-				break;
+			// case 'state':
+			// 	stateValid = value.length >= 0;
+			// 	fieldValidationErrors.state = stateValid ? '' : 'Campo deve ser preenchido!';
+			// 	break;
 			default:
 				break;
 		}
@@ -120,7 +120,7 @@ export default class NewProduct extends React.Component {
 			originValid: originValid,
 			typeValid: typeValid,
 			quantityValid: quantityValid,
-			stateValid: stateValid
+			// stateValid: stateValid
 		}, this.validateForm);
 
 	}
@@ -129,7 +129,7 @@ export default class NewProduct extends React.Component {
 		this.setState({
 			formValid: this.state.siorgValid && this.state.buyerValid && this.state.requesterValid &&
 				this.state.descriptionValid && this.state.originValid && this.state.typeValid && this.state.quantityValid
-				&& this.state.stateValid
+				// && this.state.stateValid
 		});
 	}
 
@@ -142,6 +142,28 @@ export default class NewProduct extends React.Component {
 		});
 
 	}
+
+	//Function to get item status
+	getStatus = () => {
+		axios.get('/status').then(response => {
+			if (response.status === 200) {
+				let resState = response.data.resState;
+				let state = [];
+				resState.forEach((state) => {
+					state.push({
+						_id: state._id,
+						_status: state.status,
+					})
+				});
+				
+				this.setState({
+					state,
+				})
+			}
+		}).catch(ex => {
+			console.error(ex, ex.response);
+		})
+	};
 
 	//Function to connect with the database and save a new equipment
 	submitRequest = async () => {
@@ -159,7 +181,7 @@ export default class NewProduct extends React.Component {
 			originValid: false,
 			typeValid: false,
 			quantityValid: false,
-			stateValid: false,
+			// stateValid: false,
 			formValid: false,
 		});
 
@@ -177,8 +199,12 @@ export default class NewProduct extends React.Component {
 					description: this.state.description,
 					origin: this.state.origin,
 					equipmentType: this.state.type,
-					equipmentState: this.state.state,
+					//equipmentState: this.state.state,
 				})
+				// let resState = await axios.post('/status/', {
+				// 	equipmentState: this.state.state,
+				// })
+				
 				if (res.status !== 201) {
 					alert("Opss.. algo saiu errado");
 					this.setState({
@@ -189,7 +215,7 @@ export default class NewProduct extends React.Component {
 						originValid: true,
 						typeValid: true,
 						quantityValid: true,
-						stateValid: true,
+						// stateValid: true,
 						formValid: true,
 					});
 				}
@@ -223,13 +249,17 @@ export default class NewProduct extends React.Component {
 				originValid: true,
 				typeValid: true,
 				quantityValid: true,
-				stateValid: true,
+				// stateValid: true,
 				formValid: true,
 			});
 		}
 	}
 
 	render() {
+		let data;
+		data = this.state.state.map((item) => 
+			<option value={item}>{item}</option>
+		);
 
 		const { siorgValid, buyerValid, requesterValid, descriptionValid, originValid, typeValid, quantityValid, stateValid } = this.state
 		// console.log(this.state)
@@ -249,7 +279,7 @@ export default class NewProduct extends React.Component {
 				{/* Alert to show that there are things unsaved */}
 				<Prompt
 					when={siorgValid || buyerValid || requesterValid || descriptionValid || originValid || typeValid ||
-						quantityValid || stateValid}
+						quantityValid}
 					message="tem certeza que deseja sair desta página? Todas as suas alterações serão perdidas"
 				/>
 
@@ -319,7 +349,10 @@ export default class NewProduct extends React.Component {
 							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 							<Label for="stateArea" sm={2}>Status:</Label>
 							<Col sm={2}>
-								<Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" />
+							<Input type="select" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} value={this.state.stateArea}>
+								{data}	
+							</Input>
+								{/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
 							</Col>
 						</FormGroup>
 					</Form>
