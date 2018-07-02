@@ -26,8 +26,10 @@ export default class NewProduct extends React.Component {
 			description: '',
 			origin: '',
 			type: '',
+			typeList: [],
 			quantity: '',
-			state: [],
+			state: '',
+			stateList: [],
 
 			formErrors: {
 				siorg: '',
@@ -36,8 +38,10 @@ export default class NewProduct extends React.Component {
 				description: '',
 				origin: '',
 				type: '',
+				typeList: [],
 				quantity: '',
-				state: []
+				state: '',
+				stateList: []
 			},
 
 			siorgValid: false,
@@ -47,12 +51,16 @@ export default class NewProduct extends React.Component {
 			originValid: false,
 			typeValid: false,
 			quantityValid: false,
-			// stateValid: false,
+			stateValid: false,
 			formValid: false,
 
 		};
 	}
 
+	componentWillMount(){
+		this.getStatus();
+		this.getType();
+	}
 
 	// Validation Functions
 	validateField(fieldName, value) {
@@ -64,7 +72,7 @@ export default class NewProduct extends React.Component {
 		let originValid = this.state.originValid;
 		let typeValid = this.state.typeValid;
 		let quantityValid = this.state.quantityValid;
-		// let stateValid = this.state.stateValid;
+		let stateValid = this.state.stateValid;
 
 		switch (fieldName) {
 			case 'siorg':
@@ -104,10 +112,10 @@ export default class NewProduct extends React.Component {
 				quantityValid = value.length >= 0;
 				fieldValidationErrors.quantity = quantityValid ? '' : 'Campo deve ser preenchido!';
 				break;
-			// case 'state':
-			// 	stateValid = value.length >= 0;
-			// 	fieldValidationErrors.state = stateValid ? '' : 'Campo deve ser preenchido!';
-			// 	break;
+			case 'state':
+				stateValid = value.length >= 0;
+				fieldValidationErrors.state = stateValid ? '' : 'Campo deve ser preenchido!';
+				break;
 			default:
 				break;
 		}
@@ -120,7 +128,7 @@ export default class NewProduct extends React.Component {
 			originValid: originValid,
 			typeValid: typeValid,
 			quantityValid: quantityValid,
-			// stateValid: stateValid
+			stateValid: stateValid
 		}, this.validateForm);
 
 	}
@@ -129,7 +137,7 @@ export default class NewProduct extends React.Component {
 		this.setState({
 			formValid: this.state.siorgValid && this.state.buyerValid && this.state.requesterValid &&
 				this.state.descriptionValid && this.state.originValid && this.state.typeValid && this.state.quantityValid
-				// && this.state.stateValid
+				&& this.state.stateValid
 		});
 	}
 
@@ -147,17 +155,37 @@ export default class NewProduct extends React.Component {
 	getStatus = () => {
 		axios.get('/status').then(response => {
 			if (response.status === 200) {
-				let resState = response.data.resState;
-				let state = [];
-				resState.forEach((state) => {
-					state.push({
-						_id: state._id,
-						_status: state.status,
-					})
+				let resStatus = response.data.status;
+				let status = [];
+				resStatus.forEach((_status) => {
+					console.log(_status)
+					status.push(_status.status)
 				});
-				
+
+				console.log(status)
 				this.setState({
-					state,
+					stateList: status
+				})
+			}
+		}).catch(ex => {
+			console.error(ex, ex.response);
+		})
+	};
+
+	//Function to get item type
+	getType = () => {
+		axios.get('/type').then(response => {
+			if (response.status === 200) {
+				let typeItem = response.data.type;
+				let type = [];
+				typeItem.forEach((_type) => {
+					//console.log(_status)
+					type.push(_type.type)
+				});
+
+				//console.log(status)
+				this.setState({
+					typeList: type
 				})
 			}
 		}).catch(ex => {
@@ -181,7 +209,7 @@ export default class NewProduct extends React.Component {
 			originValid: false,
 			typeValid: false,
 			quantityValid: false,
-			// stateValid: false,
+			stateValid: false,
 			formValid: false,
 		});
 
@@ -199,12 +227,12 @@ export default class NewProduct extends React.Component {
 					description: this.state.description,
 					origin: this.state.origin,
 					equipmentType: this.state.type,
-					//equipmentState: this.state.state,
+					equipmentState: this.state.state,
 				})
 				// let resState = await axios.post('/status/', {
 				// 	equipmentState: this.state.state,
 				// })
-				
+
 				if (res.status !== 201) {
 					alert("Opss.. algo saiu errado");
 					this.setState({
@@ -215,7 +243,7 @@ export default class NewProduct extends React.Component {
 						originValid: true,
 						typeValid: true,
 						quantityValid: true,
-						// stateValid: true,
+						stateValid: true,
 						formValid: true,
 					});
 				}
@@ -249,7 +277,7 @@ export default class NewProduct extends React.Component {
 				originValid: true,
 				typeValid: true,
 				quantityValid: true,
-				// stateValid: true,
+				stateValid: true,
 				formValid: true,
 			});
 		}
@@ -257,8 +285,14 @@ export default class NewProduct extends React.Component {
 
 	render() {
 		let data;
-		data = this.state.state.map((item) => 
-			<option value={item}>{item}</option>
+		console.log(this.state.stateList)
+		data = this.state.stateList.map((item, index) =>
+			<option value={item} key={index}>{item}</option>
+		);
+
+		let dataType;
+		dataType = this.state.typeList.map((item, index) =>
+			<option value={item} key={index}>{item}</option>
 		);
 
 		const { siorgValid, buyerValid, requesterValid, descriptionValid, originValid, typeValid, quantityValid, stateValid } = this.state
@@ -267,7 +301,7 @@ export default class NewProduct extends React.Component {
 		let patrimonyfield = null
 		if (this.state.isPermanent) {
 			patrimonyfield = (<FormGroup row>
-				<Label style={{ marginLeft: "7px"}} for="patrimony" sm={2}>Número de patrimônio:</Label>
+				<Label style={{ marginLeft: "7px" }} for="patrimony" sm={2}>Número de patrimônio:</Label>
 				<Col sm={2}>
 					<Input value={this.state.patrimonyNumber} type="text" name="patrimonyNumber" id="patrimony" onChange={(event) => this.handleUserInput(event)} placeholder="Número de patrimônio" />
 				</Col>
@@ -279,7 +313,7 @@ export default class NewProduct extends React.Component {
 				{/* Alert to show that there are things unsaved */}
 				<Prompt
 					when={siorgValid || buyerValid || requesterValid || descriptionValid || originValid || typeValid ||
-						quantityValid}
+						quantityValid || stateValid}
 					message="tem certeza que deseja sair desta página? Todas as suas alterações serão perdidas"
 				/>
 
@@ -288,7 +322,7 @@ export default class NewProduct extends React.Component {
 				<div className="margin-left">
 					<Form>
 						<FormGroup row>
-							<Label sm={2} check style={{ marginTop: "10px", marginLeft: "7px"}}>
+							<Label sm={2} check style={{ marginTop: "10px", marginLeft: "7px" }}>
 								<Input type="checkbox" checked={this.state.isPermanent} name="isPermanent" onChange={() => this.setState({ isPermanent: !this.state.isPermanent })} />{' '}
 								Item permanente
           					</Label>
@@ -335,7 +369,10 @@ export default class NewProduct extends React.Component {
 							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 							<Label for="typeArea" sm={2}>Tipo:</Label>
 							<Col sm={3}>
-								<Input value={this.state.type} type="text" name="type" id="typeArea" onChange={(event) => this.handleUserInput(event)} placeholder="Tipo do produto" />
+								<Input type="select" name="type" id="typeArea" onChange={(event) => this.handleUserInput(event)} value={this.state.typeArea}>
+									{dataType}
+								</Input>
+								{/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
 							</Col>
 						</FormGroup>
 						<FormGroup row>
@@ -349,9 +386,9 @@ export default class NewProduct extends React.Component {
 							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 							<Label for="stateArea" sm={2}>Status:</Label>
 							<Col sm={2}>
-							<Input type="select" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} value={this.state.stateArea}>
-								{data}	
-							</Input>
+								<Input type="select" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} value={this.state.stateArea}>
+									{data}
+								</Input>
 								{/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
 							</Col>
 						</FormGroup>
