@@ -13,6 +13,7 @@ import Inventory from './Inventory/Inventory';
 import EquipmentsEdit from './EquipmentEditing/EquipmentEditing';
 import EquipmentDetailsView from './EquipmentDetails/EquipmentDetailsView'
 import NewProduct from './NewProduct/NewProduct';
+import Config from './Config/Config';
 
 const Main = () => (
 	<main>
@@ -30,6 +31,7 @@ const Main = () => (
 			<Route path='/editarequipamento/:id' component={EquipmentsEdit} />
 			<Route path='/detalhesequipamento/:id' component={EquipmentDetailsView} />
 			<Route path='/novoproduto' component={NewProduct} />
+			<Route path='/configuracoes' component={Config} />
 			<Redirect from='*' to='/home'/>
 		</Switch>
 	</main>
