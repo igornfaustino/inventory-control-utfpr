@@ -385,7 +385,7 @@ export default class NewProduct extends React.Component {
 						<FormGroup row>
 							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 							<Label for="stateArea" sm={2}>Status:</Label>
-							<Col sm={2}>
+							<Col sm={3}>
 								<Input type="select" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} value={this.state.stateArea}>
 									{data}
 								</Input>

@@ -35,7 +35,8 @@ export class PurchaseForm extends React.Component {
 
             requisitionItens: [],
             sectorList: [],
-            UGRList: []
+            UGRList: [],
+            managementList: []
         };
         this.toggleOut = this.toggleOut.bind(this);
         this.toggleIn = this.toggleIn.bind(this);
@@ -47,6 +48,7 @@ export class PurchaseForm extends React.Component {
     componentWillMount() {
         this.getSector();
         this.getUGR();
+        this.getManagement();
 
         let data = this.props.purchase.requisitionItems;
         let newdata = [];
@@ -108,7 +110,7 @@ export class PurchaseForm extends React.Component {
 					sector.push(_sector.sector)
 				});
 
-				console.log(sector)
+				//console.log(sector)
 				this.setState({
 					sectorList: sector
 				})
@@ -126,13 +128,35 @@ export class PurchaseForm extends React.Component {
 				let UGRPurchase = response.data.ugr;
 				let UGR = [];
 				UGRPurchase.forEach((_UGR) => {
-					console.log(_UGR)
+					//console.log(_UGR)
 					UGR.push(_UGR.ugr)
 				});
 
 				//console.log(sector)
 				this.setState({
 					UGRList: UGR
+				})
+			}
+		}).catch(ex => {
+			console.error(ex, ex.response);
+		})
+    };
+    
+    //Function to get Management
+	getManagement = () => {
+		axios.get('/management').then(response => {
+			if (response.status === 200) {
+                //console.log(response);
+				let managementPurchase = response.data.management;
+				let management = [];
+				managementPurchase.forEach((_management) => {
+					//console.log(_management)
+					management.push(_management.management)
+				});
+
+				console.log(management)
+				this.setState({
+					managementList: management
 				})
 			}
 		}).catch(ex => {
@@ -361,6 +385,11 @@ export class PurchaseForm extends React.Component {
 		dataUGR = this.state.UGRList.map((item, index) =>
 			<option value={item} key={index}>{item}</option>
         );
+
+        let dataManagement;
+		dataManagement = this.state.managementList.map((item, index) =>
+			<option value={item} key={index}>{item}</option>
+        );
         
         return (
             <Container>
@@ -385,13 +414,15 @@ export class PurchaseForm extends React.Component {
                         value={moment(this.props.purchase.requisitionDate).format("YYYY-MM-DD")}
                         onChange={this.props.onChange} />
 
-                    <TextInput
-                        name="management"
-                        label="Gestão:"
-                        disabled={this.props.disabled}
-                        // size='4'
-                        value={this.props.purchase.management}
-                        onChange={this.props.onChange} />
+                    <FormGroup row>
+                        <p style={{ marginTop: "10px", color: "red" }}>*</p>
+                        <Label for="managementArea" sm={2}>Gestão:</Label>
+                        <Col sm={3} style={{ marginLeft: "90px"}}>
+                            <Input type="select" name="management" id="managementArea" onChange={() => this.props.onChange} value={this.props.managementArea}>
+                                {dataManagement}
+                            </Input>
+                        </Col>
+					</FormGroup>
 
                     <TextInput
                         name="requester"
