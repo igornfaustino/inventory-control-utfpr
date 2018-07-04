@@ -14,11 +14,13 @@ import EquipmentsEdit from './EquipmentEditing/EquipmentEditing';
 import EquipmentDetailsView from './EquipmentDetails/EquipmentDetailsView'
 import NewProduct from './NewProduct/NewProduct';
 import Config from './Config/Config';
+import Register from './Register/Register';
 
 const Main = () => (
 	<main>
 		<Switch>
 			<Route exact path='/' component={Login} />
+			<Route path='/register' component={Register} />
 			<Route path='/home' component={Home} />
 			<Route path='/novasolicitacoes' component={NewRequests} />
 			<Route path='/editarsolicitacoes/:id' component={EditRequest} />
