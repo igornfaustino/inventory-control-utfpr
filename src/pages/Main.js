@@ -5,7 +5,6 @@ import Home from './Home/Home';
 import NewRequests from './NewRequests/NewRequests';
 import Requests from './Requests/Requests';
 import Products from './Products/Products';
-import ApprovedRequests from './approvedRequests/ApprovedRequests';
 import PurchasesHistory from './PurchasesHistory/PurchasesHistory';
 import PurchaseRequisition from './PurchaseRequisition/PurchaseRequisition';
 import EditRequest from './EditRequest/EditRequest';
@@ -13,6 +12,7 @@ import Inventory from './Inventory/Inventory';
 import EquipmentsEdit from './EquipmentEditing/EquipmentEditing';
 import EquipmentDetailsView from './EquipmentDetails/EquipmentDetailsView'
 import NewProduct from './NewProduct/NewProduct';
+import NewSupplier from '../components/PurchaseRequisition/NewSupplier';
 import Config from './Config/Config';
 import Register from './Register/Register';
 
@@ -32,6 +32,7 @@ const Main = () => (<main>
 		<Route path='/editarequipamento/:id' component={EquipmentsEdit} />
 		<Route path='/detalhesequipamento/:id' component={EquipmentDetailsView} />
 		<Route path='/novoproduto' component={NewProduct} />
+		<Route path='/novovendedor' component={NewSupplier}/>
 		<Route path='/configuracoes' component={Config} />
 		<Redirect from='*' to='/home' />
 	</Switch>

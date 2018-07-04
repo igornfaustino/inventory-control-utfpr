@@ -267,7 +267,7 @@ export default class NewProduct extends React.Component {
 				formErrors: { siorg: '', buyer: '', requester: '', description: '', origin: '', type: '', quantity: '', state: '' },
 
 			});
-			alert("Solicitação cadastrada")
+			alert("Produto cadastrado")
 		}
 		catch (ex) {
 			console.error(ex)

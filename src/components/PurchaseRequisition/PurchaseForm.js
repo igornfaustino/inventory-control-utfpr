@@ -10,6 +10,7 @@ import { BootstrapTable, SearchField, TableHeaderColumn } from 'react-bootstrap-
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
 import TextInput from '../common/TextInput';
+import NewSupplier from './NewSupplier';
 import axios from 'axios';
 
 
@@ -477,11 +478,6 @@ export class PurchaseForm extends React.Component {
                             thStyle={{ width: '15%' }}
                             dataSort={true}>Quantidade</TableHeaderColumn>
 
-                        <TableHeaderColumn dataField='min'
-                            dataFormat={this.priceFormatter}
-                            tdStyle={{ width: '15%' }}
-                            thStyle={{ width: '15%' }}
-                            dataSort={true}>Preço Mínimo</TableHeaderColumn>
 
                         <TableHeaderColumn dataField='price'
                             dataFormat={this.priceFormatter}
@@ -490,14 +486,13 @@ export class PurchaseForm extends React.Component {
                             dataSort={true}>Preço Médio</TableHeaderColumn>
 
 
-                        <TableHeaderColumn dataField='max'
-                            dataFormat={this.priceFormatter}
-                            tdStyle={{ width: '15%' }}
-                            thStyle={{ width: '15%' }}
-                            dataSort={true}>Preço Máximo</TableHeaderColumn>
-
                         <TableHeaderColumn tdStyle={{ width: '14%' }} thStyle={{ width: '14%' }} dataField='status'
                             dataSort={true}>Status</TableHeaderColumn>
+
+                        <TableHeaderColumn dataField='seller'
+                            tdStyle={{ width: '15%' }}
+                            thStyle={{ width: '15%' }}
+                            dataSort={true}><a href="/novovendedor">Vendedor</a></TableHeaderColumn>
                     </BootstrapTable>
 
                     <this.ButtonFinishRequest />
@@ -533,20 +528,8 @@ export class PurchaseForm extends React.Component {
                                 dataFormat={this.priceFormatter}
                                 tdStyle={{ width: '15%' }}
                                 thStyle={{ width: '15%' }}
-                                dataField='minprice'
-                                dataSort={true}>Preço min</TableHeaderColumn>
-                            <TableHeaderColumn
-                                dataFormat={this.priceFormatter}
-                                tdStyle={{ width: '15%' }}
-                                thStyle={{ width: '15%' }}
                                 dataField='price'
                                 dataSort={true}>Preço médio</TableHeaderColumn>
-                            <TableHeaderColumn
-                                dataFormat={this.priceFormatter}
-                                tdStyle={{ width: '15%' }}
-                                thStyle={{ width: '15%' }}
-                                dataField='maxprice'
-                                dataSort={true}>Preço máx</TableHeaderColumn>
 
                             <TableHeaderColumn tdStyle={{ width: '14%' }} thStyle={{ width: '14%' }} dataField='status'
                                 dataSort={true}>Status</TableHeaderColumn>
