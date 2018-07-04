@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Button, Input} from "reactstrap";
+import axios from 'axios';
 
 import HeaderLogin from '../../components/HeaderLogin/HeaderLogin';
 import './Login.css';
@@ -25,7 +26,18 @@ export default class Login extends React.Component {
 	
 	handleSubmit = event => {
 		event.preventDefault();
-		this.props.history.push('/home');
+		axios.post("authenticate", {
+			email: this.state.email,
+			password: this.state.password
+		}).then(res => {
+			console.log(res.data)
+			localStorage.setItem("admin", res.data.user.admin);
+			localStorage.setItem("auth", res.data.token);
+			this.props.history.push('/home');
+		}).catch(ex => {
+			console.log(ex)
+			alert("Usuario não cadastrado!")
+		})
 	};
 
 	handleClick = event => {
