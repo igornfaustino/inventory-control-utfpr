@@ -6,6 +6,9 @@ import Header from '../../components/Header/Header';
 
 import './NewProduct.css';
 import axios from 'axios';
+
+import { isAdmin } from '../../utils/userLogin';
+
 /*
  - Screen for register a new equipment in the data base
  - All fields are necessary
@@ -284,6 +287,10 @@ export default class NewProduct extends React.Component {
 	}
 
 	render() {
+		if (!isAdmin()) {
+			this.props.history.push('/home');
+		}
+
 		let data;
 		console.log(this.state.stateList)
 		data = this.state.stateList.map((item, index) =>

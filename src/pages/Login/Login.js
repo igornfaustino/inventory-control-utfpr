@@ -32,7 +32,10 @@ export default class Login extends React.Component {
 		}).then(res => {
 			console.log(res.data)
 			localStorage.setItem("admin", res.data.user.admin);
-			localStorage.setItem("auth", res.data.token);
+			localStorage.setItem("token", res.data.token);
+			axios.defaults.headers = {
+				"Authorization": localStorage.getItem("token")
+			}
 			this.props.history.push('/home');
 		}).catch(ex => {
 			console.log(ex)

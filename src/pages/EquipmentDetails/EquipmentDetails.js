@@ -4,6 +4,8 @@ import { Container } from 'reactstrap'
 import '../Pages.css';
 import moment from 'moment';
 
+import { isAdmin } from '../../utils/userLogin';
+
 export default class EquipmentDetails extends React.Component {
 	constructor(props) {
 		super(props);
@@ -40,6 +42,10 @@ export default class EquipmentDetails extends React.Component {
 	}
 
 	render() {
+		if (!isAdmin()) {
+			this.props.history.push('/home');
+		}
+
 		return (
 			<div>
 				<Container>

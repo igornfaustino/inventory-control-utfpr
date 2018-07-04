@@ -11,6 +11,7 @@ import Header from '../../components/Header/Header';
 import axios from 'axios';
 import moment from 'moment'
 
+import { isAdmin } from '../../utils/userLogin';
 
 export default class PurchasesHistory extends React.Component {
 	constructor(props) {
@@ -98,6 +99,10 @@ export default class PurchasesHistory extends React.Component {
 	};
 
 	render() {
+		if (!isAdmin()) {
+			this.props.history.push('/home');
+		}
+
 		let data;
 		if (this.state.loading === false) {
 			data = <TableList header={['Descrição', 'Custo', 'Data', ' ']} items={this.state.items} />

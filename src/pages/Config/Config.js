@@ -5,6 +5,8 @@ import SubHeader from '../../components/SubHeader/SubHeader';
 import { Button, Col, Row, Form, Modal, ModalHeader, ModalBody, FormGroup, Input, Label, Container } from 'reactstrap'
 import axios from "axios";
 
+import { isAdmin } from '../../utils/userLogin';
+
 export default class Config extends React.Component {
 	constructor(props) {
 		super(props)
@@ -77,6 +79,10 @@ export default class Config extends React.Component {
 	}
 
 	render() {
+		// if (!isAdmin()) {
+		// 	this.props.history.push('/home');
+		// }
+
 		let listItem = this.state.list.map((value, index) => (
 			<div key={index}>
 				<Row>
@@ -124,11 +130,11 @@ export default class Config extends React.Component {
 					</Form>
 				</Container>
 				<Container fluid>
-				<hr style={{
-					border: 0,
-					height: '1px',
-					background: '#333',
-				}}/>
+					<hr style={{
+						border: 0,
+						height: '1px',
+						background: '#333',
+					}} />
 				</Container>
 				<Container style={{
 					marginLeft: "50px"

@@ -10,6 +10,7 @@ import axios from 'axios';
 // import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
 import { sleep } from '../../utils/sleep'
+import { isAdmin } from '../../utils/userLogin';
 
 
 export default class Inventory extends React.Component {
@@ -90,6 +91,10 @@ export default class Inventory extends React.Component {
 	}
 
 	render() {
+		if (!isAdmin()) {
+			this.props.history.push('/home');
+		}
+
 		let data
 		if (this.state.loading === false) {
 			data = <TableList header={['Nº de Patrimônio', 'SIORG', 'Descrição', 'Origem', 'Tipo', 'Estado', 'Localização', '', '', '']} items={this.state.items} />

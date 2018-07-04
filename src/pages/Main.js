@@ -16,27 +16,27 @@ import NewProduct from './NewProduct/NewProduct';
 import Config from './Config/Config';
 import Register from './Register/Register';
 
-const Main = () => (
-	<main>
-		<Switch>
-			<Route exact path='/' component={Login} />
-			<Route path='/register' component={Register} />
-			<Route path='/home' component={Home} />
-			<Route path='/novasolicitacoes' component={NewRequests} />
-			<Route path='/editarsolicitacoes/:id' component={EditRequest} />
-			<Route path='/solicitacoes' component={Requests} />
-			<Route path='/produtos' component={Products} />
-			<Route path='/aprovados' component={ApprovedRequests} />
-			<Route path='/requisicao' component={PurchaseRequisition} />
-			<Route path='/compras' component={PurchasesHistory} />
-			<Route path='/almoxarifado' component={Inventory} />
-			<Route path='/editarequipamento/:id' component={EquipmentsEdit} />
-			<Route path='/detalhesequipamento/:id' component={EquipmentDetailsView} />
-			<Route path='/novoproduto' component={NewProduct} />
-			<Route path='/configuracoes' component={Config} />
-			<Redirect from='*' to='/home'/>
-		</Switch>
-	</main>
+
+const Main = () => (<main>
+	<Switch>
+		<Route exact path='/' component={Login} />
+		<Route path='/register' component={Register} />
+		<Route path='/home' component={Home} />
+		<Route path='/novasolicitacoes' component={NewRequests} />
+		<Route path='/editarsolicitacoes/:id' component={EditRequest} />
+		<Route path='/solicitacoes' component={Requests} />
+		<Route path='/produtos' component={Products} />
+		<Route path='/requisicao' component={PurchaseRequisition} />
+		<Route path='/compras' component={PurchasesHistory} />
+		<Route path='/almoxarifado' component={Inventory} />
+		<Route path='/editarequipamento/:id' component={EquipmentsEdit} />
+		<Route path='/detalhesequipamento/:id' component={EquipmentDetailsView} />
+		<Route path='/novoproduto' component={NewProduct} />
+		<Route path='/configuracoes' component={Config} />
+		<Redirect from='*' to='/home' />
+	</Switch>
+</main>
 );
+
 
 export default Main;

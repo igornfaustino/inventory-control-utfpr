@@ -276,7 +276,11 @@ export default class FormRequest extends React.Component {
             if (prices[i].requisitionType.toLocaleUpperCase() === 'PDF') {
                 let formData = new FormData();
                 formData.append('file', prices[i].rawFile);
-                const file = await axios.post('/file/', formData);
+                const file = await axios.post('/file/', formData, {
+                    headers: {
+                        "Authorization": localStorage.getItem("token")
+                    }
+                });
                 if(file.status === 201)
                     prices[i].reference = file.data.fileId
             }
@@ -295,7 +299,11 @@ export default class FormRequest extends React.Component {
             if (prices[i].rawFile) {
                 let formData = new FormData();
                 formData.append('file', prices[i].rawFile);
-                const file = await axios.post('/file/', formData);
+                const file = await axios.post('/file/', formData, {
+                    headers: {
+                        "Authorization": localStorage.getItem("token")
+                    }
+                });
                 if(file.status === 201)                
                     prices[i].reference = file.data.fileId
             }

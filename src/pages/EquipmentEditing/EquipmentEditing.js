@@ -4,6 +4,8 @@ import axios from 'axios';
 import Header from '../../components/Header/Header';
 import SubHeader from '../../components/SubHeader/SubHeader'
 
+import { isAdmin } from '../../utils/userLogin';
+
 export default class EquipmentsEdit extends React.Component {
     constructor(props) {
         super(props);
@@ -142,6 +144,10 @@ export default class EquipmentsEdit extends React.Component {
     }
 
     render() {
+        if (!isAdmin()) {
+			this.props.history.push('/home');
+		}
+
         let patrimonyfield = null
         if (this.state.equipment.isPermanent) {
             patrimonyfield = (<FormGroup row>
