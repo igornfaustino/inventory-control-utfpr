@@ -14,11 +14,14 @@ import EquipmentsEdit from './EquipmentEditing/EquipmentEditing';
 import EquipmentDetailsView from './EquipmentDetails/EquipmentDetailsView'
 import NewProduct from './NewProduct/NewProduct';
 import NewSupplier from '../components/PurchaseRequisition/NewSupplier';
+import Config from './Config/Config';
+import Register from './Register/Register';
 
 const Main = () => (
 	<main>
 		<Switch>
 			<Route exact path='/' component={Login} />
+			<Route path='/register' component={Register} />
 			<Route path='/home' component={Home} />
 			<Route path='/novasolicitacoes' component={NewRequests} />
 			<Route path='/editarsolicitacoes/:id' component={EditRequest} />
@@ -32,6 +35,7 @@ const Main = () => (
 			<Route path='/detalhesequipamento/:id' component={EquipmentDetailsView} />
 			<Route path='/novoproduto' component={NewProduct} />
 			<Route path='/novovendedor' component={NewSupplier}/>
+			<Route path='/configuracoes' component={Config} />
 			<Redirect from='*' to='/home'/>
 		</Switch>
 	</main>

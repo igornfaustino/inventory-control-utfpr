@@ -26,8 +26,10 @@ export default class NewProduct extends React.Component {
 			description: '',
 			origin: '',
 			type: '',
+			typeList: [],
 			quantity: '',
 			state: '',
+			stateList: [],
 
 			formErrors: {
 				siorg: '',
@@ -36,8 +38,10 @@ export default class NewProduct extends React.Component {
 				description: '',
 				origin: '',
 				type: '',
+				typeList: [],
 				quantity: '',
-				state: ''
+				state: '',
+				stateList: []
 			},
 
 			siorgValid: false,
@@ -53,6 +57,10 @@ export default class NewProduct extends React.Component {
 		};
 	}
 
+	componentWillMount(){
+		this.getStatus();
+		this.getType();
+	}
 
 	// Validation Functions
 	validateField(fieldName, value) {
@@ -143,6 +151,48 @@ export default class NewProduct extends React.Component {
 
 	}
 
+	//Function to get item status
+	getStatus = () => {
+		axios.get('/status').then(response => {
+			if (response.status === 200) {
+				let resStatus = response.data.status;
+				let status = [];
+				resStatus.forEach((_status) => {
+					console.log(_status)
+					status.push(_status.status)
+				});
+
+				console.log(status)
+				this.setState({
+					stateList: status
+				})
+			}
+		}).catch(ex => {
+			console.error(ex, ex.response);
+		})
+	};
+
+	//Function to get item type
+	getType = () => {
+		axios.get('/type').then(response => {
+			if (response.status === 200) {
+				let typeItem = response.data.type;
+				let type = [];
+				typeItem.forEach((_type) => {
+					//console.log(_status)
+					type.push(_type.type)
+				});
+
+				//console.log(status)
+				this.setState({
+					typeList: type
+				})
+			}
+		}).catch(ex => {
+			console.error(ex, ex.response);
+		})
+	};
+
 	//Function to connect with the database and save a new equipment
 	submitRequest = async () => {
 		if (!this.state.siorgValid || !this.state.buyerValid || !this.state.requesterValid || !this.state.descriptionValid
@@ -179,6 +229,10 @@ export default class NewProduct extends React.Component {
 					equipmentType: this.state.type,
 					equipmentState: this.state.state,
 				})
+				// let resState = await axios.post('/status/', {
+				// 	equipmentState: this.state.state,
+				// })
+
 				if (res.status !== 201) {
 					alert("Opss.. algo saiu errado");
 					this.setState({
@@ -230,6 +284,16 @@ export default class NewProduct extends React.Component {
 	}
 
 	render() {
+		let data;
+		console.log(this.state.stateList)
+		data = this.state.stateList.map((item, index) =>
+			<option value={item} key={index}>{item}</option>
+		);
+
+		let dataType;
+		dataType = this.state.typeList.map((item, index) =>
+			<option value={item} key={index}>{item}</option>
+		);
 
 		const { siorgValid, buyerValid, requesterValid, descriptionValid, originValid, typeValid, quantityValid, stateValid } = this.state
 		// console.log(this.state)
@@ -237,7 +301,7 @@ export default class NewProduct extends React.Component {
 		let patrimonyfield = null
 		if (this.state.isPermanent) {
 			patrimonyfield = (<FormGroup row>
-				<Label style={{ marginLeft: "7px"}} for="patrimony" sm={2}>Número de patrimônio:</Label>
+				<Label style={{ marginLeft: "7px" }} for="patrimony" sm={2}>Número de patrimônio:</Label>
 				<Col sm={2}>
 					<Input value={this.state.patrimonyNumber} type="text" name="patrimonyNumber" id="patrimony" onChange={(event) => this.handleUserInput(event)} placeholder="Número de patrimônio" />
 				</Col>
@@ -258,7 +322,7 @@ export default class NewProduct extends React.Component {
 				<div className="margin-left">
 					<Form>
 						<FormGroup row>
-							<Label sm={2} check style={{ marginTop: "10px", marginLeft: "7px"}}>
+							<Label sm={2} check style={{ marginTop: "10px", marginLeft: "7px" }}>
 								<Input type="checkbox" checked={this.state.isPermanent} name="isPermanent" onChange={() => this.setState({ isPermanent: !this.state.isPermanent })} />{' '}
 								Item permanente
           					</Label>
@@ -305,7 +369,10 @@ export default class NewProduct extends React.Component {
 							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 							<Label for="typeArea" sm={2}>Tipo:</Label>
 							<Col sm={3}>
-								<Input value={this.state.type} type="text" name="type" id="typeArea" onChange={(event) => this.handleUserInput(event)} placeholder="Tipo do produto" />
+								<Input type="select" name="type" id="typeArea" onChange={(event) => this.handleUserInput(event)} value={this.state.typeArea}>
+									{dataType}
+								</Input>
+								{/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
 							</Col>
 						</FormGroup>
 						<FormGroup row>
@@ -318,8 +385,11 @@ export default class NewProduct extends React.Component {
 						<FormGroup row>
 							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 							<Label for="stateArea" sm={2}>Status:</Label>
-							<Col sm={2}>
-								<Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" />
+							<Col sm={3}>
+								<Input type="select" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} value={this.state.stateArea}>
+									{data}
+								</Input>
+								{/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
 							</Col>
 						</FormGroup>
 					</Form>

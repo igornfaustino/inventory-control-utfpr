@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup, Form } from 'react-bootstrap';
-import { Button, Container, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import { Button, Container, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, Input, Label, Col } from 'reactstrap'
 import moment from 'moment'
 import { loadAllRequisition } from './connectAPI';
 
@@ -11,6 +11,7 @@ import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-a
 
 import TextInput from '../common/TextInput';
 import NewSupplier from './NewSupplier';
+import axios from 'axios';
 
 
 export class PurchaseForm extends React.Component {
@@ -33,7 +34,10 @@ export class PurchaseForm extends React.Component {
                 average: 0
             },
 
-            requisitionItens: []
+            requisitionItens: [],
+            sectorList: [],
+            UGRList: [],
+            managementList: []
         };
         this.toggleOut = this.toggleOut.bind(this);
         this.toggleIn = this.toggleIn.bind(this);
@@ -43,6 +47,10 @@ export class PurchaseForm extends React.Component {
     }
 
     componentWillMount() {
+        this.getSector();
+        this.getUGR();
+        this.getManagement();
+
         let data = this.props.purchase.requisitionItems;
         let newdata = [];
         data.forEach((requisition, index) => {
@@ -90,6 +98,72 @@ export class PurchaseForm extends React.Component {
             // console.log(error)
         }
     }
+
+    //Function to get sector
+	getSector = () => {
+		axios.get('/sector').then(response => {
+			if (response.status === 200) {
+                //console.log(response);
+				let sectorPurchase = response.data.sector;
+				let sector = [];
+				sectorPurchase.forEach((_sector) => {
+					//console.log(_status)
+					sector.push(_sector.sector)
+				});
+
+				//console.log(sector)
+				this.setState({
+					sectorList: sector
+				})
+			}
+		}).catch(ex => {
+			console.error(ex, ex.response);
+		})
+    };
+    
+    //Function to get UGR
+	getUGR = () => {
+		axios.get('/ugr').then(response => {
+			if (response.status === 200) {
+                //console.log(response);
+				let UGRPurchase = response.data.ugr;
+				let UGR = [];
+				UGRPurchase.forEach((_UGR) => {
+					//console.log(_UGR)
+					UGR.push(_UGR.ugr)
+				});
+
+				//console.log(sector)
+				this.setState({
+					UGRList: UGR
+				})
+			}
+		}).catch(ex => {
+			console.error(ex, ex.response);
+		})
+    };
+    
+    //Function to get Management
+	getManagement = () => {
+		axios.get('/management').then(response => {
+			if (response.status === 200) {
+                //console.log(response);
+				let managementPurchase = response.data.management;
+				let management = [];
+				managementPurchase.forEach((_management) => {
+					//console.log(_management)
+					management.push(_management.management)
+				});
+
+				console.log(management)
+				this.setState({
+					managementList: management
+				})
+			}
+		}).catch(ex => {
+			console.error(ex, ex.response);
+		})
+	};
 
     AddRequest() {
         this.toggleOut();
@@ -303,6 +377,21 @@ export class PurchaseForm extends React.Component {
 
     render() {
         // console.log(this.props.purchase.requisitionDate)
+        let dataSector;
+		dataSector = this.state.sectorList.map((item, index) =>
+			<option value={item} key={index}>{item}</option>
+        );
+
+        let dataUGR;
+		dataUGR = this.state.UGRList.map((item, index) =>
+			<option value={item} key={index}>{item}</option>
+        );
+
+        let dataManagement;
+		dataManagement = this.state.managementList.map((item, index) =>
+			<option value={item} key={index}>{item}</option>
+        );
+        
         return (
             <Container>
                 <Form
@@ -326,13 +415,15 @@ export class PurchaseForm extends React.Component {
                         value={moment(this.props.purchase.requisitionDate).format("YYYY-MM-DD")}
                         onChange={this.props.onChange} />
 
-                    <TextInput
-                        name="management"
-                        label="Gestão:"
-                        disabled={this.props.disabled}
-                        // size='4'
-                        value={this.props.purchase.management}
-                        onChange={this.props.onChange} />
+                    <FormGroup row>
+                        <p style={{ marginTop: "10px", color: "red" }}>*</p>
+                        <Label for="managementArea" sm={2}>Gestão:</Label>
+                        <Col sm={3} style={{ marginLeft: "90px"}}>
+                            <Input type="select" name="management" id="managementArea" onChange={() => this.props.onChange} value={this.props.managementArea}>
+                                {dataManagement}
+                            </Input>
+                        </Col>
+					</FormGroup>
 
                     <TextInput
                         name="requester"
@@ -341,22 +432,28 @@ export class PurchaseForm extends React.Component {
                         // size='4'
                         value={this.props.purchase.requester}
                         onChange={this.props.onChange} />
+                    
+                        <FormGroup row>
+                            <p style={{ marginTop: "10px", color: "red" }}>*</p>
+							<Label for="typeArea" sm={2}>Setor:</Label>
+							<Col sm={3} style={{ marginLeft: "90px"}}>
+								<Input type="select" name="sector" id="sectorArea" onChange={() => this.props.onChange} value={this.props.sectorArea}>
+									{dataSector}
+								</Input>
+								{/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
+							</Col>
+						</FormGroup>
 
-                    <TextInput
-                        name="sector"
-                        label="Setor:"
-                        disabled={this.props.disabled}
-                        // size='4'
-                        value={this.props.purchase.sector}
-                        onChange={this.props.onChange} />
-
-                    <TextInput
-                        name="UGR"
-                        label="UGR:"
-                        // size='4'
-                        disabled={this.props.disabled}
-                        value={this.props.purchase.UGR}
-                        onChange={this.props.onChange} />
+                        <FormGroup row>
+                            <p style={{ marginTop: "10px", color: "red" }}>*</p>
+							<Label for="typeArea" sm={2}>UGR:</Label>
+							<Col sm={3} style={{ marginLeft: "90px"}}>
+								<Input type="select" name="UGR" id="ugrArea" onChange={() => this.props.onChange} value={this.props.ugrArea}>
+									{dataUGR}
+								</Input>
+								{/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
+							</Col>
+						</FormGroup>
 
 
                     <this.ButtonAddRequest />
