@@ -36,6 +36,8 @@ export async function loadPurchaseRequisition(id) {
         if (response.status === 200) {
             let purchase = response.data.purchase;
             // console.log(response.data)
+
+            console.log(response.data)
             purchase.requisitionItems = prepareRequistionItems(purchase.requisitionItems);
             return ({
                 purchases: purchase,
@@ -100,6 +102,7 @@ function prepareRequistionItems(requisitionItems) {
                     description: item.item.description,
                     justification: item.item.justification,
                     qtd: item.item.qtd,
+                    qtdReceived: item.item.qtdReceived,
                     quotation: item.item.quotation,
                     status: item.item.status,
                     itemSupplier: item.itemSupplier
