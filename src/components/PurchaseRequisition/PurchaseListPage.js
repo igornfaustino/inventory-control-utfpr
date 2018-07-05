@@ -113,7 +113,7 @@ export default class PurchaseListPage extends React.Component {
                 max: "R$ " + (price.average * price.max).toFixed(2),
                 renderEditAction: this.RenderEditAction(index),
                 renderViewAction: this.RenderViewAction(index),
-                renderMoveAction: this.RenderMoveAction(index),
+                // renderMoveAction: this.RenderMoveAction(index),
 
             })
         });
@@ -131,7 +131,7 @@ export default class PurchaseListPage extends React.Component {
                         Nova Requisição
                     </Button>
                     <TableList
-                        header={['Gestão', 'Requisitante', 'Data', 'N° de itens', 'Custo Mínimo', 'Custo Médio', 'Custo Máximo', '', '']}
+                        header={['Gestão', 'Requisitante', 'Data', 'N° de itens', 'Custo Mínimo', 'Custo Médio', 'Custo Máximo', '']}
                         items={items}/>
                 </div>
             )

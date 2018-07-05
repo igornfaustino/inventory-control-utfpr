@@ -14,6 +14,7 @@ import TextInput from '../common/TextInput';
 import axios from 'axios';
 import NewSupplier from "./NewSupplier";
 
+import PurchaseSave from './PurchaseSave';
 
 export class PurchaseForm extends React.Component {
 
@@ -384,7 +385,14 @@ export class PurchaseForm extends React.Component {
         else
             return row.itemSupplier.name
     }
-    onSeller(seller){
+    moveWareHouse = (cell, row, enumObject, index) =>{
+
+            return (
+                <PurchaseSave data={row} buttonLabel={"Mover"} />
+            );
+
+    }
+        onSeller(seller){
         let i = this.state.requisitionItens.map((item)=> item._id).indexOf(this.state.seller._id)
         this.sellerToggle()
         let req= this.state.requisitionItens
@@ -528,10 +536,12 @@ export class PurchaseForm extends React.Component {
                                            dataSort={true}>Status</TableHeaderColumn>
 
                         <TableHeaderColumn dataField='seller'
-                                           tdStyle={{width: '15%'}}
-                                           thStyle={{width: '15%'}}
                                            dataFormat={this.seller}
                                            dataSort={true}>Vendedor</TableHeaderColumn>
+
+                        <TableHeaderColumn dataField='move'
+                                           dataFormat={this.moveWareHouse}
+                                           dataSort={true}>Ação</TableHeaderColumn>
                     </BootstrapTable>
 
                     <this.ButtonFinishRequest/>
