@@ -127,11 +127,11 @@ export default class NewSupplier extends React.Component {
 
     //Function to connect with the database and save a new equipment
     submitRequest= () => {
-        // if (!this.state.nameValid || !this.state.cnpjValid || !this.state.phoneValid || !this.state.numberValid
-        //     || !this.state.streetValid || !this.state.cityValid || !this.state.stateValid || !this.state.countryValid) {
-        //     alert("Preencha todos os campos");
-        //     return;
-        // }
+        if (!this.state.nameValid || !this.state.cnpjValid || !this.state.phoneValid || !this.state.numberValid
+            || !this.state.streetValid || !this.state.cityValid || !this.state.stateValid || !this.state.countryValid) {
+            alert("Preencha todos os campos");
+            return;
+        }
 
         this.setState({
             nameValid: false,
