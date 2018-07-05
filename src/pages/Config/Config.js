@@ -115,7 +115,7 @@ export default class Config extends React.Component {
 						<FormGroup row style={marginForm}>
 							<Label for="adminArea" sm={2}>Novo Administrador:</Label>
 							<Col sm={4}>
-								<Input value={this.state.admin} type="text" name="admin" id="adminArea" onChange={(event) => this.handleUserInput(event)} placeholder="admin" />
+								<Input value={this.state.admin} type="text" name="admin" id="adminArea" onChange={(event) => this.handleUserInput(event)} placeholder="E-mail: " />
 							</Col>
 							<Col md={2}></Col>
 							<Col md={2}>

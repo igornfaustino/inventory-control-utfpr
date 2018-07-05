@@ -56,7 +56,7 @@ export class NewPurchasePage extends React.Component {
     render() {
         return (
             <div>
-                <SubHeader title="Nova Requisição de Compra" />
+                <SubHeader title="Nova Compra" />
                 <PurchaseForm
                     purchase={this.state.purchase}
                     onSave={this.savePurchase}
