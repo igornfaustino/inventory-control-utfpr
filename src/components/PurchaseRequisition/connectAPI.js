@@ -98,7 +98,7 @@ function prepareRequistionItems(requisitionItems) {
                     description: item.item.description,
                     justification: item.item.justification,
                     qtd: item.item.qtd,
-                    qtdReceived: item.qtdReceived,
+                    qtdReceived: !item.qtdReceived? 0 :Number(item.qtdReceived),
                     quotation: item.item.quotation,
                     status: item.item.status,
                     itemSupplier: item.itemSupplier
