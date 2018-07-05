@@ -10,7 +10,8 @@ export default class PurchaseSave extends React.Component {
             modal: false,
             isPermanent: false,
             stateList: [],
-            buyer: {}
+            buyer: {},
+            data: {}
         };
 
         this.toggle = this.toggle.bind(this);
@@ -51,11 +52,17 @@ export default class PurchaseSave extends React.Component {
                 data[event.target.name] = 1
             }
         }
+        if(event.target.name === "isPermanent"){
+            this.setState({
+                isPermanent: !this.state.isPermanent
+            })
+            data.isPermanent = this.state.isPermanent
+        }
         this.setState({data: data});
     };
 
     renderItem = () => {
-
+        console.log(this.state)
 
         let item = this.state.data
         let data;
@@ -66,7 +73,7 @@ export default class PurchaseSave extends React.Component {
 
         let patrimonyfield = null;
 
-        if (item.isPermanent) {
+        if (this.state.isPermanent) {
             patrimonyfield = (<FormGroup row>
                 <Label style={{marginLeft: "7px"}} for="patrimony" sm={2}>Número de patrimônio:</Label>
                 <Col sm={2}>
@@ -80,7 +87,7 @@ export default class PurchaseSave extends React.Component {
             <div>
                 <FormGroup row>
                     <Label sm={2} check style={{marginTop: "10px", marginLeft: "7px"}}>
-                        <Input type="checkbox" checked={item.isPermanent} name="isPermanent" id={item._id}
+                        <Input type="checkbox" checked={this.state.isPermanent} name="isPermanent" id={item._id}
                                onChange={this.onChange}/>{' '}
                         Item permanente
                     </Label>
@@ -159,9 +166,8 @@ export default class PurchaseSave extends React.Component {
     };
 
     onConfirm = async (item) => {
-
+        item.isPermanent = this.state.isPermanent
         await this.moveWareHouse(item);
-
         this.props.onMove(item._id,item.quantity)
 
     };

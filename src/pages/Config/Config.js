@@ -16,7 +16,7 @@ export default class Config extends React.Component {
 			status: '',
 			type: '',
 			management: '',
-			ugr: '',
+			UGR: '',
 			sector: '',
 			list: [],
 			modal: false,

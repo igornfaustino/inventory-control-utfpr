@@ -12,7 +12,7 @@ export class PurchasePrintView extends React.Component {
             management: '',
             number: '',
             requisitionDate: "",
-            ugr: '',
+            UGR: '',
             sector: '',
             requester: '',
             requisitionItems: [],
