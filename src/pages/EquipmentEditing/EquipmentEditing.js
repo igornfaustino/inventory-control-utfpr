@@ -82,7 +82,6 @@ export default class EquipmentsEdit extends React.Component {
                         });
                     }
                     this.setState({
-                        isSubjacentBy: false,
                         equipment: response.data.equipment,
                     });
                 }
@@ -120,11 +119,14 @@ export default class EquipmentsEdit extends React.Component {
                                     boolSubjacent = true;
                                 }
                             })
+                            //setOfSubjacentEquipments.push(item); //modified
+                            if(item.components.length > 0) {
+                                setOfSubjacentEquipments.push(item);
+                            }
                         }
                     });
-                    setOfSubjacentEquipments.push({_id: id}); //fix this
+                    setOfSubjacentEquipments.push({_id: id});
                     let availableEquipments = this.compareLists(items, setOfSubjacentEquipments);
-                    console.log(isSubjacent)
                     this.setState({
                         availableComponents: availableEquipments,
                         loading: false,
@@ -275,6 +277,22 @@ export default class EquipmentsEdit extends React.Component {
         })
     }
 
+    subjacentEquipmentMessage() { //added/modified
+        if(this.state.disabledSubjacency) {
+            console.log(this.state.isSubjacentBy)
+            return (
+                <Button onClick={() => {
+                    this.props.history.push({
+                        pathname: `/editarequipamento/${this.state.isSubjacentBy}`,
+                        id: this.state.isSubjacentBy
+                    })
+                }} type="submit">Movimentar equipamento inclusivo ou desacoplá-lo deste.</Button>
+            );
+        } else {
+            return '';
+        }
+    }
+    
     moveEquipmentToStorage = async () =>  {
         let locationHistory = this.state.locationHistory;
         let location = {
@@ -513,6 +531,9 @@ export default class EquipmentsEdit extends React.Component {
                             </Col>
                         </FormGroup>
                         <Button color="primary" onClick={this.toggle} disabled={this.state.disabledSubjacency}>Movimentar</Button>
+                        <br/>
+                        <br/>
+                        {this.subjacentEquipmentMessage()}
                         <div align="right">
                             <Button color="secondary" onClick={this.savebutton} disabled={!this.state.changed}>Salvar
                                 Alterações</Button>
