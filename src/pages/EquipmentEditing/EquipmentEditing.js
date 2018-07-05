@@ -3,32 +3,161 @@ import { Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFoot
 import axios from 'axios';
 import Header from '../../components/Header/Header';
 import SubHeader from '../../components/SubHeader/SubHeader'
+import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table';
+import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
+
+import { isAdmin } from '../../utils/userLogin';
 
 export default class EquipmentsEdit extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            equipment: {
+                isPermanent: false,
+                patrimonyNumber: '',
+                siorg: '',
+                buyer: '',
+                solicitor: 'test ',
+                description: '',
+                origin: '',
+                equipmentType: '',
+                // quantity: 1,
+                equipmentState: '',
+                components: [], //componentes a serem colocados na tabela
+            },
+            locationHistory: {
+                justification: '',
+                locationType: '',
+                location: ''
+            },
+            //equipamentos armazenados no estoque (colocado no Modal)
+            availableComponents: [{
+                isSelected: false,
+                isPermanent: false,
+                _id: '',
+                patrimonyNumber: '',
+                siorg: '',
+                buyer: '',
+                solicitor: '',
+                description: '',
+                origin: '',
+                equipmentType: '',
+                // quantity: 1,
+                equipmentState: '',
+                components: [],
+            },],
+            isSubjacentBy: false,
+            changed: false,
+            modal: false,
+            disabled: false,
+            addDisabled: true,
+            modalComponent: false,
+            modalVisual: false,
+            disabledSubjacency: false,
+            disabledSendStorage: false,
+            selected: 0,
+        };
+        this.moveEquipmentToStorage = this.moveEquipmentToStorage.bind(this);
+        this.componentTableCreator = this.componentTableCreator.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.onChangeLocation = this.onChangeLocation.bind(this);
+        this.toggle = this.toggle.bind(this);
+        this.toggleComponent = this.toggleComponent.bind(this);
+        this.toggleVisual = this.toggleVisual.bind(this);
+        this.savebutton = this.savebutton.bind(this);
+        this.addComponent = this.addComponent.bind(this);
+        this.handleDeleteRow = this.handleDeleteRow.bind(this);
+    }
+
     componentDidMount() {
         let id = this.props.match.params.id;
         try {
             axios.get('/equipment/' + id).then(response => {
-
                 if (response.status === 200) {
                     if (response.data.equipment.locationHistory.length) {
                         this.setState({
                             locationHistory: response.data.equipment.locationHistory[0]
                         });
-
                     }
                     this.setState({
                         equipment: response.data.equipment,
-                        loading: false
                     });
                 }
             }).catch(ex => {
                 console.error(ex, ex.response);
-            })
+            });
+            axios.get('/equipments').then(response => {
+                if (response.status === 200) {
+                    let equipments = response.data.equipments;
+                    let items = [];
+                    let setOfSubjacentEquipments = [];
+                    let isSubjacent = false;
+                    let boolSubjacent = false;
+                    equipments.forEach((item) => {
+                        items.push({
+                            isSelected: false,
+                            _id: item._id,
+                            siorg: item.siorg,
+                            patrimonyNumber: item.patrimonyNumber,
+                            buyer: item.buyer,
+                            solicitor: item.solicitor,
+                            description: item.description,
+                            origin: item.origin,
+                            equipmentType: item.equipmentType,
+                            equipmentState: item.equipmentState,
+                            components: item.components,
+                            isPermanent: item.isPermanent,
+                        })
+                        if(item.components) {
+                            item.components.forEach((element) => {
+                                setOfSubjacentEquipments.push(element);
+                                if(element._id == id) {
+                                    setOfSubjacentEquipments.push(item);
+                                    isSubjacent = item._id;
+                                    boolSubjacent = true;
+                                }
+                            })
+                            //setOfSubjacentEquipments.push(item); //modified
+                            if(item.components.length > 0) {
+                                setOfSubjacentEquipments.push(item);
+                            }
+                        }
+                    });
+                    setOfSubjacentEquipments.push({_id: id});
+                    let availableEquipments = this.compareLists(items, setOfSubjacentEquipments);
+                    this.setState({
+                        availableComponents: availableEquipments,
+                        loading: false,
+                        isSubjacentBy: isSubjacent,
+                        disabledSubjacency: boolSubjacent,
+                    });
+                }
+            }).catch(ex => {
+                console.error(ex, ex.response);
+            });
         }
         catch (err) {
             console.error(err)
         }
+    }
+
+    compareLists(list1, list2) {
+        let difference = [];
+        let count;
+        list1.forEach((element) => {
+            count = true;
+            list2.forEach((item) => {
+                if(item._id === element._id) {
+                    count = false;
+                }
+            })
+            if(count === true) {
+                difference.push(element);
+            }
+        })
+        return difference;
     }
 
     onChange(event) {
@@ -51,35 +180,131 @@ export default class EquipmentsEdit extends React.Component {
         });
     }
 
-    constructor(props) {
-        super(props);
+    CustomModalSearch = props => {
+        return (
+            <SearchField
+                defaultValue={props.defaultSearch}
+                placeholder={"Buscar"} />
+        );
+    };
 
-        this.state = {
-            equipment: {
-                siorg: '',
-                buyer: '',
-                solicitor: 'test ',
-                description: '',
-                origin: '',
-                equipmentType: '',
-                // quantity: 1,
-                equipmentState: '',
-                patrimonyNumber: '',
-            },
-            locationHistory: {
-                justification: '',
-                locationType: '',
-                location: ''
-            },
-            changed: false,
-            modal: false,
-            disabled: false,
-        };
-        this.componentDidMount = this.componentDidMount.bind(this);
-        this.onChange = this.onChange.bind(this);
-        this.onChangeLocation = this.onChangeLocation.bind(this);
-        this.toggle = this.toggle.bind(this);
-        this.savebutton = this.savebutton.bind(this)
+    onRowSelect = (item, isSelect, e) => {
+        let selected = this.state.selected;
+        let addDisabled;
+        isSelect? selected++ : selected--;
+        selected? addDisabled = false : addDisabled = true;
+        let availableComponents = this.state.availableComponents
+        let index = availableComponents.indexOf(item)
+        availableComponents[index] = { ...availableComponents[index], isSelected: isSelect }
+        this.setState({
+            availableComponents: availableComponents,
+            selected: selected,
+            addDisabled: addDisabled,
+        })
+        console.log(availableComponents);
+    }
+
+    buttonFormatter(cell, row, rowIndex){
+        return (
+            <Button color="danger" onClick={() => this.handleDeleteRow(row)}>Remover</Button>
+        );
+    }
+
+    componentTableCreator() {
+        return (
+            <BootstrapTable 
+                search
+                data={this.state.equipment.components}
+                // remote={true}
+                // deleteRow={true}
+                options={{
+                    searchField: this.CustomModalSearch,
+                    noDataText: "Componentes não disponíveis.",
+                    // onDeleteRow: this.handleDeleteRow
+                }}
+            >
+                <TableHeaderColumn dataField='_id'
+                    tdStyle={{ width: '0%' }}
+                    thStyle={{ width: '0%' }} dataSort={false} isKey>Key</TableHeaderColumn>
+                <TableHeaderColumn dataField='siorg' dataSort={true}>SIORG</TableHeaderColumn>
+                <TableHeaderColumn dataField='description' dataSort={true}>Descrição</TableHeaderColumn>
+                <TableHeaderColumn dataField='equipmentState' dataSort={true}>Estado</TableHeaderColumn>
+                <TableHeaderColumn dataField="button" dataFormat={this.buttonFormatter.bind(this)}></TableHeaderColumn>
+            </BootstrapTable>
+        );
+    }
+
+    handleDeleteRow(cell, row, rowIndex) {
+        let state = this.state;
+        let afterDeletionComponents = [];
+        let deletedComponent;
+        state.equipment.components.forEach((value) => {
+            if(value._id !== cell._id) {
+                afterDeletionComponents.push(value);
+            } else {
+                deletedComponent = value;
+            }
+        });
+        state.equipment.components = afterDeletionComponents;
+        state.availableComponents.push(deletedComponent);
+        this.setState({
+            availableComponents: state.availableComponents,
+            equipment: state.equipment,
+            changed: true,
+        });
+        console.log(this.state.equipment.components);
+    }
+
+    addComponent() {
+        this.setState({ modalComponent: false })
+        let equipment = this.state.equipment;
+        let availableComponents = this.state.availableComponents;
+        let updatedAvailableComponents = [];
+        availableComponents.forEach((value) => {
+            if(value.isSelected) {
+                if(equipment.components.filter(item => item._id === value._id).length === 0) {
+                    equipment.components.push(value);
+                }
+            } else {
+                updatedAvailableComponents.push(value);
+            }
+        });
+        console.log(equipment.components);
+        this.setState({
+            equipment: equipment,
+            availableComponents: updatedAvailableComponents,
+            changed: true,
+        })
+    }
+
+    subjacentEquipmentMessage() { //added/modified
+        if(this.state.disabledSubjacency) {
+            console.log(this.state.isSubjacentBy)
+            return (
+                <Button onClick={() => {
+                    this.props.history.push({
+                        pathname: `/editarequipamento/${this.state.isSubjacentBy}`,
+                        id: this.state.isSubjacentBy
+                    })
+                }} type="submit">Movimentar equipamento inclusivo ou desacoplá-lo deste.</Button>
+            );
+        } else {
+            return '';
+        }
+    }
+    
+    moveEquipmentToStorage = async () =>  {
+        let locationHistory = this.state.locationHistory;
+        let location = {
+            justification: ' ',
+            locationType: ' ',
+            location: 'Em Estoque',
+        }
+        locationHistory = location;
+        await this.setState({ locationHistory: locationHistory }, () => {
+            console.log(this.state.locationHistory, 'It works now :)');
+        }); 
+        this.moveEquipment();
     }
 
     moveEquipment = () => {
@@ -88,26 +313,50 @@ export default class EquipmentsEdit extends React.Component {
             return
         }
         this.setState({
-            disabled: true
+            disabled: true,
+            disabledSendStorage: true
         })
         axios.post('/equipments/' + this.state.equipment._id + '/move', this.state.locationHistory).then(response => {
-            if (response.status === 200) {
+            if (response.status === 201) {
                 // console.log(response);
-                this.setState({
-                    disabled: false,
-                    locationHistory: {
-                        justification: '',
-                        locationType: '',
-                        location: ''
-                    }
-                })
-                alert("Equipamento movimentado com sucesso!")
+                // this.setState({
+                //     disabled: false,
+                //     locationHistory: {
+                //         justification: '',
+                //         locationType: '',
+                //         location: ''
+                //     }
+                // })
+                // alert("Equipamento movimentado com sucesso!")
                 this.toggle()
             }
-
         }).catch(ex => {
             alert("Opss.. Algo saiu errado");
             console.error(ex, ex.response);
+        })
+        this.moveComponents();
+    }
+
+    moveComponents = () => {
+        let locationHistory = this.state.locationHistory;
+        this.state.equipment.components.forEach((component) => {
+            axios.post('/equipments/' + component._id + '/move', locationHistory).then(response => {
+                if (response.status === 201) {
+                    // console.log(response);
+                    this.setState({
+                        disabled: false,
+                        locationHistory: {
+                            justification: '',
+                            locationType: '',
+                            location: ''
+                        }
+                    })
+                    // alert("Equipamento movimentado com sucesso!")
+                }
+            }).catch(ex => {
+                alert("Opss.. Algo saiu errado");
+                console.error(ex, ex.response);
+            })
         })
     }
 
@@ -117,11 +366,33 @@ export default class EquipmentsEdit extends React.Component {
         });
     }
 
+    toggleComponent() {
+        let availableComponents = this.state.availableComponents;
+        availableComponents.forEach((value) => {
+            value.isSelected = false;
+        });
+        this.setState({
+            selected: 0,
+            addDisabled: true,
+            modalComponent: !this.state.modalComponent,
+            availableComponents: availableComponents,
+        });
+    }
+
+    toggleVisual() {
+        this.setState({
+            modalVisual: !this.state.modalVisual,
+        });
+    }
+
     savebutton(event) {
         event.preventDefault();
-
         try {
-            axios.put('/equipment/' + this.state.equipment._id, this.state.equipment).then(response => {
+            let equipment = this.state.equipment;
+            if(!equipment.isPermanent){
+                equipment.patrimonyNumber = ''
+            }
+            axios.put('/equipment/' + equipment._id, equipment).then(response => {
                 if (response.status === 200) {
                     alert("Equipamento atualizado com sucesso!")
                 }
@@ -137,6 +408,20 @@ export default class EquipmentsEdit extends React.Component {
     }
 
     render() {
+        if (!isAdmin()) {
+			this.props.history.push('/home');
+		}
+
+        let patrimonyfield = null
+        if (this.state.equipment.isPermanent) {
+            patrimonyfield = (<FormGroup row>
+                <Label for="patrimony" sm={2}>Número de patrimonio:</Label>
+                <Col sm={2}>
+                    <Input value={this.state.equipment.patrimonyNumber} type="text" name="patrimonyNumber" id="patrimony" onChange={this.onChange} placeholder="Número Siorg" />
+                </Col>
+            </FormGroup>)
+        }
+
         return (
             <div>
                 <Header></Header>
@@ -144,6 +429,21 @@ export default class EquipmentsEdit extends React.Component {
                 <SubHeader title='Almoxarifado >> Editar Equipamento'></SubHeader>
                 <div className="margin-left" style={{ marginRight: "20px" }}>
                     <Form>
+                        <FormGroup row>
+                            <Label check>
+                                <Input type="checkbox" checked={this.state.equipment.isPermanent} name="isPermanent" onChange={() => {
+                                    let equipment = this.state.equipment
+                                    //make changes to ingredients
+                                    equipment.isPermanent = !equipment.isPermanent
+                                    this.setState({
+                                        changed: true,
+                                        equipment: equipment
+                                    })
+                                }} />{' '}
+                                Item permanente
+          					</Label>
+                        </FormGroup>
+                        {patrimonyfield}
                         <FormGroup row>
                             <Label for="siorg" sm={2}>Código do SIORG:</Label>
                             <Col sm={2}>
@@ -221,7 +521,19 @@ export default class EquipmentsEdit extends React.Component {
                                     onChange={this.onChange} />
                             </Col>
                         </FormGroup>
-                        <Button color="primary" onClick={this.toggle}>Movimentar</Button>
+                        <FormGroup row>
+                            <Label for="components" sm={2}>Componentes do Equipamento:</Label>
+                            <Col sm={2}>
+                                <Button color="primary" onClick={this.toggleComponent} disabled={this.state.disabledSubjacency}>Adicionar Componentes</Button>
+                            </Col>
+                            <Col sm={2}>
+                                <Button color="secondary" onClick={this.toggleVisual} disabled={this.state.disabledSubjacency}>Visualizar Componentes</Button>
+                            </Col>
+                        </FormGroup>
+                        <Button color="primary" onClick={this.toggle} disabled={this.state.disabledSubjacency}>Movimentar</Button>
+                        <br/>
+                        <br/>
+                        {this.subjacentEquipmentMessage()}
                         <div align="right">
                             <Button color="secondary" onClick={this.savebutton} disabled={!this.state.changed}>Salvar
                                 Alterações</Button>
@@ -272,12 +584,53 @@ export default class EquipmentsEdit extends React.Component {
                             </Container>
                         </ModalBody>
                         <ModalFooter>
+                            <Button color="secondary" onClick={this.moveEquipmentToStorage} disabled={this.state.disabledSendStorage}>Devolver ao Estoque</Button>
                             <Button color="secondary" onClick={this.moveEquipment} disabled={this.state.locationHistory.justification === '' || this.state.locationHistory.locationType === '' || this.state.locationHistory.location === '' || this.state.disabled}>Movimentar</Button>
                         </ModalFooter>
+                    </Modal>
+                    {/* {Modal to Add Comonents to Equipment} */}
+                    <Modal isOpen={this.state.modalComponent} toggle={this.toggleComponent} size="lg">
+                        <ModalHeader toggle={this.toggleComponent}>Adicionar Componentes ao Equipamento</ModalHeader>
+                        <ModalBody>
+                            <BootstrapTable 
+                                search
+                                data={this.state.availableComponents}
+                                selectRow={{
+                                    mode: 'checkbox',
+                                    clickToSelect: true,
+                                    onSelect: this.onRowSelect,
+                                }}
+                                options={{
+                                    searchField: this.CustomModalSearch,
+                                    noDataText: "Componentes não disponíveis."
+                                }}
+                            >
+                                <TableHeaderColumn dataField='_id'
+                                    tdStyle={{ width: '0%' }}
+                                    thStyle={{ width: '0%' }} dataSort={false} isKey>Key</TableHeaderColumn>
+                                <TableHeaderColumn dataField='siorg' dataSort={true}>SIORG</TableHeaderColumn>
+                                <TableHeaderColumn dataField='description' dataSort={true}>Descrição</TableHeaderColumn>
+                                <TableHeaderColumn dataField='equipmentState' dataSort={true}>Estado</TableHeaderColumn>
+                            </BootstrapTable>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={this.addComponent} disabled={this.state.addDisabled}>Adicionar</Button>
+                        </ModalFooter>
+                    </Modal>
+                    {/* {Modal for components Visualization and Deletion} */}
+                    <Modal isOpen={this.state.modalVisual} toggle={this.toggleVisual}>
+                        <ModalHeader toggle={this.toggleVisual}>Componentes do Equipamento</ModalHeader>
+                        <ModalBody>
+                            {/* <div style={{
+                                overflowY: 'auto',
+                                height: '500px',
+                            }}> */}
+                                {this.componentTableCreator()}
+                            {/* </div> */}
+                        </ModalBody>
                     </Modal>
                 </div>
             </div>
         );
-
     }
 }

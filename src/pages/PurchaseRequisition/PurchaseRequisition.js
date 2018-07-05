@@ -9,12 +9,18 @@ import Header from '../../components/Header/Header';
 // Import Routes
 import {Route, Switch} from 'react-router-dom';
 
+import { isAdmin } from '../../utils/userLogin';
+
 export default class PurchaseRequisition extends React.Component {
     // constructor(props) {
     //     super(props);
     // }
 
     render() {
+        if (!isAdmin()) {
+			this.props.history.push('/home');
+		}
+
         return (
             <div>
                 <Header/>

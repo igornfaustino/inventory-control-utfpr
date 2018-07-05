@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonGroup, Form } from 'react-bootstrap';
-import { Button, Container, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import { Button, Col, Container, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import moment from 'moment'
 import { loadAllRequisition } from './connectAPI';
 
@@ -9,8 +9,12 @@ import { BootstrapTable, SearchField, TableHeaderColumn } from 'react-bootstrap-
 
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
-import TextInput from '../common/TextInput';
 
+import TextInput from '../common/TextInput';
+import axios from 'axios';
+import NewSupplier from "./NewSupplier";
+
+import PurchaseSave from './PurchaseSave';
 
 export class PurchaseForm extends React.Component {
 
@@ -21,9 +25,9 @@ export class PurchaseForm extends React.Component {
             modal: false,
             loading: true,
             data:
-                {
-                    requisitions: []
-                },
+            {
+                requisitions: []
+            },
 
             // Validate Price
             validPrice: {
@@ -32,17 +36,26 @@ export class PurchaseForm extends React.Component {
                 average: 0
             },
 
-            requisitionItens: []
+            requisitionItens: [],
+            sectorList: [],
+            UGRList: [],
+            managementList: []
         };
         this.toggleOut = this.toggleOut.bind(this);
         this.toggleIn = this.toggleIn.bind(this);
         this.removeRequest = this.removeRequest.bind(this);
         this.AddRequest = this.AddRequest.bind(this);
+        this.onSeller = this.onSeller.bind(this);
 
     }
 
     componentWillMount() {
+        this.getSector();
+        this.getUGR();
+        this.getManagement();
+
         let data = this.props.purchase.requisitionItems;
+        console.log(data)
         let newdata = [];
         data.forEach((requisition, index) => {
             let price = 0;
@@ -89,6 +102,88 @@ export class PurchaseForm extends React.Component {
             // console.log(error)
         }
     }
+
+    //Function to get sector
+    getSector = () => {
+        axios.get('/sector').then(response => {
+            if (response.status === 200) {
+                //console.log(response);
+                let sectorPurchase = response.data.sector;
+                let sector = [];
+                sectorPurchase.forEach((_sector) => {
+                    //console.log(_status)
+                    sector.push(_sector.sector)
+                });
+                this.props.onChange({
+                    target: {
+                        name: 'sector',
+                        value: sector[0] ? sector[0] : ""
+                    }
+                })
+
+                //console.log(sector)
+                this.setState({
+                    sectorList: sector
+                })
+            }
+        }).catch(ex => {
+            console.error(ex, ex.response);
+        })
+    };
+
+    //Function to get UGR
+    getUGR = () => {
+        axios.get('/ugr').then(response => {
+            if (response.status === 200) {
+                //console.log(response);
+                let UGRPurchase = response.data.ugr;
+                let UGR = [];
+                UGRPurchase.forEach((_UGR) => {
+                    //console.log(_UGR)
+                    UGR.push(_UGR.ugr)
+                });
+                this.props.onChange({
+                    target: {
+                        name: 'UGR',
+                        value: UGR[0] ? UGR[0] : ""
+                    }
+                })
+                //console.log(sector)
+                this.setState({
+                    UGRList: UGR
+                })
+            }
+        }).catch(ex => {
+            console.error(ex, ex.response);
+        })
+    };
+
+    //Function to get Management
+    getManagement = () => {
+        axios.get('/management').then(response => {
+            if (response.status === 200) {
+                //console.log(response);
+                let managementPurchase = response.data.management;
+                let management = [];
+                managementPurchase.forEach((_management) => {
+                    //console.log(_management)
+                    management.push(_management.management)
+                });
+
+                this.props.onChange({
+                    target: {
+                        name: 'management',
+                        value: management[0] ? management[0] : ""
+                    }
+                })
+                this.setState({
+                    managementList: management
+                })
+            }
+        }).catch(ex => {
+            console.error(ex, ex.response);
+        })
+    };
 
     AddRequest() {
         this.toggleOut();
@@ -184,13 +279,7 @@ export class PurchaseForm extends React.Component {
     };
 
     isDisabled = () => {
-        return (
-            this.props.purchase.requester.length > 0 &&
-            this.props.purchase.management.length > 0 &&
-            this.props.purchase.UGR.length > 0 &&
-            this.props.purchase.sector.length > 0 &&
-            this.props.purchase.requester.length > 0
-        ) ? false : true
+        return (!this.props.purchase.requester && !this.props.purchase.sector && !this.props.purchase.UGR && !this.props.purchase.management)
     };
 
     CustonModalSearch = props => {
@@ -215,7 +304,7 @@ export class PurchaseForm extends React.Component {
                     value={this.props.edit ? 'Salvar Alterações' : 'Salvar'}
                 >
                     Salvar Alterações
-                    </Button>
+                </Button>
                 // </Container>
             )
         }
@@ -289,9 +378,11 @@ export class PurchaseForm extends React.Component {
                 <Button type='button'
                     size="sm"
                     className={`btn btn-success`}
-                    onClick={() => { this.AddRequest() }}>
+                    onClick={() => {
+                        this.AddRequest()
+                    }}>
                     Adicionar Selecionados
-          </Button>
+                </Button>
             </ButtonGroup>
         );
     }
@@ -300,17 +391,91 @@ export class PurchaseForm extends React.Component {
         return `R$ ${cell.toFixed(2)}`;
     }
 
+    newSeller(row) {
+        console.log(row);
+        this.setState({ seller: row, activeSeller: true })
+    }
+
+    seller = (cell, row, enumObject, index) => {
+        if (!row.itemSupplier)
+            return <Button color={"secundary"} onClick={() => this.newSeller(row)}> Adicionar Vendedor</Button>
+        else
+            return row.itemSupplier.name
+    }
+    moveWareHouse = (cell, row, enumObject, index) => {
+
+        let max = this.state.requisitionItens[index].qtdReceived
+        console.log(max)
+        let item = {
+            ...row,
+            qtdReceivedMax: row.qtd - max,
+            qtdReceived: 0,
+        }
+        if(item.qtdReceivedMax === 0){
+            return "Em Estoque"
+        }
+
+        return (
+            <PurchaseSave data={item} buttonLabel={"Mover"} onMove={this.onMove}/>
+        );
+
+    };
+
+    onMove = (item_id, qtd) => {
+        let i = this.state.requisitionItens.map((item) => item._id).indexOf(item_id);
+
+        let req = this.state.requisitionItens;
+        req[i].qtdReceived = qtd;
+
+        this.props.onChangeRequest(req);
+    };
+
+    onSeller(seller) {
+        let i = this.state.requisitionItens.map((item) => item._id).indexOf(this.state.seller._id)
+        this.sellerToggle()
+        let req = this.state.requisitionItens
+        req[i].itemSupplier = seller;
+
+        // console.log(this.state.requisitionItens[i])
+
+        this.props.onChangeRequest(req);
+
+        // this.setState({requisitionItens: req})
+
+    }
+
+    sellerToggle = () => {
+        this.setState({activeSeller: !this.state.activeSeller})
+    }
+
     render() {
-        // console.log(this.props.purchase.requisitionDate)
+        console.log(this.props.purchase)
+        let dataSector;
+        dataSector = this.state.sectorList.map((item, index) =>
+            <option value={item} key={index}>{item}</option>
+        );
+        dataSector.unshift(<option value='Escolha' key={-1}>Escolha</option>)
+
+        let dataUGR;
+        dataUGR = this.state.UGRList.map((item, index) =>
+            <option value={item} key={index}>{item}</option>
+        );
+        dataUGR.unshift(<option value='Escolha' key={-1}>Escolha</option>)
+
+        let dataManagement;
+        dataManagement = this.state.managementList.map((item, index) =>
+            <option value={item} key={index}>{item}</option>
+        );
+        dataManagement.unshift(<option value='Escolha' key={-1}>Escolha</option>)
+
         return (
             <Container>
                 <Form
                     style={{ marginTop: 30 }}
                 >
-
                     <TextInput
                         name="number"
-                        label="Numero da Requisição:"
+                        label="Número da Requisição:"
                         // type='text'
                         // size='4'
                         disabled={!this.props.edit}
@@ -326,13 +491,16 @@ export class PurchaseForm extends React.Component {
                         value={moment(this.props.purchase.requisitionDate).format("YYYY-MM-DD")}
                         onChange={this.props.onChange} />
 
-                    <TextInput
-                        name="management"
-                        label="Gestão:"
-                        disabled={this.props.disabled}
-                        // size='4'
-                        value={this.props.purchase.management}
-                        onChange={this.props.onChange} />
+                    <FormGroup row>
+                        <p style={{ marginTop: "10px", color: "red" }}>*</p>
+                        <Label for="managementArea" sm={2}>Gestão:</Label>
+                        <Col sm={3} style={{ marginLeft: "90px" }}>
+                            <Input type="select" name="management" id="managementArea"
+                                   onChange={this.props.onChange} value={this.props.purchase.management}>
+                                {dataManagement}
+                            </Input>
+                        </Col>
+                    </FormGroup>
 
                     <TextInput
                         name="requester"
@@ -342,21 +510,29 @@ export class PurchaseForm extends React.Component {
                         value={this.props.purchase.requester}
                         onChange={this.props.onChange} />
 
-                    <TextInput
-                        name="sector"
-                        label="Setor:"
-                        disabled={this.props.disabled}
-                        // size='4'
-                        value={this.props.purchase.sector}
-                        onChange={this.props.onChange} />
+                    <FormGroup row>
+                        <p style={{ marginTop: "10px", color: "red" }}>*</p>
+                        <Label for="typeArea" sm={2}>Setor:</Label>
+                        <Col sm={3} style={{marginLeft: "90px"}}>
+                            <Input type="select" name="sector" id="sectorArea" onChange={this.props.onChange}
+                                   value={this.props.purchase.sector}>
+                                {dataSector}
+                            </Input>
+                            {/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
+                        </Col>
+                    </FormGroup>
 
-                    <TextInput
-                        name="UGR"
-                        label="UGR:"
-                        // size='4'
-                        disabled={this.props.disabled}
-                        value={this.props.purchase.UGR}
-                        onChange={this.props.onChange} />
+                    <FormGroup row>
+                        <p style={{ marginTop: "10px", color: "red" }}>*</p>
+                        <Label for="typeArea" sm={2}>UGR:</Label>
+                        <Col sm={3} style={{marginLeft: "90px"}}>
+                            <Input type="select" name="UGR" id="ugrArea" onChange={this.props.onChange}
+                                   value={this.props.purchase.UGR}>
+                                {dataUGR}
+                            </Input>
+                            {/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
+                        </Col>
+                    </FormGroup>
 
 
                     <this.ButtonAddRequest />
@@ -375,38 +551,39 @@ export class PurchaseForm extends React.Component {
                             tdStyle={{ width: '0%' }}
                             thStyle={{ width: '0%' }} dataSort={false} isKey>key</TableHeaderColumn>
 
-                        <TableHeaderColumn dataField='description' dataSort={true} >Descrição</TableHeaderColumn>
+                        <TableHeaderColumn dataField='description' dataSort={true}>Descrição</TableHeaderColumn>
+
                         <TableHeaderColumn dataField='qtd'
                             tdStyle={{ width: '15%' }}
                             thStyle={{ width: '15%' }}
                             dataSort={true}>Quantidade</TableHeaderColumn>
 
                         <TableHeaderColumn dataField='min'
-                            dataFormat={this.priceFormatter}
-                            tdStyle={{ width: '15%' }}
-                            thStyle={{ width: '15%' }}
-                            dataSort={true}>Preço min</TableHeaderColumn>
+                                           dataFormat={this.priceFormatter}
+                                           tdStyle={{width: '15%'}}
+                                           thStyle={{width: '15%'}}
+                                           dataSort={true}>Preço Mínimo</TableHeaderColumn>
 
                         <TableHeaderColumn dataField='price'
                             dataFormat={this.priceFormatter}
                             tdStyle={{ width: '15%' }}
                             thStyle={{ width: '15%' }}
-                            dataSort={true}>Preço médio</TableHeaderColumn>
+                            dataSort={true}>Preço Médio</TableHeaderColumn>
 
-
-
-                        <TableHeaderColumn dataField='max'
-                            dataFormat={this.priceFormatter}
-                            tdStyle={{ width: '15%' }}
-                            thStyle={{ width: '15%' }}
-                            dataSort={true}>Preço máx</TableHeaderColumn>
 
                         <TableHeaderColumn tdStyle={{ width: '14%' }} thStyle={{ width: '14%' }} dataField='status'
                             dataSort={true}>Status</TableHeaderColumn>
+
+                        <TableHeaderColumn dataField='seller'
+                                           dataFormat={this.seller}
+                                           dataSort={true}>Vendedor</TableHeaderColumn>
+
+                        <TableHeaderColumn dataField='move'
+                                           dataFormat={this.moveWareHouse}
+                                           dataSort={true}>Ação</TableHeaderColumn>
                     </BootstrapTable>
 
                     <this.ButtonFinishRequest />
-
 
                 </Form>
                 <Modal isOpen={this.state.modal} toggle={this.toggleOut} size="lg"
@@ -439,20 +616,8 @@ export class PurchaseForm extends React.Component {
                                 dataFormat={this.priceFormatter}
                                 tdStyle={{ width: '15%' }}
                                 thStyle={{ width: '15%' }}
-                                dataField='minprice'
-                                dataSort={true}>Preço min</TableHeaderColumn>
-                            <TableHeaderColumn
-                                dataFormat={this.priceFormatter}
-                                tdStyle={{ width: '15%' }}
-                                thStyle={{ width: '15%' }}
                                 dataField='price'
                                 dataSort={true}>Preço médio</TableHeaderColumn>
-                            <TableHeaderColumn
-                                dataFormat={this.priceFormatter}
-                                tdStyle={{ width: '15%' }}
-                                thStyle={{ width: '15%' }}
-                                dataField='maxprice'
-                                dataSort={true}>Preço máx</TableHeaderColumn>
 
                             <TableHeaderColumn tdStyle={{ width: '14%' }} thStyle={{ width: '14%' }} dataField='status'
                                 dataSort={true}>Status</TableHeaderColumn>
@@ -460,6 +625,18 @@ export class PurchaseForm extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="danger" onClick={this.toggleOut}>Fechar</Button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal isOpen={this.state.activeSeller} toggle={this.sellerToggle} size="lg"
+
+                >
+                    <ModalHeader toggle={this.sellerToggle}>Cadastro de Vendedor</ModalHeader>
+                    <ModalBody>
+                        <NewSupplier seller={this.state.seller} onComplete={this.onSeller} />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="danger" onClick={this.sellerToggle}>Fechar</Button>
                     </ModalFooter>
                 </Modal>
             </Container>

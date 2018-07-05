@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Button, Input} from "reactstrap";
+import axios from 'axios';
 
 import HeaderLogin from '../../components/HeaderLogin/HeaderLogin';
 import './Login.css';
@@ -25,8 +26,26 @@ export default class Login extends React.Component {
 	
 	handleSubmit = event => {
 		event.preventDefault();
-		this.props.history.push('/home');
+		axios.post("authenticate", {
+			email: this.state.email,
+			password: this.state.password
+		}).then(res => {
+			console.log(res.data)
+			localStorage.setItem("admin", res.data.user.admin);
+			localStorage.setItem("token", res.data.token);
+			axios.defaults.headers = {
+				"Authorization": localStorage.getItem("token")
+			}
+			this.props.history.push('/home');
+		}).catch(ex => {
+			console.log(ex)
+			alert("Usuario não cadastrado!")
+		})
 	};
+
+	handleClick = event => {
+		this.props.history.push('/register');
+	}
 
 	render() {
 		return (
@@ -42,6 +61,7 @@ export default class Login extends React.Component {
 							onChange={this.handleChange}
 							value={this.state.email}
 							required
+							style={{marginTop: "25%"}}
 						/>
 						<Input
 							id="password"
@@ -52,6 +72,7 @@ export default class Login extends React.Component {
 							required
 						/>
 						<Button className="btn btn-info btn-color" type="Submit" block size="lg" disabled={!this.validateForm()}>Entrar</Button>
+						<Button onClick={() => {this.handleClick() }} style={{marginTop: "5%", fontSize: "0.9em"}} color="link" href="#">Não Tem Cadastro? Cadastre-se.</Button>
 						<p className="mt-5 mb-3 text-muted">&copy; 2018</p>
 					</Form>
 				</div>

@@ -1,9 +1,13 @@
 import React from 'react';
 import './Home.css';
 import Header from '../../components/Header/Header';
+import { isLoggedIn } from '../../utils/userLogin';
 
 export default class Home extends React.Component {
 	render() {
+		if(!isLoggedIn()){
+			this.props.history.push('/');
+		}
 		return (
 			<div>
 				<Header></Header>

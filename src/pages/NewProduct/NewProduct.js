@@ -1,11 +1,14 @@
 import React from 'react';
-import {Prompt} from 'react-router'
-import {Button, Col, Form, FormGroup, Input, Label} from 'reactstrap';
+import { Prompt } from 'react-router'
+import { Button, Col, Form, FormGroup, Input, Label } from 'reactstrap';
 import SubHeader from '../../components/SubHeader/SubHeader';
 import Header from '../../components/Header/Header';
 
 import './NewProduct.css';
 import axios from 'axios';
+
+import { isAdmin } from '../../utils/userLogin';
+
 /*
  - Screen for register a new equipment in the data base
  - All fields are necessary
@@ -14,158 +17,226 @@ import axios from 'axios';
 
 export default class NewProduct extends React.Component {
 
-    constructor(props) {
-        super(props);
+	constructor(props) {
+		super(props);
 
-        this.state = {
-            siorg: '',
-            buyer: '',
-            requester: '',
-            description: '',
-            origin: '',
-            type: '',
-            quantity: '',
-            state: '',
+		this.state = {
+			isPermanent: false,
+			patrimonyNumber: '',
+			siorg: '',
+			buyer: '',
+			requester: '',
+			description: '',
+			origin: '',
+			type: '',
+			typeList: [],
+			quantity: '',
+			state: '',
+			stateList: [],
 
-            formErrors: {
-                siorg: '',
-                buyer: '',
-                requester: '',
-                description: '',
-                origin: '',
-                type: '',
-                quantity: '',
-                state: ''
-            },
+			formErrors: {
+				siorg: '',
+				buyer: '',
+				requester: '',
+				description: '',
+				origin: '',
+				type: '',
+				typeList: [],
+				quantity: '',
+				state: '',
+				stateList: []
+			},
 
-            siorgValid: false,
-            buyerValid: false,
-            requesterValid: false,
-            descriptionValid: false,
-            originValid: false,
-            typeValid: false,
-            quantityValid: false,
-            stateValid: false,
-            formValid: false,
+			siorgValid: false,
+			buyerValid: false,
+			requesterValid: false,
+			descriptionValid: false,
+			originValid: false,
+			typeValid: false,
+			quantityValid: false,
+			stateValid: false,
+			formValid: false,
 
-        };
-    }
+		};
+	}
 
+	componentWillMount(){
+		this.getStatus();
+		this.getType();
+	}
 
-    // Validation Functions
-    validateField(fieldName, value) {
-        let fieldValidationErrors = this.state.formErrors;
-        let siorgValid = this.state.siorgValid;
-        let buyerValid = this.state.buyerValid;
-        let requesterValid = this.state.requesterValid;
-        let descriptionValid = this.state.descriptionValid;
-        let originValid = this.state.originValid;
-        let typeValid = this.state.typeValid;
-        let quantityValid = this.state.quantityValid;
-        let stateValid = this.state.stateValid;
+	// Validation Functions
+	validateField(fieldName, value) {
+		let fieldValidationErrors = this.state.formErrors;
+		let siorgValid = this.state.siorgValid;
+		let buyerValid = this.state.buyerValid;
+		let requesterValid = this.state.requesterValid;
+		let descriptionValid = this.state.descriptionValid;
+		let originValid = this.state.originValid;
+		let typeValid = this.state.typeValid;
+		let quantityValid = this.state.quantityValid;
+		let stateValid = this.state.stateValid;
 
-        switch (fieldName) {
-            case 'siorg':
-                let siorgNumber = true;
-                let aux;
-                for (let i in value) {
-                    aux = parseInt(value[i], 10);
-                    if (isNaN(aux)) {
-                        siorgNumber = false;
-                        break;
-                    }
-                }
-                siorgValid = value.length >= 0 && siorgNumber;
-                fieldValidationErrors.siorg = siorgValid ? '' : 'Campo deve ser preenchido!';
-                break;
-            case 'buyer':
-                buyerValid = value.length >= 0;
-                fieldValidationErrors.buyer = buyerValid ? '' : 'Campo deve ser preenchido!';
-                break;
-            case 'requester':
-                requesterValid = value.length >= 0;
-                fieldValidationErrors.requester = requesterValid ? '' : 'Campo deve ser preenchido!';
-                break;
-            case 'description':
-                descriptionValid = value.length >= 0;
-                fieldValidationErrors.description = descriptionValid ? '' : 'Campo deve ser preenchido!';
-                break;
-            case 'origin':
-                originValid = value.length >= 0;
-                fieldValidationErrors.origin = originValid ? '' : 'Campo deve ser preenchido!';
-                break;
-            case 'type':
-                typeValid = value.length >= 0;
-                fieldValidationErrors.type = typeValid ? '' : 'Campo deve ser preenchido!';
-                break;
-            case 'quantity':
-                quantityValid = value.length >= 0;
-                fieldValidationErrors.quantity = quantityValid ? '' : 'Campo deve ser preenchido!';
-                break;
-            case 'state':
-                stateValid = value.length >= 0;
-                fieldValidationErrors.state = stateValid ? '' : 'Campo deve ser preenchido!';
-                break;
-            default:
-                break;
-        }
-        this.setState({
-            formErrors: fieldValidationErrors,
-            siorgValid: siorgValid,
-            buyerValid: buyerValid,
-            requesterValid: requesterValid,
-            descriptionValid: descriptionValid,
-            originValid: originValid,
-            typeValid: typeValid,
-            quantityValid: quantityValid,
-            stateValid: stateValid
-        }, this.validateForm);
+		switch (fieldName) {
+			case 'siorg':
+				let siorgNumber = true;
+				let aux;
+				for (let i in value) {
+					aux = parseInt(value[i], 10);
+					if (isNaN(aux)) {
+						siorgNumber = false;
+						break;
+					}
+				}
+				siorgValid = value.length >= 0 && siorgNumber;
+				fieldValidationErrors.siorg = siorgValid ? '' : 'Campo deve ser preenchido!';
+				break;
+			case 'buyer':
+				buyerValid = value.length >= 0;
+				fieldValidationErrors.buyer = buyerValid ? '' : 'Campo deve ser preenchido!';
+				break;
+			case 'requester':
+				requesterValid = value.length >= 0;
+				fieldValidationErrors.requester = requesterValid ? '' : 'Campo deve ser preenchido!';
+				break;
+			case 'description':
+				descriptionValid = value.length >= 0;
+				fieldValidationErrors.description = descriptionValid ? '' : 'Campo deve ser preenchido!';
+				break;
+			case 'origin':
+				originValid = value.length >= 0;
+				fieldValidationErrors.origin = originValid ? '' : 'Campo deve ser preenchido!';
+				break;
+			case 'type':
+				typeValid = value.length >= 0;
+				fieldValidationErrors.type = typeValid ? '' : 'Campo deve ser preenchido!';
+				break;
+			case 'quantity':
+				quantityValid = value.length >= 0;
+				fieldValidationErrors.quantity = quantityValid ? '' : 'Campo deve ser preenchido!';
+				break;
+			case 'state':
+				stateValid = value.length >= 0;
+				fieldValidationErrors.state = stateValid ? '' : 'Campo deve ser preenchido!';
+				break;
+			default:
+				break;
+		}
+		this.setState({
+			formErrors: fieldValidationErrors,
+			siorgValid: siorgValid,
+			buyerValid: buyerValid,
+			requesterValid: requesterValid,
+			descriptionValid: descriptionValid,
+			originValid: originValid,
+			typeValid: typeValid,
+			quantityValid: quantityValid,
+			stateValid: stateValid
+		}, this.validateForm);
 
-    }
+	}
 
-    validateForm() {
-        this.setState({
-            formValid: this.state.siorgValid && this.state.buyerValid && this.state.requesterValid &&
-            this.state.descriptionValid && this.state.originValid && this.state.typeValid && this.state.quantityValid
-            && this.state.stateValid
-        });
-    }
+	validateForm() {
+		this.setState({
+			formValid: this.state.siorgValid && this.state.buyerValid && this.state.requesterValid &&
+				this.state.descriptionValid && this.state.originValid && this.state.typeValid && this.state.quantityValid
+				&& this.state.stateValid
+		});
+	}
 
-    handleUserInput(e) {
-        const name = e.target.name;
-        const value = e.target.value;
+	handleUserInput(e) {
+		const name = e.target.name;
+		const value = e.target.value;
 
-        this.setState({[name]: value}, () => {
-            this.validateField(name, value)
-        });
+		this.setState({ [name]: value }, () => {
+			this.validateField(name, value)
+		});
 
-    }
+	}
 
-    //Function to connect with the database and save a new equipment
-    submitRequest = () => {
-        if (!this.state.siorgValid || !this.state.buyerValid || !this.state.requesterValid || !this.state.descriptionValid
-            || !this.state.originValid || !this.state.typeValid || !this.state.quantityValid || !this.state.stateValid) {
-            alert("Preencha todos os campos");
-            return;
-        }
+	//Function to get item status
+	getStatus = () => {
+		axios.get('/status').then(response => {
+			if (response.status === 200) {
+				let resStatus = response.data.status;
+				let status = [];
+				resStatus.forEach((_status) => {
+					console.log(_status)
+					status.push(_status.status)
+				});
 
-        // console.log(this.state)
+				console.log(status)
+				this.setState({
+					stateList: status
+				})
+			}
+		}).catch(ex => {
+			console.error(ex, ex.response);
+		})
+	};
 
-		for (var i=0; i<this.state.quantity; i++){
-            
-			axios.post('/equipment/', {
-				siorg: this.state.siorg,
-				buyer: this.state.buyer,
-				solicitor: this.state.requester,
-				description: this.state.description,
-				origin: this.state.origin,
-				equipmentType: this.state.type,
-				equipmentState: this.state.state,
-			}).then(res => {
-				// console.log(res)
-				if (res.status === 200) {
+	//Function to get item type
+	getType = () => {
+		axios.get('/type').then(response => {
+			if (response.status === 200) {
+				let typeItem = response.data.type;
+				let type = [];
+				typeItem.forEach((_type) => {
+					//console.log(_status)
+					type.push(_type.type)
+				});
 
-				} else {
+				//console.log(status)
+				this.setState({
+					typeList: type
+				})
+			}
+		}).catch(ex => {
+			console.error(ex, ex.response);
+		})
+	};
+
+	//Function to connect with the database and save a new equipment
+	submitRequest = async () => {
+		if (!this.state.siorgValid || !this.state.buyerValid || !this.state.requesterValid || !this.state.descriptionValid
+			|| !this.state.originValid || !this.state.typeValid || !this.state.quantityValid || !this.state.stateValid) {
+			alert("Preencha todos os campos");
+			return;
+		}
+
+		this.setState({
+			siorgValid: false,
+			buyerValid: false,
+			requesterValid: false,
+			descriptionValid: false,
+			originValid: false,
+			typeValid: false,
+			quantityValid: false,
+			stateValid: false,
+			formValid: false,
+		});
+
+		// console.log(this.state)
+		try {
+
+			for (var i = 0; i < this.state.quantity; i++) {
+
+				let res = await axios.post('/equipment/', {
+					isPermanent: this.state.isPermanent,
+					patrimonyNumber: this.state.isPermanent ? this.state.patrimonyNumber : '',
+					siorg: this.state.siorg,
+					buyer: this.state.buyer,
+					solicitor: this.state.requester,
+					description: this.state.description,
+					origin: this.state.origin,
+					equipmentType: this.state.type,
+					equipmentState: this.state.state,
+				})
+				// let resState = await axios.post('/status/', {
+				// 	equipmentState: this.state.state,
+				// })
+
+				if (res.status !== 201) {
 					alert("Opss.. algo saiu errado");
 					this.setState({
 						siorgValid: true,
@@ -179,44 +250,73 @@ export default class NewProduct extends React.Component {
 						formValid: true,
 					});
 				}
-			}).catch(err => {
-				// console.log(err)
-				alert("Opss.. algo saiu errado");
-				this.setState({
-					siorgValid: true,
-					buyerValid: true,
-					requesterValid: true,
-					descriptionValid: true,
-					originValid: true,
-					typeValid: true,
-					quantityValid: true,
-					stateValid: true,
-					formValid: true,
-				});
+			}
+
+			this.setState({
+				siorg: '',
+				buyer: '',
+				requester: '',
+				description: '',
+				origin: '',
+				type: '',
+				quantity: '',
+				state: '',
+				isPermanent: false,
+				patrimonyNumber: '',
+
+				formErrors: { siorg: '', buyer: '', requester: '', description: '', origin: '', type: '', quantity: '', state: '' },
+
+			});
+			alert("Produto cadastrado")
+		}
+		catch (ex) {
+			console.error(ex)
+			alert("Opss.. algo saiu errado");
+			this.setState({
+				siorgValid: true,
+				buyerValid: true,
+				requesterValid: true,
+				descriptionValid: true,
+				originValid: true,
+				typeValid: true,
+				quantityValid: true,
+				stateValid: true,
+				formValid: true,
 			});
 		}
-		
-		this.setState({
-			siorg: '',
-			buyer: '',
-			requester: '',
-			description: '',
-			origin: '',
-			type: '',
-			quantity: '',
-			state: '',
-			
-			formErrors: { siorg: '', buyer: '', requester: '', description: '', origin: '', type: '', quantity: '', state: '' },
-			
-		});
-		alert("Solicitação cadastrada")
-		
 	}
 
-    render(){
+	render() {
+		if (!isAdmin()) {
+			this.props.history.push('/home');
+		}
+
+		let data;
+		console.log(this.state.stateList)
+		data = this.state.stateList.map((item, index) =>
+			<option value={item} key={index}>{item}</option>
+		);
+		data.unshift(<option value={'Escolha'} key={-1}>Escolha</option>)
+
+		let dataType;
+		dataType = this.state.typeList.map((item, index) =>
+			<option value={item} key={index}>{item}</option>
+		);
+		dataType.unshift(<option value={'Escolha'} key={-1}>Escolha</option>)
 
 		const { siorgValid, buyerValid, requesterValid, descriptionValid, originValid, typeValid, quantityValid, stateValid } = this.state
 		// console.log(this.state)
+
+		let patrimonyfield = null
+		if (this.state.isPermanent) {
+			patrimonyfield = (<FormGroup row>
+				<Label style={{ marginLeft: "7px" }} for="patrimony" sm={2}>Número de patrimônio:</Label>
+				<Col sm={2}>
+					<Input value={this.state.patrimonyNumber} type="text" name="patrimonyNumber" id="patrimony" onChange={(event) => this.handleUserInput(event)} placeholder="Número de patrimônio" />
+				</Col>
+			</FormGroup>)
+		}
+
 		return (
 			<div>
 				{/* Alert to show that there are things unsaved */}
@@ -230,6 +330,13 @@ export default class NewProduct extends React.Component {
 				<SubHeader title="Cadastro de item"></SubHeader>
 				<div className="margin-left">
 					<Form>
+						<FormGroup row>
+							<Label sm={2} check style={{ marginTop: "10px", marginLeft: "7px" }}>
+								<Input type="checkbox" checked={this.state.isPermanent} name="isPermanent" onChange={() => this.setState({ isPermanent: !this.state.isPermanent })} />{' '}
+								Item permanente
+          					</Label>
+						</FormGroup>
+						{patrimonyfield}
 						<FormGroup row>
 							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 							<Label for="siorgCode" sm={2}>Código do SIORG:</Label>
@@ -271,7 +378,10 @@ export default class NewProduct extends React.Component {
 							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 							<Label for="typeArea" sm={2}>Tipo:</Label>
 							<Col sm={3}>
-								<Input value={this.state.type} type="text" name="type" id="typeArea" onChange={(event) => this.handleUserInput(event)} placeholder="Tipo do produto" />
+								<Input type="select" name="type" id="type" onChange={(event) => this.handleUserInput(event)} value={this.state.type}>
+									{dataType}
+								</Input>
+								{/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
 							</Col>
 						</FormGroup>
 						<FormGroup row>
@@ -284,8 +394,11 @@ export default class NewProduct extends React.Component {
 						<FormGroup row>
 							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 							<Label for="stateArea" sm={2}>Status:</Label>
-							<Col sm={2}>
-								<Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" />
+							<Col sm={3}>
+								<Input type="select" name="state" id="state" onChange={(event) => this.handleUserInput(event)} value={this.state.state}>
+									{data}
+								</Input>
+								{/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
 							</Col>
 						</FormGroup>
 					</Form>
@@ -298,5 +411,5 @@ export default class NewProduct extends React.Component {
 			</div>
 		);
 
-    }
+	}
 }

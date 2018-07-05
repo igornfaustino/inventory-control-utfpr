@@ -36,6 +36,8 @@ export async function loadPurchaseRequisition(id) {
         if (response.status === 200) {
             let purchase = response.data.purchase;
             // console.log(response.data)
+
+            console.log(response.data)
             purchase.requisitionItems = prepareRequistionItems(purchase.requisitionItems);
             return ({
                 purchases: purchase,
@@ -56,7 +58,7 @@ export async function savePurchaseRequisition(purchase) {
     newpurchase.requisitionItems = newItem;
 
     return await axios.post('/purchase', newpurchase).then(response => {
-        if (response.status === 200) {
+        if (response.status === 201) {
             alert("Adicionado com sucesso!");
             return (response.data._id)
         }
@@ -71,20 +73,16 @@ export async function updatePurchaseRequisition(purchase) {
     let newpurchase = purchase;
     let newItem = [];
     purchase.requisitionItems.forEach((item) => {
-        newItem.push({ item: item._id, itemSupplier: item.itemSupplier })
+        newItem.push({ item: item._id, itemSupplier: item.itemSupplier, qtdReceived: item.qtdReceived })
     });
     newpurchase.requisitionItems = newItem;
 
-    return await axios.put('/purchase/' + newpurchase._id, newpurchase).then(response => {
-        if (response.status === 200) {
-            alert("Atualizado com sucesso!");
-            return (response.data._id)
-        }
-    })
-        .catch(ex => {
-            alert("Não Foi possivel conectar ao servidor");
-            console.error(ex, ex.response);
-        })
+    try {
+        return await axios.put('/purchase/' + newpurchase._id, newpurchase)
+    } catch (ex) {
+        alert("Não Foi possivel conectar ao servidor");
+        console.error(ex, ex.response);
+    }
 }
 
 function prepareRequistionItems(requisitionItems) {
@@ -100,6 +98,7 @@ function prepareRequistionItems(requisitionItems) {
                     description: item.item.description,
                     justification: item.item.justification,
                     qtd: item.item.qtd,
+                    qtdReceived: !item.qtdReceived? 0 :Number(item.qtdReceived),
                     quotation: item.item.quotation,
                     status: item.item.status,
                     itemSupplier: item.itemSupplier

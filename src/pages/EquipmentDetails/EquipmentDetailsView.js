@@ -8,6 +8,7 @@ import axios from 'axios';
 import Header from '../../components/Header/Header';
 
 import SubHeader from '../../components/SubHeader/SubHeader';
+import { isAdmin } from '../../utils/userLogin';
 
 export default class EquipmentDetailsView extends React.Component {
     constructor(props) {
@@ -42,6 +43,10 @@ export default class EquipmentDetailsView extends React.Component {
     }
 
     render() {
+        if (!isAdmin()) {
+			this.props.history.push('/home');
+		}
+
         let data = (
             <div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
                 <ClipLoader

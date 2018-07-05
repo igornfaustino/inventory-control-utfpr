@@ -50,6 +50,7 @@ export default class ViewPurchase extends React.Component {
         if (this.state.loading === false) {
             data =
                 (<PurchasePrintView
+                    history={this.props.history}
                     purchase={this.state.data.purchase}
                 />)
         }

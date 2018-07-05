@@ -28,6 +28,9 @@ export default class FormRequest extends React.Component {
         super(props);
 
         this.state = {
+            stateList: [],
+            typeList: [],            
+
             // edit fields
             status: 'Pendente',
             changeJustification: '',
@@ -63,8 +66,52 @@ export default class FormRequest extends React.Component {
         };
     }
 
+    //Function to get item status
+	getStatus = () => {
+		axios.get('/status').then(response => {
+			if (response.status === 200) {
+				let resStatus = response.data.status;
+				let status = [];
+				resStatus.forEach((_status) => {
+					console.log(_status)
+					status.push(_status.status)
+				});
 
+				console.log(status)
+				this.setState({
+					stateList: status
+				})
+			}
+		}).catch(ex => {
+			console.error(ex, ex.response);
+		})
+	};
+
+	//Function to get item type
+	getType = () => {
+		axios.get('/type').then(response => {
+			if (response.status === 200) {
+				let typeItem = response.data.type;
+				let type = [];
+				typeItem.forEach((_type) => {
+					//console.log(_status)
+					type.push(_type.type)
+				});
+
+				//console.log(status)
+				this.setState({
+					typeList: type
+				})
+			}
+		}).catch(ex => {
+			console.error(ex, ex.response);
+		})
+    };
+    
     componentWillMount() {
+        this.getStatus();
+        this.getType();
+
         if (this.props.requisition) {
             let price = this.state.validPrice;
 
@@ -229,8 +276,13 @@ export default class FormRequest extends React.Component {
             if (prices[i].requisitionType.toLocaleUpperCase() === 'PDF') {
                 let formData = new FormData();
                 formData.append('file', prices[i].rawFile);
-                const file = await axios.post('/file/', formData);
-                prices[i].reference = file.data.fileId
+                const file = await axios.post('/file/', formData, {
+                    headers: {
+                        "Authorization": localStorage.getItem("token")
+                    }
+                });
+                if(file.status === 201)
+                    prices[i].reference = file.data.fileId
             }
             delete prices[i].file;
             delete prices[i].rawFile
@@ -247,8 +299,13 @@ export default class FormRequest extends React.Component {
             if (prices[i].rawFile) {
                 let formData = new FormData();
                 formData.append('file', prices[i].rawFile);
-                const file = await axios.post('/file/', formData);
-                prices[i].reference = file.data.fileId
+                const file = await axios.post('/file/', formData, {
+                    headers: {
+                        "Authorization": localStorage.getItem("token")
+                    }
+                });
+                if(file.status === 201)                
+                    prices[i].reference = file.data.fileId
             }
             delete prices[i].file;
             delete prices[i].rawFile
@@ -279,7 +336,7 @@ export default class FormRequest extends React.Component {
             qtd: this.state.quantity,
             quotation: await this.preparePrice()
         }).then(res => {
-            if (res.status === 200) {
+            if (res.status === 201) {
                 alert("Solicitação cadastrada");
                 this.setState({
                     siorg: '',
@@ -336,7 +393,7 @@ export default class FormRequest extends React.Component {
         let quotation = this.state.quotation;
         let file = quotation[idx].reference;
         axios.delete('/file/' + file).then(res => {
-            if (res.status === 200) {
+            if (res.status === 204) {
                 quotation[idx].reference = '';
                 this.setState({
                     quotation
@@ -417,33 +474,39 @@ export default class FormRequest extends React.Component {
     };
 
     render() {
+        let dataType;
+		dataType = this.state.typeList.map((item, index) =>
+			<option value={item} key={index}>{item}</option>
+        );
+
+        let data;
+		console.log(this.state.stateList)
+		data = this.state.stateList.map((item, index) =>
+			<option value={item} key={index}>{item}</option>
+		);
+        
         const {descriptionValid, quantityValid, justifyValid} = this.state;
 
         // Only shows if in edit screen
         const edit = this.state.edit ? (
             <div>
-                <FormGroup row style={marginRight}>
-                    <Label for="descriptionArea" sm={2}>Status:</Label>
-                    <Col sm={7}>
-                        <Input type="select" name="status" id="status" onChange={(event) => this.handleUserInput(event)}
-                               value={this.state.status}>
-                            <option value="Pendente">Pendente</option>
-                            <option value="Cancelado">Cancelado</option>
-                            <option value="Aprovado">Aprovado</option>
-                            <option value="Em estoque">Em estoque</option>
-                            {/* <option>5</option> */}
+                <FormGroup row>
+                    {/* <p style={{ marginTop: "10px", color: "red" }}>*</p> */}
+                    <Label for="stateArea" sm={2}>Status:</Label>
+                    <Col sm={3}>
+                        <Input type="select" name="status" id="statusArea" onChange={(event) => this.handleUserInput(event)} value={this.state.statusArea}>
+                            {data}
                         </Input>
+                        {/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
                     </Col>
-                </FormGroup>
-                <FormGroup row style={marginRight}>
-                    <Label for="descriptionArea" sm={2}>Tipo do Item:</Label>
-                    <Col sm={7}>
-                        <Input type="select" name="itemType" id="status"
-                               onChange={(event) => this.handleUserInput(event)} value={this.state.itemType}>
-                            <option value="Eletronico">Eletronico</option>
-                            <option value="Escolar">Escolar</option>
-                            {/* <option>5</option> */}
+				</FormGroup>
+                <FormGroup row>
+                    <Label for="typeArea" sm={2}>Tipo do Item:</Label>
+                    <Col sm={3}>
+                        <Input type="select" name="type" id="typeArea" onChange={(event) => this.handleUserInput(event)} value={this.state.type}>
+                            {dataType}
                         </Input>
+                        {/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
                     </Col>
                 </FormGroup>
                 <hr/>
@@ -545,11 +608,12 @@ export default class FormRequest extends React.Component {
                         </FormGroup>
                         <div className={`form-group${this.errorClass(this.state.formErrors.description)}`}>
                             <FormGroup row style={marginRight}>
+                                <p style={{ marginTop: "10px", marginLeft: "7px"}}></p>
                                 <Label sm={2}>Siorg:</Label>
                                 <Col sm={7}>
                                     <Input value={this.state.siorg} type="text" name="siorg"
                                            onChange={(event) => this.handleUserInput(event)}
-                                           placeholder="Numero do SIORG"/>
+                                           placeholder="Número do SIORG"/>
                                 </Col>
                             </FormGroup>
                         </div>

@@ -2,8 +2,6 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import { ClipLoader } from 'react-spinners';
 
-import CSVReader from "react-csv-reader";
-
 import '../Pages.css';
 import './Products.css';
 
@@ -15,6 +13,7 @@ import axios from 'axios';
 import moment from 'moment';
 
 import { sleep } from '../../utils/sleep'
+import { isLoggedIn } from '../../utils/userLogin'
 
 
 export default class Products extends React.Component {
@@ -22,7 +21,6 @@ export default class Products extends React.Component {
 		super(props);
 		this.handleClick = this.handleClick.bind(this);
 		this.state = {
-			canUpload: false,
 			loading: true,
 			items: [],
 
@@ -31,9 +29,7 @@ export default class Products extends React.Component {
 				min: 0.6,
 				max: 1.3,
 				average: 0
-			},
-
-			csv: null
+			}
 		};
 	}
 
@@ -56,6 +52,7 @@ export default class Products extends React.Component {
 						price.average = item.quotation.map((x) => x.price).reduce((a, b) => a + b, 0) / item.quotation.length;
 					// console.log()
 					price.average = price.average ? price.average : 0;
+					console.log(item)
 					items.push({
 						_id: item._id,
 						siorg: item.siorg,
@@ -89,71 +86,11 @@ export default class Products extends React.Component {
 		})
 	}
 
-	handleForce = data => {
-		let body = data.slice(0); // make copy
-		body.splice(0, 1);
-		let header = data[0];
-		header.forEach((value, id) => {
-			if (value.toLocaleLowerCase() === 'descrição' || value.toLocaleLowerCase() === 'descricao' || value.toLocaleLowerCase() === 'description') {
-				header[id] = 'description'
-			} else if (value.toLocaleLowerCase() === 'qtd' || value.toLocaleLowerCase() === 'quantidade') {
-				header[id] = 'qtd'
-			} else if (value.toLocaleLowerCase() === 'siorg') {
-				header[id] = 'siorg'
-			} else if (value.toLocaleLowerCase() === 'date' || value.toLocaleLowerCase() === 'data') {
-				header[id] = 'date'
-			} else if (value.toLocaleLowerCase() === 'status' || value.toLocaleLowerCase() === 'situação') {
-				header[id] = 'status'
-			} else {
-				header[id] = ''
-			}
-		});
-
-		let csv = [];
-		body.forEach((value, id) => {
-			let object = {};
-			if (value !== '' && value.length !== 1) {
-				value.forEach((value, id) => {
-					if (header[id] !== '')
-						object[header[id]] = value
-				});
-				csv.push(object)
-			}
-		});
-
-		this.setState({
-			csv,
-			canUpload: true
-		});
-	};
-
-	submitSheet = async () => {
-		this.setState({
-			canUpload: false
-		});
-		let { csv } = this.state;
-		let error = [];
-		for (let i = 0; i < csv.length; i++) {
-			try {
-				let res = await axios.post('/requisition', csv[i]);
-				if (res.status !== 200) {
-					error.push(i + 1)
-				}
-			}
-			catch (ex) {
-				error.push(i + 1)
-			}
-		}
-
-		if (error.length === 0) {
-			alert('Planilha importada com sucesso');
-			window.location.reload();
-		} else {
-			alert('As segintes linhas não foram inseridas com sucesso' + error.toString())
-		}
-	};
-
 	render() {
+		if (!isLoggedIn()) {
+            this.props.history.push('/');
+        }
+
 		let data = (!this.state.loading) ?
 			<TableList header={['SIORG', 'Descrição', 'Qtd', 'Data', 'Status', '']}
 				items={this.state.items} /> :
@@ -172,24 +109,7 @@ export default class Products extends React.Component {
 				/>
 				<div>
 					{data}
-					<div align="left" className="margin-left">
-						<div className="margin-left-small">
-							<p>Importe os dados da solicitação de uma planilha CSV</p>
-						</div>
 
-						<CSVReader
-							cssClass="react-csv-input"
-							onFileLoaded={this.handleForce}
-						/>
-
-						<Button disabled={!this.state.canUpload} type="button" color="secondary"
-							style={{ marginBottom: '5px' }} className="btn btn-primary margin-top" onClick={() => {
-								this.submitSheet()
-							}}>
-							Enviar planilha
-                        </Button>
-
-					</div>
 				</div>
 			</div>
 		);

@@ -1,10 +1,12 @@
 import React from 'react';
 import '../Home/Home.css';
 import FormRequest from '../../components/FormRequest/FormRequest';
-import {loadRequisition} from '../../components/PurchaseRequisition/connectAPI';
-import {ClipLoader} from 'react-spinners';
+import { loadRequisition } from '../../components/PurchaseRequisition/connectAPI';
+import { ClipLoader } from 'react-spinners';
 
 import Header from '../../components/Header/Header';
+
+import { isLoggedIn } from '../../utils/userLogin'
 
 export default class NewRequest extends React.Component {
 
@@ -37,13 +39,17 @@ export default class NewRequest extends React.Component {
         }
         else {
             this.setState(
-                {loading: false}
+                { loading: false }
             )
         }
     }
 
     render() {
-        let data = (<div className='sweet-loading' style={{display: 'flex', justifyContent: 'center', margin: 100}}>
+        if (!isLoggedIn()) {
+            this.props.history.push('/');
+        }
+
+        let data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
             <ClipLoader
                 color={'#123abc'}
                 loading={this.state.loading}
@@ -53,11 +59,11 @@ export default class NewRequest extends React.Component {
             data = <FormRequest
                 location={this.props.location}
                 requisition={this.state.requisition}
-                title={"Nova Solicitação"}/>
+                title={"Nova Solicitação"} />
         }
         return (
             <div>
-                <Header/>
+                <Header />
                 {data}
             </div>
         )

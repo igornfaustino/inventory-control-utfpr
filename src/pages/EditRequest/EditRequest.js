@@ -6,46 +6,52 @@ import { loadRequisition } from "../../components/PurchaseRequisition/connectAPI
 import { ClipLoader } from 'react-spinners';
 import Header from '../../components/Header/Header';
 
+import { isAdmin } from '../../utils/userLogin';
+
 export default class EditRequest extends React.Component {
 
-	constructor(props) {
+    constructor(props) {
         super(props);
 
-        this.state={
-            loading:true,
-            requisition:{}
+        this.state = {
+            loading: true,
+            requisition: {}
         };
-        this.componentWillMount=this.componentWillMount.bind(this)
+        this.componentWillMount = this.componentWillMount.bind(this)
     }
     componentWillMount() {
-        try{
-            loadRequisition(this.props.match.params.id).then((value)=>{
+        try {
+            loadRequisition(this.props.match.params.id).then((value) => {
                 this.setState(
-                {
-                  requisition:value.requisition,
-                  loading : value.loading
-                }
-              )
+                    {
+                        requisition: value.requisition,
+                        loading: value.loading
+                    }
+                )
             })
-          }
-          catch(error){
-            // console.log(error)
-          }
-    }
-    render(){
-        let data=(<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
-        <ClipLoader
-            color={'#123abc'}
-            loading={this.state.loading}
-        />
-    </div>);
-        if(this.state.loading===false){
-            data=<FormRequest 
-                location={this.props.location} 
-                requisition={this.state.requisition} 
-                title={"Editar Solicitação"}/>
         }
-        return(
+        catch (error) {
+            // console.log(error)
+        }
+    }
+    render() {
+        if (!isAdmin()) {
+            this.props.history.push('/home');
+        }
+
+        let data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
+            <ClipLoader
+                color={'#123abc'}
+                loading={this.state.loading}
+            />
+        </div>);
+        if (this.state.loading === false) {
+            data = <FormRequest
+                location={this.props.location}
+                requisition={this.state.requisition}
+                title={"Editar Solicitação"} />
+        }
+        return (
             <div>
                 <Header></Header>
                 {data}

@@ -31,10 +31,16 @@
      margin-bottom: -1px;
      border-bottom-right-radius: 0;
      border-bottom-left-radius: 0;
-     margin-top: 30%;
+     margin-top: 2%;
    }
+   .form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-top: 25%;
+  }
    .form-signin input[type="password"] {
-     margin-bottom: 10px;
+     margin-bottom: 18px;
      border-top-left-radius: 0;
      border-top-right-radius: 0;
      margin-top: 2%;
