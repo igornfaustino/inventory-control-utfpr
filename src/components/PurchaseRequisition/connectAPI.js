@@ -73,7 +73,7 @@ export async function updatePurchaseRequisition(purchase) {
     let newpurchase = purchase;
     let newItem = [];
     purchase.requisitionItems.forEach((item) => {
-        newItem.push({ item: item._id, itemSupplier: item.itemSupplier })
+        newItem.push({ item: item._id, itemSupplier: item.itemSupplier, qtdReceived: item.qtdReceived })
     });
     newpurchase.requisitionItems = newItem;
 
@@ -98,7 +98,7 @@ function prepareRequistionItems(requisitionItems) {
                     description: item.item.description,
                     justification: item.item.justification,
                     qtd: item.item.qtd,
-                    qtdReceived: item.item.qtdReceived,
+                    qtdReceived: item.qtdReceived,
                     quotation: item.item.quotation,
                     status: item.item.status,
                     itemSupplier: item.itemSupplier

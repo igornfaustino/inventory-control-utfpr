@@ -55,6 +55,7 @@ export class PurchaseForm extends React.Component {
         this.getManagement();
 
         let data = this.props.purchase.requisitionItems;
+        console.log(data)
         let newdata = [];
         data.forEach((requisition, index) => {
             let price = 0;
@@ -386,9 +387,12 @@ export class PurchaseForm extends React.Component {
             return row.itemSupplier.name
     }
     moveWareHouse = (cell, row, enumObject, index) => {
+
+        let max = this.state.requisitionItens[index].qtdReceived
+        console.log(max)
         let item = {
             ...row,
-            qtdReceivedMax: row.qtd - (!this.state.requisitionItens[index].qtdReceived ? 0 : this.state.requisitionItens[index].qtdReceived),
+            qtdReceivedMax: row.qtd - max,
             qtdReceived: 0,
         }
         if(item.qtdReceivedMax === 0){

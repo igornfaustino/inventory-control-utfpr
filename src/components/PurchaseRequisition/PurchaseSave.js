@@ -34,7 +34,7 @@ export default class PurchaseSave extends React.Component {
             equipmentState: '',
             origin: "Compra",
             equipmentType: props.itemType,
-            quantity: props.qtd,});
+            quantity: props.qtdReceivedMax,});
     }
 
     onChange = (event) => {
