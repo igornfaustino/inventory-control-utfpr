@@ -1,6 +1,7 @@
 import React from 'react';
 import '../../pages/Pages.css';
 import SubHeader from '../../components/SubHeader/SubHeader';
+import PurchaseSave from './PurchaseSave';
 
 import { updatePurchaseRequisition, loadPurchaseRequisition } from './connectAPI';
 import { ClipLoader } from 'react-spinners';
@@ -8,6 +9,7 @@ import PurchaseForm from './PurchaseForm';
 import axios from 'axios';
 
 import { sleep } from '../../utils/sleep'
+
 
 export default class EditPurchase extends React.Component {
     constructor(props) {
@@ -65,7 +67,9 @@ export default class EditPurchase extends React.Component {
             const axiosRes = updatePurchaseRequisition(this.state.data.purchase)
             axiosRes.then(res => {
                 if (res.status === 200) {
+                    console.log(res.data)
                     alert("Compra Atualizada!")
+
                     let notifyEmail = this.state.data.purchase.requisitionItems.filter((value) => {
                         for (let requisition of this.state.requisition) {
                             if (requisition._id === value.item)

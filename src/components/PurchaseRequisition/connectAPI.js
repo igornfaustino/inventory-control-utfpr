@@ -36,6 +36,8 @@ export async function loadPurchaseRequisition(id) {
         if (response.status === 200) {
             let purchase = response.data.purchase;
             // console.log(response.data)
+
+            console.log(response.data)
             purchase.requisitionItems = prepareRequistionItems(purchase.requisitionItems);
             return ({
                 purchases: purchase,
@@ -71,7 +73,7 @@ export async function updatePurchaseRequisition(purchase) {
     let newpurchase = purchase;
     let newItem = [];
     purchase.requisitionItems.forEach((item) => {
-        newItem.push({ item: item._id, itemSupplier: item.itemSupplier })
+        newItem.push({ item: item._id, itemSupplier: item.itemSupplier, qtdReceived: item.qtdReceived })
     });
     newpurchase.requisitionItems = newItem;
 
@@ -96,6 +98,7 @@ function prepareRequistionItems(requisitionItems) {
                     description: item.item.description,
                     justification: item.item.justification,
                     qtd: item.item.qtd,
+                    qtdReceived: !item.qtdReceived? 0 :Number(item.qtdReceived),
                     quotation: item.item.quotation,
                     status: item.item.status,
                     itemSupplier: item.itemSupplier

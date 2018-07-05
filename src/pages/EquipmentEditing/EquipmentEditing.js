@@ -47,12 +47,14 @@ export default class EquipmentsEdit extends React.Component {
                 equipmentState: '',
                 components: [],
             },],
+            isSubjacentBy: false,
             changed: false,
             modal: false,
             disabled: false,
             addDisabled: true,
             modalComponent: false,
             modalVisual: false,
+            disabledSubjacency: false,
             disabledSendStorage: false,
             selected: 0,
         };
@@ -80,6 +82,7 @@ export default class EquipmentsEdit extends React.Component {
                         });
                     }
                     this.setState({
+                        isSubjacentBy: false,
                         equipment: response.data.equipment,
                     });
                 }
@@ -91,6 +94,8 @@ export default class EquipmentsEdit extends React.Component {
                     let equipments = response.data.equipments;
                     let items = [];
                     let setOfSubjacentEquipments = [];
+                    let isSubjacent = false;
+                    let boolSubjacent = false;
                     equipments.forEach((item) => {
                         items.push({
                             isSelected: false,
@@ -109,14 +114,22 @@ export default class EquipmentsEdit extends React.Component {
                         if(item.components) {
                             item.components.forEach((element) => {
                                 setOfSubjacentEquipments.push(element);
+                                if(element._id == id) {
+                                    setOfSubjacentEquipments.push(item);
+                                    isSubjacent = item._id;
+                                    boolSubjacent = true;
+                                }
                             })
                         }
                     });
-                    setOfSubjacentEquipments.push(this.state.equipment);
+                    setOfSubjacentEquipments.push({_id: id}); //fix this
                     let availableEquipments = this.compareLists(items, setOfSubjacentEquipments);
+                    console.log(isSubjacent)
                     this.setState({
                         availableComponents: availableEquipments,
-                        loading: false
+                        loading: false,
+                        isSubjacentBy: isSubjacent,
+                        disabledSubjacency: boolSubjacent,
                     });
                 }
             }).catch(ex => {
@@ -211,9 +224,9 @@ export default class EquipmentsEdit extends React.Component {
                 <TableHeaderColumn dataField='_id'
                     tdStyle={{ width: '0%' }}
                     thStyle={{ width: '0%' }} dataSort={false} isKey>Key</TableHeaderColumn>
-                <TableHeaderColumn dataField='siorg'>SIORG</TableHeaderColumn>
-                <TableHeaderColumn dataField='description'>Descrição</TableHeaderColumn>
-                <TableHeaderColumn dataField='equipmentState'>Estado</TableHeaderColumn>
+                <TableHeaderColumn dataField='siorg' dataSort={true}>SIORG</TableHeaderColumn>
+                <TableHeaderColumn dataField='description' dataSort={true}>Descrição</TableHeaderColumn>
+                <TableHeaderColumn dataField='equipmentState' dataSort={true}>Estado</TableHeaderColumn>
                 <TableHeaderColumn dataField="button" dataFormat={this.buttonFormatter.bind(this)}></TableHeaderColumn>
             </BootstrapTable>
         );
@@ -288,20 +301,44 @@ export default class EquipmentsEdit extends React.Component {
         axios.post('/equipments/' + this.state.equipment._id + '/move', this.state.locationHistory).then(response => {
             if (response.status === 201) {
                 // console.log(response);
-                this.setState({
-                    disabled: false,
-                    locationHistory: {
-                        justification: '',
-                        locationType: '',
-                        location: ''
-                    }
-                })
-                alert("Equipamento movimentado com sucesso!")
+                // this.setState({
+                //     disabled: false,
+                //     locationHistory: {
+                //         justification: '',
+                //         locationType: '',
+                //         location: ''
+                //     }
+                // })
+                // alert("Equipamento movimentado com sucesso!")
                 this.toggle()
             }
         }).catch(ex => {
             alert("Opss.. Algo saiu errado");
             console.error(ex, ex.response);
+        })
+        this.moveComponents();
+    }
+
+    moveComponents = () => {
+        let locationHistory = this.state.locationHistory;
+        this.state.equipment.components.forEach((component) => {
+            axios.post('/equipments/' + component._id + '/move', locationHistory).then(response => {
+                if (response.status === 201) {
+                    // console.log(response);
+                    this.setState({
+                        disabled: false,
+                        locationHistory: {
+                            justification: '',
+                            locationType: '',
+                            location: ''
+                        }
+                    })
+                    // alert("Equipamento movimentado com sucesso!")
+                }
+            }).catch(ex => {
+                alert("Opss.. Algo saiu errado");
+                console.error(ex, ex.response);
+            })
         })
     }
 
@@ -469,13 +506,13 @@ export default class EquipmentsEdit extends React.Component {
                         <FormGroup row>
                             <Label for="components" sm={2}>Componentes do Equipamento:</Label>
                             <Col sm={2}>
-                                <Button color="primary" onClick={this.toggleComponent}>Adicionar Componentes</Button>
+                                <Button color="primary" onClick={this.toggleComponent} disabled={this.state.disabledSubjacency}>Adicionar Componentes</Button>
                             </Col>
                             <Col sm={2}>
-                                <Button color="secondary" onClick={this.toggleVisual}>Visualizar Componentes</Button>
+                                <Button color="secondary" onClick={this.toggleVisual} disabled={this.state.disabledSubjacency}>Visualizar Componentes</Button>
                             </Col>
                         </FormGroup>
-                        <Button color="primary" onClick={this.toggle}>Movimentar</Button>
+                        <Button color="primary" onClick={this.toggle} disabled={this.state.disabledSubjacency}>Movimentar</Button>
                         <div align="right">
                             <Button color="secondary" onClick={this.savebutton} disabled={!this.state.changed}>Salvar
                                 Alterações</Button>
@@ -550,9 +587,9 @@ export default class EquipmentsEdit extends React.Component {
                                 <TableHeaderColumn dataField='_id'
                                     tdStyle={{ width: '0%' }}
                                     thStyle={{ width: '0%' }} dataSort={false} isKey>Key</TableHeaderColumn>
-                                <TableHeaderColumn dataField='siorg'>SIORG</TableHeaderColumn>
-                                <TableHeaderColumn dataField='description'>Descrição</TableHeaderColumn>
-                                <TableHeaderColumn dataField='equipmentState'>Estado</TableHeaderColumn>
+                                <TableHeaderColumn dataField='siorg' dataSort={true}>SIORG</TableHeaderColumn>
+                                <TableHeaderColumn dataField='description' dataSort={true}>Descrição</TableHeaderColumn>
+                                <TableHeaderColumn dataField='equipmentState' dataSort={true}>Estado</TableHeaderColumn>
                             </BootstrapTable>
                         </ModalBody>
                         <ModalFooter>
