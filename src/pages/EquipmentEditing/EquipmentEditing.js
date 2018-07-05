@@ -51,8 +51,10 @@ export default class EquipmentsEdit extends React.Component {
             addDisabled: true,
             modalComponent: false,
             modalVisual: false,
+            disabledSendStorage: false,
             selected: 0,
         };
+        this.moveEquipmentToStorage = this.moveEquipmentToStorage.bind(this);
         this.componentTableCreator = this.componentTableCreator.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -258,13 +260,28 @@ export default class EquipmentsEdit extends React.Component {
         })
     }
 
+    moveEquipmentToStorage = async () =>  {
+        let locationHistory = this.state.locationHistory;
+        let location = {
+            justification: ' ',
+            locationType: ' ',
+            location: 'Em Estoque',
+        }
+        locationHistory = location;
+        await this.setState({ locationHistory: locationHistory }, () => {
+            console.log(this.state.locationHistory, 'It works now :)');
+        }); 
+        this.moveEquipment();
+    }
+
     moveEquipment = () => {
         if (this.state.locationHistory.justification === '' || this.state.locationHistory.locationType === '' || this.state.locationHistory.location === '') {
             alert("Preencha todos os campos!")
             return
         }
         this.setState({
-            disabled: true
+            disabled: true,
+            disabledSendStorage: true
         })
         axios.post('/equipments/' + this.state.equipment._id + '/move', this.state.locationHistory).then(response => {
             if (response.status === 201) {
@@ -503,6 +520,7 @@ export default class EquipmentsEdit extends React.Component {
                             </Container>
                         </ModalBody>
                         <ModalFooter>
+                            <Button color="secondary" onClick={this.moveEquipmentToStorage} disabled={this.state.disabledSendStorage}>Devolver ao Estoque</Button>
                             <Button color="secondary" onClick={this.moveEquipment} disabled={this.state.locationHistory.justification === '' || this.state.locationHistory.locationType === '' || this.state.locationHistory.location === '' || this.state.disabled}>Movimentar</Button>
                         </ModalFooter>
                     </Modal>
