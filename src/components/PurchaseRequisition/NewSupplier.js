@@ -45,6 +45,7 @@ export default class NewSupplier extends React.Component {
         }
     }
 
+
     //Funções para validação de dados
     //Todos os dados devem ser preenchidos e o cnpj validado pela função em utils/validadeCNJP.js 
     validateField(fieldName, value) {
@@ -125,12 +126,12 @@ export default class NewSupplier extends React.Component {
     }
 
     //Function to connect with the database and save a new equipment
-    submitRequest = async () => {
-        if (!this.state.nameValid || !this.state.cnpjValid || !this.state.phoneValid || !this.state.numberValid
-            || !this.state.streetValid || !this.state.cityValid || !this.state.stateValid || !this.state.countryValid) {
-            alert("Preencha todos os campos");
-            return;
-        }
+    submitRequest= () => {
+        // if (!this.state.nameValid || !this.state.cnpjValid || !this.state.phoneValid || !this.state.numberValid
+        //     || !this.state.streetValid || !this.state.cityValid || !this.state.stateValid || !this.state.countryValid) {
+        //     alert("Preencha todos os campos");
+        //     return;
+        // }
 
         this.setState({
             nameValid: false,
@@ -147,7 +148,7 @@ export default class NewSupplier extends React.Component {
         // console.log(this.state)
         try {
 
-            let res = await axios.post('/supplier/', {
+            axios.post('/supplier/', {
                 name: this.state.name,
                 cnpj: this.state.cnpj,
                 phone: this.state.phone,
@@ -158,7 +159,14 @@ export default class NewSupplier extends React.Component {
                     state: this.state.state,
                     country: this.state.country
                 }
-            })
+            }).then(res=>{
+
+
+
+            if (res.status === 201){
+                console.log(res.data)
+                this.props.onComplete(res.data.supplier)
+            }
             if (res.status !== 201) {
                 alert("Opss.. algo saiu errado");
                 this.setState({
@@ -173,21 +181,7 @@ export default class NewSupplier extends React.Component {
                     formValid: true,
                 });
             }
-
-            this.setState({
-                name: '',
-                cnpj: '',
-                phone: '',
-                number: '',
-                street: '',
-                city: '',
-                state: '',
-                country: '',
-
-                formErrors: { name: '', cnpj: '', phone: '', number: '', street: '', city: '', state: '', country: '' },
-
-            });
-            alert("Vendedor cadastrado")
+            })
         }
         catch (ex) {
             console.error(ex)
@@ -254,7 +248,7 @@ export default class NewSupplier extends React.Component {
                     </Col>
                 </FormGroup>
                 <FormGroup row style={{ marginLeft: '61%', marginTop: '2%' }}>
-                    <Button type="submit" color="success" disabled={!this.state.formValid} onClick={this.submitRequest}>
+                    <Button color="success"  onClick={this.submitRequest}>
                         Cadastrar Produto
 					</Button>
                 </FormGroup>
