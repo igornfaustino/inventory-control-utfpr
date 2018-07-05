@@ -1,14 +1,15 @@
 import React from 'react';
-import { loadAllPurchaseRequisition } from "./connectAPI";
+import {loadAllPurchaseRequisition} from "./connectAPI";
 // Import React Table
 import "react-table/react-table.css";
 import SubHeader from '../SubHeader/SubHeader';
-import { Button } from 'reactstrap'
+import {Button} from 'reactstrap'
 import TableList from '../TableList/TableList';
 import moment from 'moment'
-import { ClipLoader } from 'react-spinners';
+import {ClipLoader} from 'react-spinners';
+import PurchaseSave from './PurchaseSave';
 
-import { sleep } from '../../utils/sleep'
+import {sleep} from '../../utils/sleep'
 
 export default class PurchaseListPage extends React.Component {
 
@@ -74,6 +75,13 @@ export default class PurchaseListPage extends React.Component {
 
         );
     };
+    RenderMoveAction = (index) => {
+        const id = this.state.purchaselist[index]._id;
+        let data = {purchase:this.state.purchaselist[index]}
+        return (
+            <PurchaseSave data={data} buttonLabel={"Mover"} />
+        );
+    };
 
     render() {
 
@@ -105,9 +113,11 @@ export default class PurchaseListPage extends React.Component {
                 max: "R$ " + (price.average * price.max).toFixed(2),
                 renderEditAction: this.RenderEditAction(index),
                 renderViewAction: this.RenderViewAction(index),
+                // renderMoveAction: this.RenderMoveAction(index),
+
             })
         });
-        let data = (<div className='sweet-loading' style={{ display: 'flex', justifyContent: 'center', margin: 100 }}>
+        let data = (<div className='sweet-loading' style={{display: 'flex', justifyContent: 'center', margin: 100}}>
             <ClipLoader
                 color={'#123abc'}
                 loading={this.state.loading}
@@ -116,18 +126,21 @@ export default class PurchaseListPage extends React.Component {
         if (this.state.loading === false) {
             data = (
                 <div>
-                    <Button color="success" href={`${this.state.match.url}/novo`} style={{ marginTop: '1%', marginLeft: '1%' }}>
+                    <Button color="success" href={`${this.state.match.url}/novo`}
+                            style={{marginTop: '1%', marginLeft: '1%'}}>
                         Nova Requisição
                     </Button>
-                    <TableList header={['Gestão', 'Requisitante', 'Data', 'N° de itens', 'Custo Mínimo', 'Custo Médio', 'Custo Máximo', '', '']}
-                        items={items} />
+                    <TableList
+                        header={['Gestão', 'Requisitante', 'Data', 'N° de itens', 'Custo Mínimo', 'Custo Médio', 'Custo Máximo', '']}
+                        items={items}/>
                 </div>
             )
         }
         return (
             <div>
-                <SubHeader title="Listagem de Requisições" />
+                <SubHeader title="Listagem de Requisições"/>
                 {data}
+
             </div>
         )
     }

@@ -296,11 +296,13 @@ export default class NewProduct extends React.Component {
 		data = this.state.stateList.map((item, index) =>
 			<option value={item} key={index}>{item}</option>
 		);
+		data.unshift(<option value={'Escolha'} key={-1}>Escolha</option>)
 
 		let dataType;
 		dataType = this.state.typeList.map((item, index) =>
 			<option value={item} key={index}>{item}</option>
 		);
+		dataType.unshift(<option value={'Escolha'} key={-1}>Escolha</option>)
 
 		const { siorgValid, buyerValid, requesterValid, descriptionValid, originValid, typeValid, quantityValid, stateValid } = this.state
 		// console.log(this.state)
@@ -376,7 +378,7 @@ export default class NewProduct extends React.Component {
 							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 							<Label for="typeArea" sm={2}>Tipo:</Label>
 							<Col sm={3}>
-								<Input type="select" name="type" id="typeArea" onChange={(event) => this.handleUserInput(event)} value={this.state.typeArea}>
+								<Input type="select" name="type" id="type" onChange={(event) => this.handleUserInput(event)} value={this.state.type}>
 									{dataType}
 								</Input>
 								{/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
@@ -393,7 +395,7 @@ export default class NewProduct extends React.Component {
 							<p style={{ marginTop: "10px", color: "red" }}>*</p>
 							<Label for="stateArea" sm={2}>Status:</Label>
 							<Col sm={3}>
-								<Input type="select" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} value={this.state.stateArea}>
+								<Input type="select" name="state" id="state" onChange={(event) => this.handleUserInput(event)} value={this.state.state}>
 									{data}
 								</Input>
 								{/* <Input value={this.state.state} type="text" name="state" id="stateArea" onChange={(event) => this.handleUserInput(event)} placeholder="Status do produto" /> */}
