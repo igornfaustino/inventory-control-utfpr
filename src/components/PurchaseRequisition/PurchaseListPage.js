@@ -128,7 +128,7 @@ export default class PurchaseListPage extends React.Component {
                 <div>
                     <Button color="success" href={`${this.state.match.url}/novo`}
                             style={{marginTop: '1%', marginLeft: '1%'}}>
-                        Nova Requisição
+                        Nova Compra
                     </Button>
                     <TableList
                         header={['Gestão', 'Requisitante', 'Data', 'N° de itens', 'Custo Mínimo', 'Custo Médio', 'Custo Máximo', '']}
@@ -138,7 +138,7 @@ export default class PurchaseListPage extends React.Component {
         }
         return (
             <div>
-                <SubHeader title="Listagem de Requisições"/>
+                <SubHeader title="Listagem de Compras" />
                 {data}
 
             </div>
