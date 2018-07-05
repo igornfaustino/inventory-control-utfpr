@@ -382,7 +382,7 @@ export class PurchaseForm extends React.Component {
 
     seller = (cell, row, enumObject, index) => {
         if (!row.itemSupplier)
-            return <a onClick={() => this.newSeller(row)}> Adicionar Vendedor</a>
+            return <Button color={"secundary"} onClick={() => this.newSeller(row)}> Adicionar Vendedor</Button>
         else
             return row.itemSupplier.name
     }
