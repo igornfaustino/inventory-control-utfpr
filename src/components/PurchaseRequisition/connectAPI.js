@@ -75,16 +75,12 @@ export async function updatePurchaseRequisition(purchase) {
     });
     newpurchase.requisitionItems = newItem;
 
-    return await axios.put('/purchase/' + newpurchase._id, newpurchase).then(response => {
-        if (response.status === 200) {
-            alert("Atualizado com sucesso!");
-            return (response.data._id)
-        }
-    })
-        .catch(ex => {
-            alert("Não Foi possivel conectar ao servidor");
-            console.error(ex, ex.response);
-        })
+    try {
+        return await axios.put('/purchase/' + newpurchase._id, newpurchase)
+    } catch (ex) {
+        alert("Não Foi possivel conectar ao servidor");
+        console.error(ex, ex.response);
+    }
 }
 
 function prepareRequistionItems(requisitionItems) {

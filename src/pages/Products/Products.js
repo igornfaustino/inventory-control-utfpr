@@ -52,6 +52,7 @@ export default class Products extends React.Component {
 						price.average = item.quotation.map((x) => x.price).reduce((a, b) => a + b, 0) / item.quotation.length;
 					// console.log()
 					price.average = price.average ? price.average : 0;
+					console.log(item)
 					items.push({
 						_id: item._id,
 						siorg: item.siorg,

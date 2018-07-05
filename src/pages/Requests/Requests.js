@@ -68,6 +68,7 @@ export default class ApprovedRequests extends React.Component {
 						price.average = item.quotation.map((x) => x.price).reduce((a, b) => a + b, 0) / item.quotation.length;
 
 					price.average = price.average ? price.average : 0;
+					console.log(item.history.length)
 					items.push({
 						_id: item._id,
 						siorg: item.siorg,

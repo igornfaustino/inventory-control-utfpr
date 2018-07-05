@@ -33,7 +33,7 @@ export default class Register extends React.Component {
 			email: this.state.email,
 			password: this.state.password
 		}).then(res => {
-			if(res.status === 200){
+			if(res.status === 201){
 				console.log(res)
 				alert('Cadastro efetuado com sucesso!');
 				this.props.history.push('/');

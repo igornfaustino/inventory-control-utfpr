@@ -34,6 +34,7 @@ export default class EditPurchase extends React.Component {
             const value = await loadPurchaseRequisition(this.state.match.params.id)
             //   console.log(value);
             data.purchase = value.purchases;
+            console.log(data)
             this.setState(
                 {
                     data: data,
@@ -58,8 +59,12 @@ export default class EditPurchase extends React.Component {
     savePurchase(event) {
         event.preventDefault();
         try {
-            updatePurchaseRequisition(this.state.data.purchase).then((value) => {
-                // console.log(value)
+            const axiosRes = updatePurchaseRequisition(this.state.data.purchase)
+            axiosRes.then(res => {
+                if (res.status === 200) {
+                    alert("Compra Atualizada!")
+                    window.location.reload();
+                }
             })
         }
         catch (error) {
