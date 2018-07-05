@@ -9,8 +9,10 @@ import {BootstrapTable, SearchField, TableHeaderColumn} from 'react-bootstrap-ta
 
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
+
 import TextInput from '../common/TextInput';
 import axios from 'axios';
+import NewSupplier from "./NewSupplier";
 
 
 export class PurchaseForm extends React.Component {
@@ -42,6 +44,7 @@ export class PurchaseForm extends React.Component {
         this.toggleIn = this.toggleIn.bind(this);
         this.removeRequest = this.removeRequest.bind(this);
         this.AddRequest = this.AddRequest.bind(this);
+        this.onSeller = this.onSeller.bind(this);
 
     }
 
@@ -370,6 +373,34 @@ export class PurchaseForm extends React.Component {
         return `R$ ${cell.toFixed(2)}`;
     }
 
+    newSeller(row) {
+        console.log(row);
+        this.setState({seller: row, activeSeller: true})
+    }
+
+    seller = (cell, row, enumObject, index) => {
+        if(!row.itemSupplier)
+            return <a onClick={() => this.newSeller(row)}> Adicionar Vendedor</a>
+        else
+            return row.itemSupplier.name
+    }
+    onSeller(seller){
+        let i = this.state.requisitionItens.map((item)=> item._id).indexOf(this.state.seller._id)
+        this.sellerToggle()
+        let req= this.state.requisitionItens
+        req[i].itemSupplier= seller;
+
+        // console.log(this.state.requisitionItens[i])
+
+        this.props.onChangeRequest(req);
+
+        // this.setState({requisitionItens: req})
+
+    }
+    sellerToggle = () =>{
+        this.setState({activeSeller: !this.state.activeSeller })
+    }
+
     render() {
         // console.log(this.props.purchase.requisitionDate)
         let dataSector;
@@ -474,6 +505,7 @@ export class PurchaseForm extends React.Component {
                                            thStyle={{width: '0%'}} dataSort={false} isKey>key</TableHeaderColumn>
 
                         <TableHeaderColumn dataField='description' dataSort={true}>Descrição</TableHeaderColumn>
+
                         <TableHeaderColumn dataField='qtd'
                                            tdStyle={{width: '15%'}}
                                            thStyle={{width: '15%'}}
@@ -492,14 +524,14 @@ export class PurchaseForm extends React.Component {
                                            dataSort={true}>Preço Médio</TableHeaderColumn>
 
 
-                        <TableHeaderColumn dataField='max'
-                                           dataFormat={this.priceFormatter}
-                                           tdStyle={{width: '15%'}}
-                                           thStyle={{width: '15%'}}
-                                           dataSort={true}>Preço Máximo</TableHeaderColumn>
-
                         <TableHeaderColumn tdStyle={{width: '14%'}} thStyle={{width: '14%'}} dataField='status'
                                            dataSort={true}>Status</TableHeaderColumn>
+
+                        <TableHeaderColumn dataField='seller'
+                                           tdStyle={{width: '15%'}}
+                                           thStyle={{width: '15%'}}
+                                           dataFormat={this.seller}
+                                           dataSort={true}>Vendedor</TableHeaderColumn>
                     </BootstrapTable>
 
                     <this.ButtonFinishRequest/>
@@ -535,20 +567,8 @@ export class PurchaseForm extends React.Component {
                                 dataFormat={this.priceFormatter}
                                 tdStyle={{width: '15%'}}
                                 thStyle={{width: '15%'}}
-                                dataField='minprice'
-                                dataSort={true}>Preço min</TableHeaderColumn>
-                            <TableHeaderColumn
-                                dataFormat={this.priceFormatter}
-                                tdStyle={{width: '15%'}}
-                                thStyle={{width: '15%'}}
                                 dataField='price'
                                 dataSort={true}>Preço médio</TableHeaderColumn>
-                            <TableHeaderColumn
-                                dataFormat={this.priceFormatter}
-                                tdStyle={{width: '15%'}}
-                                thStyle={{width: '15%'}}
-                                dataField='maxprice'
-                                dataSort={true}>Preço máx</TableHeaderColumn>
 
                             <TableHeaderColumn tdStyle={{width: '14%'}} thStyle={{width: '14%'}} dataField='status'
                                                dataSort={true}>Status</TableHeaderColumn>
@@ -556,6 +576,18 @@ export class PurchaseForm extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="danger" onClick={this.toggleOut}>Fechar</Button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal isOpen={this.state.activeSeller} toggle={this.sellerToggle} size="lg"
+
+                >
+                    <ModalHeader toggle={this.sellerToggle}>Cadastro de Vendedor</ModalHeader>
+                    <ModalBody>
+                        <NewSupplier seller={this.state.seller} onComplete={this.onSeller}/>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="danger" onClick={this.sellerToggle}>Fechar</Button>
                     </ModalFooter>
                 </Modal>
             </Container>

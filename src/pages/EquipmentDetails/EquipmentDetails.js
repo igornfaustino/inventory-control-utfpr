@@ -4,6 +4,8 @@ import { Container } from 'reactstrap'
 import '../Pages.css';
 import moment from 'moment';
 
+import { isAdmin } from '../../utils/userLogin';
+
 export default class EquipmentDetails extends React.Component {
 	constructor(props) {
 		super(props);
@@ -17,12 +19,27 @@ export default class EquipmentDetails extends React.Component {
 			equipmentState: '',
 			// supplier: {},
 			locationHistory: [],
+			components: [],
 		};
 		this.componentWillMount = this.componentWillMount.bind(this)
 	}
 
 	componentWillMount() {
 		this.setState({ ...this.props.equipment })
+	}
+
+	prepareComponents() {
+		let components = [];
+		this.state.components.forEach((item, index) => {
+			components.push(
+				<tr key={index}>
+					<td>{index+1}</td>
+					<td>{item.siorg}</td>
+					<td>{item.description}</td>
+					<td>{item.equipmentState}</td>
+				</tr>)
+		});
+		return components
 	}
 
 	historyItems() {
@@ -40,6 +57,10 @@ export default class EquipmentDetails extends React.Component {
 	}
 
 	render() {
+		if (!isAdmin()) {
+			this.props.history.push('/home');
+		}
+
 		return (
 			<div>
 				<Container>
@@ -71,27 +92,22 @@ export default class EquipmentDetails extends React.Component {
 							</tr>
 						</tbody>
 					</Table>
-					{/* <Table bordered condensed hover>
+					<Table bordered condensed hover>
 						<thead>
 							<tr>
-								<td colSpan="4" className="font-weight-bold text-center">Informações do Fornecedor</td>
+								<td colSpan="4" className="font-weight-bold text-center">Componentes do Equipamento</td>
 							</tr>
 							<tr>
-								<td colSpan="1" className="font-weight-bold">CNPJ</td>
-								<td colSpan="1" className="font-weight-bold">Nome</td>
-								<td colSpan="1" className="font-weight-bold">Telefone</td>
-								<td colSpan="1" className="font-weight-bold">Endereço</td>
+								<td className="font-weight-bold">Item</td>
+								<td className="font-weight-bold">SIORG</td>
+								<td className="font-weight-bold">Descrição</td>
+								<td className="font-weight-bold">Estado</td>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>{this.state.supplier.cnpj}</td>
-								<td>{this.state.supplier.name}</td>
-								<td>{this.state.supplier.phone}</td>
-								<td>{this.state.supplier.address.street + ", " + this.state.supplier.address.number + ", " + this.state.supplier.address.city + ", " + this.state.supplier.address.state + ", " + this.state.supplier.address.country}</td>
-							</tr>
+							{this.prepareComponents()}
 						</tbody>
-					</Table> */}
+					</Table>
 					<Table bordered condensed="true" hover>
 						<thead>
 							<tr>

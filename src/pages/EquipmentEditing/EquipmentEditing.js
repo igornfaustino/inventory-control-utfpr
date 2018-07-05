@@ -3,6 +3,10 @@ import { Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFoot
 import axios from 'axios';
 import Header from '../../components/Header/Header';
 import SubHeader from '../../components/SubHeader/SubHeader'
+import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table';
+import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
+
+import { isAdmin } from '../../utils/userLogin';
 
 export default class EquipmentsEdit extends React.Component {
     constructor(props) {
@@ -20,47 +24,125 @@ export default class EquipmentsEdit extends React.Component {
                 equipmentType: '',
                 // quantity: 1,
                 equipmentState: '',
+                components: [], //componentes a serem colocados na tabela
             },
             locationHistory: {
                 justification: '',
                 locationType: '',
                 location: ''
             },
+            //equipamentos armazenados no estoque (colocado no Modal)
+            availableComponents: [{
+                isSelected: false,
+                isPermanent: false,
+                _id: '',
+                patrimonyNumber: '',
+                siorg: '',
+                buyer: '',
+                solicitor: '',
+                description: '',
+                origin: '',
+                equipmentType: '',
+                // quantity: 1,
+                equipmentState: '',
+                components: [],
+            },],
             changed: false,
             modal: false,
             disabled: false,
+            addDisabled: true,
+            modalComponent: false,
+            modalVisual: false,
+            disabledSendStorage: false,
+            selected: 0,
         };
+        this.moveEquipmentToStorage = this.moveEquipmentToStorage.bind(this);
+        this.componentTableCreator = this.componentTableCreator.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onChangeLocation = this.onChangeLocation.bind(this);
         this.toggle = this.toggle.bind(this);
-        this.savebutton = this.savebutton.bind(this)
+        this.toggleComponent = this.toggleComponent.bind(this);
+        this.toggleVisual = this.toggleVisual.bind(this);
+        this.savebutton = this.savebutton.bind(this);
+        this.addComponent = this.addComponent.bind(this);
+        this.handleDeleteRow = this.handleDeleteRow.bind(this);
     }
 
     componentDidMount() {
         let id = this.props.match.params.id;
         try {
             axios.get('/equipment/' + id).then(response => {
-
                 if (response.status === 200) {
                     if (response.data.equipment.locationHistory.length) {
                         this.setState({
                             locationHistory: response.data.equipment.locationHistory[0]
                         });
-
                     }
                     this.setState({
                         equipment: response.data.equipment,
+                    });
+                }
+            }).catch(ex => {
+                console.error(ex, ex.response);
+            });
+            axios.get('/equipments').then(response => {
+                if (response.status === 200) {
+                    let equipments = response.data.equipments;
+                    let items = [];
+                    let setOfSubjacentEquipments = [];
+                    equipments.forEach((item) => {
+                        items.push({
+                            isSelected: false,
+                            _id: item._id,
+                            siorg: item.siorg,
+                            patrimonyNumber: item.patrimonyNumber,
+                            buyer: item.buyer,
+                            solicitor: item.solicitor,
+                            description: item.description,
+                            origin: item.origin,
+                            equipmentType: item.equipmentType,
+                            equipmentState: item.equipmentState,
+                            components: item.components,
+                            isPermanent: item.isPermanent,
+                        })
+                        if(item.components) {
+                            item.components.forEach((element) => {
+                                setOfSubjacentEquipments.push(element);
+                            })
+                        }
+                    });
+                    setOfSubjacentEquipments.push(this.state.equipment);
+                    let availableEquipments = this.compareLists(items, setOfSubjacentEquipments);
+                    this.setState({
+                        availableComponents: availableEquipments,
                         loading: false
                     });
                 }
             }).catch(ex => {
                 console.error(ex, ex.response);
-            })
+            });
         }
         catch (err) {
             console.error(err)
         }
+    }
+
+    compareLists(list1, list2) {
+        let difference = [];
+        let count;
+        list1.forEach((element) => {
+            count = true;
+            list2.forEach((item) => {
+                if(item._id === element._id) {
+                    count = false;
+                }
+            })
+            if(count === true) {
+                difference.push(element);
+            }
+        })
+        return difference;
     }
 
     onChange(event) {
@@ -83,6 +165,116 @@ export default class EquipmentsEdit extends React.Component {
         });
     }
 
+    CustomModalSearch = props => {
+        return (
+            <SearchField
+                defaultValue={props.defaultSearch}
+                placeholder={"Buscar"} />
+        );
+    };
+
+    onRowSelect = (item, isSelect, e) => {
+        let selected = this.state.selected;
+        let addDisabled;
+        isSelect? selected++ : selected--;
+        selected? addDisabled = false : addDisabled = true;
+        let availableComponents = this.state.availableComponents
+        let index = availableComponents.indexOf(item)
+        availableComponents[index] = { ...availableComponents[index], isSelected: isSelect }
+        this.setState({
+            availableComponents: availableComponents,
+            selected: selected,
+            addDisabled: addDisabled,
+        })
+        console.log(availableComponents);
+    }
+
+    buttonFormatter(cell, row, rowIndex){
+        return (
+            <Button color="danger" onClick={() => this.handleDeleteRow(row)}>Remover</Button>
+        );
+    }
+
+    componentTableCreator() {
+        return (
+            <BootstrapTable 
+                search
+                data={this.state.equipment.components}
+                // remote={true}
+                // deleteRow={true}
+                options={{
+                    searchField: this.CustomModalSearch,
+                    noDataText: "Componentes não disponíveis.",
+                    // onDeleteRow: this.handleDeleteRow
+                }}
+            >
+                <TableHeaderColumn dataField='_id'
+                    tdStyle={{ width: '0%' }}
+                    thStyle={{ width: '0%' }} dataSort={false} isKey>Key</TableHeaderColumn>
+                <TableHeaderColumn dataField='siorg'>SIORG</TableHeaderColumn>
+                <TableHeaderColumn dataField='description'>Descrição</TableHeaderColumn>
+                <TableHeaderColumn dataField='equipmentState'>Estado</TableHeaderColumn>
+                <TableHeaderColumn dataField="button" dataFormat={this.buttonFormatter.bind(this)}></TableHeaderColumn>
+            </BootstrapTable>
+        );
+    }
+
+    handleDeleteRow(cell, row, rowIndex) {
+        let state = this.state;
+        let afterDeletionComponents = [];
+        let deletedComponent;
+        state.equipment.components.forEach((value) => {
+            if(value._id !== cell._id) {
+                afterDeletionComponents.push(value);
+            } else {
+                deletedComponent = value;
+            }
+        });
+        state.equipment.components = afterDeletionComponents;
+        state.availableComponents.push(deletedComponent);
+        this.setState({
+            availableComponents: state.availableComponents,
+            equipment: state.equipment,
+            changed: true,
+        });
+        console.log(this.state.equipment.components);
+    }
+
+    addComponent() {
+        this.setState({ modalComponent: false })
+        let equipment = this.state.equipment;
+        let availableComponents = this.state.availableComponents;
+        let updatedAvailableComponents = [];
+        availableComponents.forEach((value) => {
+            if(value.isSelected) {
+                if(equipment.components.filter(item => item._id === value._id).length === 0) {
+                    equipment.components.push(value);
+                }
+            } else {
+                updatedAvailableComponents.push(value);
+            }
+        });
+        console.log(equipment.components);
+        this.setState({
+            equipment: equipment,
+            availableComponents: updatedAvailableComponents,
+            changed: true,
+        })
+    }
+
+    moveEquipmentToStorage = async () =>  {
+        let locationHistory = this.state.locationHistory;
+        let location = {
+            justification: ' ',
+            locationType: ' ',
+            location: 'Em Estoque',
+        }
+        locationHistory = location;
+        await this.setState({ locationHistory: locationHistory }, () => {
+            console.log(this.state.locationHistory, 'It works now :)');
+        }); 
+        this.moveEquipment();
+    }
 
     moveEquipment = () => {
         if (this.state.locationHistory.justification === '' || this.state.locationHistory.locationType === '' || this.state.locationHistory.location === '') {
@@ -90,7 +282,8 @@ export default class EquipmentsEdit extends React.Component {
             return
         }
         this.setState({
-            disabled: true
+            disabled: true,
+            disabledSendStorage: true
         })
         axios.post('/equipments/' + this.state.equipment._id + '/move', this.state.locationHistory).then(response => {
             if (response.status === 201) {
@@ -106,7 +299,6 @@ export default class EquipmentsEdit extends React.Component {
                 alert("Equipamento movimentado com sucesso!")
                 this.toggle()
             }
-
         }).catch(ex => {
             alert("Opss.. Algo saiu errado");
             console.error(ex, ex.response);
@@ -116,6 +308,25 @@ export default class EquipmentsEdit extends React.Component {
     toggle() {
         this.setState({
             modal: !this.state.modal
+        });
+    }
+
+    toggleComponent() {
+        let availableComponents = this.state.availableComponents;
+        availableComponents.forEach((value) => {
+            value.isSelected = false;
+        });
+        this.setState({
+            selected: 0,
+            addDisabled: true,
+            modalComponent: !this.state.modalComponent,
+            availableComponents: availableComponents,
+        });
+    }
+
+    toggleVisual() {
+        this.setState({
+            modalVisual: !this.state.modalVisual,
         });
     }
 
@@ -142,6 +353,10 @@ export default class EquipmentsEdit extends React.Component {
     }
 
     render() {
+        if (!isAdmin()) {
+			this.props.history.push('/home');
+		}
+
         let patrimonyfield = null
         if (this.state.equipment.isPermanent) {
             patrimonyfield = (<FormGroup row>
@@ -251,6 +466,15 @@ export default class EquipmentsEdit extends React.Component {
                                     onChange={this.onChange} />
                             </Col>
                         </FormGroup>
+                        <FormGroup row>
+                            <Label for="components" sm={2}>Componentes do Equipamento:</Label>
+                            <Col sm={2}>
+                                <Button color="primary" onClick={this.toggleComponent}>Adicionar Componentes</Button>
+                            </Col>
+                            <Col sm={2}>
+                                <Button color="secondary" onClick={this.toggleVisual}>Visualizar Componentes</Button>
+                            </Col>
+                        </FormGroup>
                         <Button color="primary" onClick={this.toggle}>Movimentar</Button>
                         <div align="right">
                             <Button color="secondary" onClick={this.savebutton} disabled={!this.state.changed}>Salvar
@@ -302,12 +526,53 @@ export default class EquipmentsEdit extends React.Component {
                             </Container>
                         </ModalBody>
                         <ModalFooter>
+                            <Button color="secondary" onClick={this.moveEquipmentToStorage} disabled={this.state.disabledSendStorage}>Devolver ao Estoque</Button>
                             <Button color="secondary" onClick={this.moveEquipment} disabled={this.state.locationHistory.justification === '' || this.state.locationHistory.locationType === '' || this.state.locationHistory.location === '' || this.state.disabled}>Movimentar</Button>
                         </ModalFooter>
+                    </Modal>
+                    {/* {Modal to Add Comonents to Equipment} */}
+                    <Modal isOpen={this.state.modalComponent} toggle={this.toggleComponent} size="lg">
+                        <ModalHeader toggle={this.toggleComponent}>Adicionar Componentes ao Equipamento</ModalHeader>
+                        <ModalBody>
+                            <BootstrapTable 
+                                search
+                                data={this.state.availableComponents}
+                                selectRow={{
+                                    mode: 'checkbox',
+                                    clickToSelect: true,
+                                    onSelect: this.onRowSelect,
+                                }}
+                                options={{
+                                    searchField: this.CustomModalSearch,
+                                    noDataText: "Componentes não disponíveis."
+                                }}
+                            >
+                                <TableHeaderColumn dataField='_id'
+                                    tdStyle={{ width: '0%' }}
+                                    thStyle={{ width: '0%' }} dataSort={false} isKey>Key</TableHeaderColumn>
+                                <TableHeaderColumn dataField='siorg'>SIORG</TableHeaderColumn>
+                                <TableHeaderColumn dataField='description'>Descrição</TableHeaderColumn>
+                                <TableHeaderColumn dataField='equipmentState'>Estado</TableHeaderColumn>
+                            </BootstrapTable>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="secondary" onClick={this.addComponent} disabled={this.state.addDisabled}>Adicionar</Button>
+                        </ModalFooter>
+                    </Modal>
+                    {/* {Modal for components Visualization and Deletion} */}
+                    <Modal isOpen={this.state.modalVisual} toggle={this.toggleVisual}>
+                        <ModalHeader toggle={this.toggleVisual}>Componentes do Equipamento</ModalHeader>
+                        <ModalBody>
+                            {/* <div style={{
+                                overflowY: 'auto',
+                                height: '500px',
+                            }}> */}
+                                {this.componentTableCreator()}
+                            {/* </div> */}
+                        </ModalBody>
                     </Modal>
                 </div>
             </div>
         );
-
     }
 }
