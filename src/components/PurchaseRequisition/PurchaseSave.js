@@ -41,6 +41,16 @@ export default class PurchaseSave extends React.Component {
         let data = this.state.data;
 
         data[event.target.name] = event.target.value;
+
+        if(event.target.name === "quantity"){
+            console.log(data.qtdReceivedMax)
+            if(event.target.value > data.qtdReceivedMax){
+                data[event.target.name] = data.qtdReceivedMax
+            }
+            if(event.target.value < 1){
+                data[event.target.name] = 1
+            }
+        }
         this.setState({data: data});
     };
 
@@ -114,7 +124,7 @@ export default class PurchaseSave extends React.Component {
                 <FormGroup row>
                     <Label for={item._id} sm={6}>{item.description}</Label>
                     <Col sm={4}>
-                        <Input value={item.qtd - (!item.qtdReceived ? 0 : item.qtdReceived)} type="number"
+                        <Input value={item.quantity} type="number"
                                name={'quantity'} id={item._id}
                                onChange={this.onChange} placeholder="Quantidade de itens recebidos"/>
                     </Col>
@@ -151,30 +161,10 @@ export default class PurchaseSave extends React.Component {
     onConfirm = async (item) => {
 
         await this.moveWareHouse(item);
-        this.saveItens(item)
+
+        this.props.onMove(item._id,item.quantity)
 
     };
-    saveItens = (item) => {
-        let status = "Em Estoque";
-        if (item.qtd > item.qtdReceived) {
-            status = 'Parcial em Estoque';
-        }
-        axios.put('/requisition/' + item._id, {
-            siorg: item.siorg,
-            description: item.description,
-            justification: item.justification,
-            qtd: item.qtd,
-            qtdReceived: item.qtdReceived,
-            status: status,
-            changeJustification: "Estoque",
-            priceJustification: "Estoque",
-            itemType: "None",
-            quotation: item.quotation
-        }).then(res => {
-        }).catch(err => {
-        });
-    };
-
     moveWareHouse = async (item) => {
 
         let x = {
@@ -189,7 +179,7 @@ export default class PurchaseSave extends React.Component {
             equipmentType: item.itemType,
         };
 
-        for( let i=0; i< item.qtd;i++){
+        for( let i=0; i< item.quantity;i++){
 
             let res = axios.post('/equipment/', x).then((req) => {
                     console.log(req)

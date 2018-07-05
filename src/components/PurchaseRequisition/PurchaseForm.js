@@ -380,23 +380,41 @@ export class PurchaseForm extends React.Component {
     }
 
     seller = (cell, row, enumObject, index) => {
-        if(!row.itemSupplier)
+        if (!row.itemSupplier)
             return <a onClick={() => this.newSeller(row)}> Adicionar Vendedor</a>
         else
             return row.itemSupplier.name
     }
-    moveWareHouse = (cell, row, enumObject, index) =>{
+    moveWareHouse = (cell, row, enumObject, index) => {
+        let item = {
+            ...row,
+            qtdReceivedMax: row.qtd - (!this.state.requisitionItens[index].qtdReceived ? 0 : this.state.requisitionItens[index].qtdReceived),
+            qtdReceived: 0,
+        }
+        if(item.qtdReceivedMax === 0){
+            return "Em Estoque"
+        }
 
-            return (
-                <PurchaseSave data={row} buttonLabel={"Mover"} />
-            );
+        return (
+            <PurchaseSave data={item} buttonLabel={"Mover"} onMove={this.onMove}/>
+        );
 
-    }
-        onSeller(seller){
-        let i = this.state.requisitionItens.map((item)=> item._id).indexOf(this.state.seller._id)
+    };
+
+    onMove = (item_id, qtd) => {
+        let i = this.state.requisitionItens.map((item) => item._id).indexOf(item_id);
+
+        let req = this.state.requisitionItens;
+        req[i].qtdReceived = qtd;
+
+        this.props.onChangeRequest(req);
+    };
+
+    onSeller(seller) {
+        let i = this.state.requisitionItens.map((item) => item._id).indexOf(this.state.seller._id)
         this.sellerToggle()
-        let req= this.state.requisitionItens
-        req[i].itemSupplier= seller;
+        let req = this.state.requisitionItens
+        req[i].itemSupplier = seller;
 
         // console.log(this.state.requisitionItens[i])
 
@@ -405,8 +423,9 @@ export class PurchaseForm extends React.Component {
         // this.setState({requisitionItens: req})
 
     }
-    sellerToggle = () =>{
-        this.setState({activeSeller: !this.state.activeSeller })
+
+    sellerToggle = () => {
+        this.setState({activeSeller: !this.state.activeSeller})
     }
 
     render() {
@@ -415,19 +434,19 @@ export class PurchaseForm extends React.Component {
         dataSector = this.state.sectorList.map((item, index) =>
             <option value={item} key={index}>{item}</option>
         );
-        dataSector.unshift( <option value='Escolha' key={-1}>Escolha</option>)
+        dataSector.unshift(<option value='Escolha' key={-1}>Escolha</option>)
 
         let dataUGR;
         dataUGR = this.state.UGRList.map((item, index) =>
             <option value={item} key={index}>{item}</option>
         );
-        dataUGR.unshift( <option value='Escolha' key={-1}>Escolha</option>)
+        dataUGR.unshift(<option value='Escolha' key={-1}>Escolha</option>)
 
         let dataManagement;
         dataManagement = this.state.managementList.map((item, index) =>
             <option value={item} key={index}>{item}</option>
         );
-        dataManagement.unshift( <option value='Escolha' key={-1}>Escolha</option>)
+        dataManagement.unshift(<option value='Escolha' key={-1}>Escolha</option>)
 
         return (
             <Container>

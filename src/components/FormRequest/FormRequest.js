@@ -225,7 +225,6 @@ export default class FormRequest extends React.Component {
             description: this.state.description,
             justification: this.state.justify,
             qtd: this.state.quantity,
-            qtdReceived: 0,
             status: this.state.status,
             changeJustification: this.state.changeJustification,
             priceJustification: this.state.priceJustification,
@@ -335,7 +334,6 @@ export default class FormRequest extends React.Component {
             description: this.state.description,
             justification: this.state.justify,
             qtd: this.state.quantity,
-            qtdReceived: 0,
             quotation: await this.preparePrice()
         }).then(res => {
             if (res.status === 201) {
