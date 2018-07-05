@@ -6,7 +6,7 @@ const isLoggedIn = () => {
 }
 
 const isAdmin = () => {
-	if (localStorage.getItem("token") && localStorage.getItem("admin")) {
+	if (localStorage.getItem("token") && localStorage.getItem("admin") === "true") {
 		return true
 	}
 	return false

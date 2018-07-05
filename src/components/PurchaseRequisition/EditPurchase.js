@@ -5,6 +5,7 @@ import SubHeader from '../../components/SubHeader/SubHeader';
 import { updatePurchaseRequisition, loadPurchaseRequisition } from './connectAPI';
 import { ClipLoader } from 'react-spinners';
 import PurchaseForm from './PurchaseForm';
+import axios from 'axios';
 
 import { sleep } from '../../utils/sleep'
 
@@ -20,7 +21,9 @@ export default class EditPurchase extends React.Component {
             loading: true,
             data: {
                 purchase: {}
-            }
+            },
+            requisition: {},
+            // requisitionUpdate: {}
         };
         this.componentDidMount = this.componentDidMount.bind(this)
     };
@@ -34,11 +37,11 @@ export default class EditPurchase extends React.Component {
             const value = await loadPurchaseRequisition(this.state.match.params.id)
             //   console.log(value);
             data.purchase = value.purchases;
-            console.log(data)
             this.setState(
                 {
                     data: data,
-                    loading: value.loading
+                    loading: value.loading,
+                    requisition: data.purchase.requisitionItems
                 }
             )
         }
@@ -56,13 +59,28 @@ export default class EditPurchase extends React.Component {
         return this.setState({ data: data });
     }
 
-    savePurchase(event) {
+    async savePurchase(event) {
         event.preventDefault();
         try {
             const axiosRes = updatePurchaseRequisition(this.state.data.purchase)
             axiosRes.then(res => {
                 if (res.status === 200) {
                     alert("Compra Atualizada!")
+                    let notifyEmail = this.state.data.purchase.requisitionItems.filter((value) => {
+                        for (let requisition of this.state.requisition) {
+                            if (requisition._id === value.item)
+                                return false
+                        }
+                        return true
+                    });
+                    for (let notify of notifyEmail) {
+                        axios.post('email/send/' + notify.item, {
+                            subject: "Item adicionado a uma compra",
+                            text: "Seu pedido foi adicionado a um pedido de compra."
+                        }).then(res => {
+                            console.log(res)
+                        })
+                    }
                     window.location.reload();
                 }
             })
@@ -75,7 +93,10 @@ export default class EditPurchase extends React.Component {
     ChangeRequest(requestlist) {
         const data = this.state.data;
         data.purchase.requisitionItems = requestlist;
-        this.setState({ data: data });
+        console.log(data.purchase.requisitionItems)
+        this.setState({
+            data: data,
+        });
     }
 
     render() {
