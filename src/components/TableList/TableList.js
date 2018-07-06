@@ -93,7 +93,7 @@ export default class TableList extends React.Component {
             // Filter table
             let valid = false;
             Object.keys(item).map((key) => {
-                if (key.charAt(0) !== '_')
+                if (item[key] && key.charAt(0) !== '_')
                     valid = valid || item[key].toString().toLowerCase().includes(this.state.filterStr.toLowerCase());
                 return key;
             });
