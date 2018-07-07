@@ -5,6 +5,7 @@ import Header from '../../components/Header/Header';
 import SubHeader from '../../components/SubHeader/SubHeader'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
+import  { Redirect } from 'react-router-dom'
 
 import { isAdmin } from '../../utils/userLogin';
 
@@ -47,6 +48,7 @@ export default class EquipmentsEdit extends React.Component {
                 equipmentState: '',
                 components: [],
             },],
+            redirect: false,
             isSubjacentBy: false,
             changed: false,
             modal: false,
@@ -351,7 +353,6 @@ export default class EquipmentsEdit extends React.Component {
                             location: ''
                         }
                     })
-                    // alert("Equipamento movimentado com sucesso!")
                 }
             }).catch(ex => {
                 alert("Opss.. Algo saiu errado");
@@ -385,6 +386,14 @@ export default class EquipmentsEdit extends React.Component {
         });
     }
 
+    redirectToListing() {
+        if(this.state.redirect) {
+            return <Redirect to = '/almoxarifado'/>;
+        } else {
+            return '';
+        }
+    }
+
     savebutton(event) {
         event.preventDefault();
         try {
@@ -394,13 +403,13 @@ export default class EquipmentsEdit extends React.Component {
             }
             axios.put('/equipment/' + equipment._id, equipment).then(response => {
                 if (response.status === 200) {
-                    alert("Equipamento atualizado com sucesso!")
+                    alert("Equipamento atualizado com sucesso!");
+                    this.setState({redirect: true});
                 }
-            })
-                .catch(ex => {
+            }).catch(ex => {
                     alert("Não Foi possivel conectar ao servidor");
                     console.error(ex, ex.response);
-                })
+            })
         }
         catch (error) {
             // console.log(error)
@@ -425,7 +434,7 @@ export default class EquipmentsEdit extends React.Component {
         return (
             <div>
                 <Header></Header>
-
+                {this.redirectToListing()}
                 <SubHeader title='Almoxarifado >> Editar Equipamento'></SubHeader>
                 <div className="margin-left" style={{ marginRight: "20px" }}>
                     <Form>
