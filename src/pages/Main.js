@@ -1,43 +1,57 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import Login from './Login/Login';
+import {Redirect, Route, Switch} from 'react-router-dom';
 import Home from './Home/Home';
-import NewRequests from './NewRequests/NewRequests';
-import Requests from './Requests/Requests';
-import Products from './Products/Products';
-import PurchasesHistory from './PurchasesHistory/PurchasesHistory';
-import PurchaseRequisition from './PurchaseRequisition/PurchaseRequisition';
-import EditRequest from './EditRequest/EditRequest';
-import Inventory from './Inventory/Inventory';
-import EquipmentsEdit from './EquipmentEditing/EquipmentEditing';
-import EquipmentDetailsView from './EquipmentDetails/EquipmentDetailsView'
-import NewProduct from './NewProduct/NewProduct';
-import NewSupplier from '../components/PurchaseRequisition/NewSupplier';
 import Config from './Config/Config';
-import Register from './Register/Register';
+import Header from '../components/Header/Header';
+import {isLoggedIn} from '../utils/userLogin';
+
+import {ToastContainer} from 'react-toastify';
+import Requisicao from './Requisicao de Compra';
+import Solicitacoes from './Solicitacoes';
+import Almoxarifado from "./Almoxarifado";
+import Usuario from "./Usuario";
+
+const SUCCESS_MSG = 201;
+const HOME = '/';
+
+class Main extends React.Component {
 
 
-const Main = () => (<main>
-	<Switch>
-		<Route exact path='/' component={Login} />
-		<Route path='/register' component={Register} />
-		<Route path='/home' component={Home} />
-		<Route path='/novasolicitacoes' component={NewRequests} />
-		<Route path='/editarsolicitacoes/:id' component={EditRequest} />
-		<Route path='/solicitacoes' component={Requests} />
-		<Route path='/produtos' component={Products} />
-		<Route path='/requisicao' component={PurchaseRequisition} />
-		<Route path='/compras' component={PurchasesHistory} />
-		<Route path='/almoxarifado' component={Inventory} />
-		<Route path='/editarequipamento/:id' component={EquipmentsEdit} />
-		<Route path='/detalhesequipamento/:id' component={EquipmentDetailsView} />
-		<Route path='/novoproduto' component={NewProduct} />
-		<Route path='/novovendedor' component={NewSupplier}/>
-		<Route path='/configuracoes' component={Config} />
-		<Redirect from='*' to='/home' />
-	</Switch>
-</main>
-);
+    isAutentic(props, Component) {
+        if (!isLoggedIn()) {
+            return <Redirect to={'/usuario/login'}/>
+        }
+        return <Component {...props}/>
+    }
+
+    render() {
+        return (
+            <main>
+                <ToastContainer autoClose={2000}/>
+                <Header/>
+                <div style={{
+                    backgroundColor: 'gray',
+                    textAlign: 'center'
+                }}>
+                    {/*{this.state.show}*/}
+                </div>
+                <Switch>
+                    <Route path='/solicitacao/*' render={(props) => this.isAutentic(props, Solicitacoes)}/>
+                    <Route path='/requisicao/*' render={(props) => this.isAutentic(props, Requisicao)}/>
+                    <Route path='/almoxarifado/*' render={(props) => this.isAutentic(props, Almoxarifado)}/>
+                    <Route path='/usuario/*' component={Usuario}/>
+
+                    <Route path='/configuracoes' render={(props) => this.isAutentic(props, Config)}/>
+                    <Route path='*' render={(props) => this.isAutentic(props, Home)}/>
+                </Switch>
+            </main>
+        );
+    }
+}
 
 
 export default Main;
+export {
+    HOME,
+    SUCCESS_MSG
+};

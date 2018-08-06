@@ -6,11 +6,12 @@ import './App.css';
 import Main from './pages/Main';
 
 class App extends Component {
+
     render() {
         return (
             <BrowserRouter>
                 <div className="App">
-                    <Main></Main>
+                    <Main {...this.props} />
                     {/* <NewProduct></NewProduct> */}
                 </div>
             </BrowserRouter>

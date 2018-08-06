@@ -11,8 +11,12 @@ const isAdmin = () => {
 	}
 	return false
 }
+const getUser = () =>{
+	return localStorage.getItem('user_id')
+}
 
 module.exports = {
 	isLoggedIn,
-	isAdmin
+	isAdmin,
+	getUser
 }
